@@ -67,7 +67,7 @@
                         <accordion-group heading="Other" is-open="true">
                             <ul class="list-unstyled collapse in">
                                 <li> <a href="notification.html"><i class="glyphicon glyphicon-comment"></i> Send Push Notification</a>  </li>
-                                <li> <a href="#"><i class="glyphicon glyphicon-th-list"></i> List Taxi</a>  </li>
+                                <li> <a href="taxi.html"><i class="glyphicon glyphicon-th-list"></i> List Taxi</a>  </li>
                             </ul>
                         </accordion-group>
                         #end
