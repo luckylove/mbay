@@ -1,0 +1,43 @@
+<script src="resources/js/activeUser.js"></script>
+
+<div class="row" ng-controller="ActiveCtrl">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Active User</h3>
+            </div>
+            <div class="panel-body">
+                <div id="custem-toolbar">
+                    <div class="form-inline" role="form" >
+                        <form name="form" ng-submit="submit(form)">
+                        <div class="form-group">
+                            <div class="input-group ">
+                                <span class="input-group-btn">
+                                   <button tabindex="-1"type="button" class="btn btn-default " ng-click="clear(); focusInput=true">Clear</button>
+                                </span>
+                                <input class="form-control" type="text" ng-model="asyncSelected" placeholder="Enter taxi number here" focus-me="focusInput" typeahead="user as user.taxiLicense for user in getActiveUser($viewValue)" >
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary " >Add</button>
+                       #* <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>*#
+                        </form>
+                    </div>
+                </div>
+                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"    data-toolbar="#custem-toolbar"
+                       data-page-list="[5, 10, 20, 50, 100, 200]" data-search="false" data-query-params="queryParams">
+                    <thead>
+                    <tr>
+                       #* <th data-field="state" data-checkbox="true"></th>*#
+                        <th data-field="id" data-align="right" data-sortable="false">ID</th>
+                        <th data-field="userName" data-align="center" data-sortable="false">Name</th>
+                        <th data-field="userLicense" data-sortable="false">License</th>
+                        <th data-field="activeCount" data-sortable="true">Active Count</th>
+                        <th data-field="activeDateStr" data-sortable="false">Date</th>
+                        #*<th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>*#
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

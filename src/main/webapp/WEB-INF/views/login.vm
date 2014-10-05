@@ -1,0 +1,111 @@
+<!doctype html>
+<html ng-app="cruiseApp">
+<head>
+    <script src="resources/js/angular-1.2.10.js"></script>
+    <script src="resources/js/ui-bootstrap-tpls-0.11.0.js"></script>
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
+    <link href="resources/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="resources/css/index.css" rel="stylesheet">
+    <link href="resources/css/login.css" rel="stylesheet">
+
+
+    <script src="resources/js/login.js"></script>
+</head>
+<body>
+<div id="wrap">
+      #parse("/nav.vm")
+    <div class="container" >
+        <div id="loginModal" class="modal show login" tabindex="-1" role="dialog" aria-hidden="true" ng-controller="LoginCtrl">
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-center"><span class="glyphicon glyphicon-log-in"></span>
+                            <span>Login</span>
+                        </h2>
+                        <h3>Please <strong>Login</strong> or <strong>Register</strong></h3>
+                    </div>
+                    <div class="modal-body">
+                        <form action="loginSubmit.html" name="form" id="logForm" method="post" class="form-horizontal ng-hide" ng-hide="logForm" novalidate>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                                        <input type="email" ng-model="email" focus-me="focusInput" name="email" class="form-control input-lg" placeholder="Email" autocomplete="off" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                        <input type="password" ng-model="password" name="password" class="form-control input-lg" placeholder="Password" autocomplete="off" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group formSubmit">
+                                <div class="col-sm-7">
+
+                                </div>
+                                <div class="col-sm-5 submitWrap">
+                                    <button type="submit" class="btn btn-primary btn-lg" ng-disabled="form.$invalid">Log In</button>
+                                </div>
+                            </div>
+                            <div class="form-group formNotice">
+                                <div class="col-xs-12">
+                                    <p class="text-center">Don't have an account? <span ng-click="showRegister()">Register now</span></p>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form action="#" id="regForm" method="post" class="form-horizontal ng-hide" ng-hide="regForm">
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                        <input type="text" class="form-control input-lg" placeholder="Username" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                                        <input type="text" class="form-control input-lg" placeholder="Email" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                        <input type="password" class="form-control input-lg" placeholder="Password" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group formSubmit">
+                                <div class="col-sm-7">
+                                    #*<div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" autocomplete="off"> I agree to the Terms &amp; Conditions
+                                        </label>
+                                    </div>*#
+                                </div>
+                                <div class="col-sm-5 submitWrap">
+                                    <button type="submit" class="btn btn-success btn-lg">Register</button>
+                                </div>
+                            </div>
+                            <div class="form-group formNotice">
+                                <div class="col-xs-12">
+                                    <p class="hasAccount text-center">Already have an account? <span ng-click="showLogin()">Log in here</span></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    #parse("/footer.vm")
+</body>
+</html>

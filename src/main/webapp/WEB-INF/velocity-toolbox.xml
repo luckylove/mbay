@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<toolbox>
+    <data type="number">
+        <key>version</key>
+        <value>2.0</value>
+    </data>
+    <tool>
+        <class>org.apache.velocity.tools.generic.NumberTool</class>
+        <key>number</key>
+        <scope>application</scope>
+        <parameter name="locale" value="en_US"/>
+    </tool>
+    <tool>
+        <class>org.apache.velocity.tools.generic.MathTool</class>
+        <key>math</key>
+        <scope>application</scope>
+    </tool>
+    <tool>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+        <key>date</key> 
+        <scope>application</scope> 
+        <parameter name="format" value="yyyy-MM-dd"/>
+        <parameter name="locale" value="ko_KR"/>
+    </tool>
+    <tool>
+        <class>org.apache.velocity.tools.generic.SortTool</class> 
+        <key>sorter</key> 
+        <scope>application</scope> 
+    </tool>
+    <tool>
+        <key>params</key>
+        <class>org.apache.velocity.tools.view.tools.ParameterParser</class> 
+        <scope>request</scope> 
+    </tool>
+    <tool>
+        <class>org.apache.velocity.tools.generic.EscapeTool</class> 
+        <key>esc</key> 
+        <scope>application</scope> 
+    </tool>
+    <tool>
+        <key>listTool</key>
+        <class>org.apache.velocity.tools.generic.ListTool</class> 
+        <scope>application</scope> 
+    </tool>
+    <tool>
+        <key>stringUtils</key>
+        <class>org.apache.commons.lang.StringUtils</class>
+    </tool>
+	 <tool>
+	   <key>import</key> 
+	   <scope>request</scope> 
+	   <class>org.apache.velocity.tools.view.tools.ImportTool</class> 
+	 </tool>
+</toolbox>

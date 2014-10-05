@@ -1,0 +1,122 @@
+<script src="resources/js/user.js"></script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">User List</h3>
+            </div>
+            <div class="panel-body">
+                <div id="custem-toolbar" class="aa">
+                    <div class="row" ng-controller="UserGroupCtrl">
+                        <div class="col-xs-12">
+                            <button type="button" class="btn btn-primary" ng-click="open()">Add New</button>
+                            <div class="btn-group" dropdown is-open="status.isopen">
+                                <button type="button" class="btn btn-primary dropdown-toggle" ng-disabled="disabled">
+                                   Assign <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    #foreach($item in $userGroup)
+                                        <li><a ng-click="assignGroup($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                            <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
+                            <div class="btn-group" id="userGroupFilter">
+                                <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Filter by group<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a ng-click="filterItemSelect($event, -1, 'All')" href="#">All</a></li>
+                                    #foreach($item in $userGroup)
+                                        <li><a ng-click="filterItemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"   data-toolbar="#custem-toolbar"
+                       data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-query-params="queryParams" data-row-style="rowStyle">
+                    <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="userName" data-align="center" data-sortable="true">Name</th>
+                        <th data-field="email" data-align="center" data-sortable="true">Email</th>
+                        <th data-field="mobile" data-align="center" data-sortable="true">Phone</th>
+                        <th data-field="taxiLicense" data-sortable="true">License</th>
+                        <th data-field="userGroupView" data-sortable="true">User Group</th>
+                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- we defind template here -->
+<script type="text/ng-template" id="addUserGroup.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add new user</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" name="form" ng-submit="submit(form)" novalidate>
+            <div class="form-group">
+                <label for="inputName" class="control-label col-xs-3">User group</label>
+                <div class="col-xs-9">
+                    <div class="btn-group" id="userGroupDropdown">
+                        <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{userForm.userGroupView}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            #foreach($item in $userGroup)
+                                <li><a ng-click="itemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                            #end
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputName" class="control-label col-xs-3">User name</label>
+                <div class="col-xs-9">
+                    <input type="hidden"  ng-model="userForm.id"/>
+                    <input type="text"  ng-model="userForm.userName" class="form-control" id="inputName" placeholder="user name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="control-label col-xs-3">Email</label>
+                <div class="col-xs-9">
+                    <input type="email" name="user111"  ng-model="userForm.email" class="form-control" id="inputEmail" placeholder="email" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputMobile" class="control-label col-xs-3">Phone</label>
+                <div class="col-xs-9">
+                    <input type="text" name="user111"  ng-model="userForm.mobile" class="form-control" id="inputMobile" placeholder="Phone">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPass"  class="control-label col-xs-3">Password</label>
+                <div class="col-xs-9">
+                    <input type="password" name="pass111"  ng-model="userForm.password" class="form-control" id="inputPass" placeholder="password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputTaxi" class="control-label col-xs-3">Taxi License</label>
+                <div class="col-xs-9">
+                    <input type="text"  ng-model="userForm.taxiLicense" class="form-control" id="inputTaxi" placeholder="taxi license">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddr" class="control-label col-xs-3">Address</label>
+                <div class="col-xs-9">
+                    <textarea class="form-control"  ng-model="userForm.address" id="inputAddr" placeholder="Address"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-offset-8 col-xs-4">
+                    <button class="btn btn-primary ng-hide" ng-hide="!userForm.isUpdate" type="submit">Update</button>
+                    <button class="btn btn-primary ng-hide" ng-hide="userForm.isUpdate" type="submit">Add</button>
+                    <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</script>

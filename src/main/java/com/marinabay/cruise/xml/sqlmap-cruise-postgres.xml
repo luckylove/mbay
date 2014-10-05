@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marinabay.cruise.dao.CruiseDao" >
+
+  <resultMap id="mapResult" type="com.marinabay.cruise.model.Cruise" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+    <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, name, reg_date, mod_date
+  </sql>
+
+ <select id="count" resultType="long" parameterType="pagingModel" >
+    select count(id) as total
+    from cruise
+     where 1=1
+    <if test="search !=null and search != ''" >
+      and (name like '%' || #{search} || '%')
+    </if>
+ </select>
+
+  <select id="select" resultMap="mapResult" parameterType="pagingModel" >
+    select
+    <include refid="Base_Column_List" />
+    from cruise ug
+      where 1=1
+    <if test="search !=null and search != ''" >
+      and (name like '%' || #{search} || '%' )
+    </if>
+    <if test="name != null and name != ''" >
+      order by ${name} ${order}
+    </if>
+  <if test="limit > 0" >
+      limit ${limit} offset ${offset}
+  </if>
+
+    
+  </select>
+  
+  <select id="selectByID" resultMap="mapResult" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cruise
+    where id = #{value}
+  </select>
+
+    <select id="findByName" resultMap="mapResult" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from cruise
+        where lower(name) = lower(#{value})
+    </select>
+
+
+  <delete id="deleteByID" parameterType="java.lang.Long" >
+    delete from cruise
+    where id = #{value}
+  </delete>
+
+  <insert id="insert" parameterType="cruiseModel" >
+    insert into cruise (name, reg_date)
+    values (
+    	#{name,jdbcType=VARCHAR},
+    	now()
+      )
+      
+    <selectKey resultType="java.lang.Long" keyProperty="id" >
+         SELECT last_value as id FROM cruise_id_seq;
+     </selectKey>
+
+  </insert>
+  
+  
+  
+  <update id="update" parameterType="cruiseModel" >
+    update cruise
+    set name = #{name,jdbcType=VARCHAR},
+      mod_date = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <mvc:annotation-driven/>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*.html" />
+            <mvc:exclude-mapping path="/login.html"/>
+            <mvc:exclude-mapping path="/loginSubmit.html"/>
+            <bean class="com.marinabay.cruise.intercepter.SecurityInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <context:component-scan base-package="com.marinabay.cruise.controller" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <bean id="cnManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="useJaf" value="false"/>
+        <property name="defaultContentType" value="application/json"/>
+        <!-- dont use jaf mapping manually-->
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <!-- All configuration is now done by the manager - since Spring V3.2 -->
+        <property name="order" value="2"/>
+        <property name="contentNegotiationManager" ref="cnManager"/>
+        <property name="viewResolvers">
+            <list>
+                <bean class="com.marinabay.cruise.resolver.JsonViewResolver">
+                    <property name="order" value="1"/>
+                </bean>
+                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+                    <property name="order" value="2"/>
+                </bean>
+
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="order" value="3"/>
+                    <property name="prefix">
+                        <value></value>
+                    </property>
+                    <property name="suffix">
+                        <value>.jsp</value>
+                    </property>
+                </bean>
+
+            </list>
+        </property>
+    </bean>
+
+    <!-- we sparate this resolver view for bestter performance-->
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".vm"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+        <property name="toolboxConfigLocation" value="/WEB-INF/velocity-toolbox.xml"/>
+        <property name="order" value="1"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+    </bean>
+
+    <bean id="velocityConfig"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/views"/>
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <prop key="file.resource.loader.cache">false</prop>
+                <prop key="velocimacro.library.autoreload">true</prop>
+                <prop key="velocimacro.permissions.allow.inline.to.replace.global">true</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- REST url & Static resource handle, DefaultAnnotation... -->
+    <mvc:default-servlet-handler/>
+</beans>

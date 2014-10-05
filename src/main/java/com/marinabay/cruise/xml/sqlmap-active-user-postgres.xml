@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marinabay.cruise.dao.ActiveUserDao" >
+
+  <resultMap id="mapResult" type="com.marinabay.cruise.model.ActiveUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="active_count" property="activeCount" jdbcType="INTEGER" />
+    <result column="active_date" property="activeDate" jdbcType="DATE" />
+    <result column="user_name" property="userName" jdbcType="DATE" />
+    <result column="taxi_license" property="userLicense" jdbcType="DATE" />
+    <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+    <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, user_id, active_count, active_date, reg_date, mod_date
+  </sql>
+
+    <sql id="Base_Column_List_Alias" >
+    ug.id, user_id, active_count, active_date, ug.reg_date, ug.mod_date
+  </sql>
+
+ <select id="count" resultType="long" parameterType="pagingModel" >
+    select count(id) as total
+    from active_user
+ </select>
+
+  <select id="select" resultMap="mapResult" parameterType="pagingModel" >
+    select
+    <include refid="Base_Column_List_Alias" /> , us.user_name, us.taxi_license
+    from active_user ug inner join users us on ug.user_id = us.id
+      where 1=1
+    order by ${name} ${order}
+    <if test="limit > 0" >
+      limit ${limit} offset ${offset}
+   </if>
+
+    
+  </select>
+  
+  <select id="selectByID" resultMap="mapResult" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from active_user
+    where id = #{value}
+  </select>
+
+    <select id="selectByDate" resultMap="mapResult" parameterType="map" >
+        select
+        <include refid="Base_Column_List" />
+        from active_user
+        where user_id = #{id} and active_date = #{activeDate,jdbcType=DATE}
+    </select>
+
+
+
+    <delete id="deleteByID" parameterType="java.lang.Long" >
+    delete from active_user
+    where id = #{value}
+  </delete>
+
+  <insert id="insert" parameterType="activeUserModel" >
+    insert into active_user (user_id, active_count, active_date, reg_date)
+    values (
+    	#{userId,jdbcType=BIGINT},
+    	#{activeCount,jdbcType=INTEGER},
+    	#{activeDate,jdbcType=DATE},
+    	now()
+      )
+      
+    <selectKey resultType="java.lang.Long" keyProperty="id" >
+         SELECT last_value as id FROM active_user_id_seq;
+     </selectKey>
+
+  </insert>
+  
+  
+  
+  <update id="increase" parameterType="activeUserModel" >
+    update active_user
+    set active_count = active_count + 1,
+      mod_date = now()
+    where user_id = #{value,jdbcType=BIGINT}
+  </update>
+  
+  
+
+</mapper>

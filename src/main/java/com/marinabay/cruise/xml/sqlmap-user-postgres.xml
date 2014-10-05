@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marinabay.cruise.dao.UserDao" >
+
+
+  <resultMap id="userResultMap" type="com.marinabay.cruise.model.User" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="VARCHAR" />
+    <result column="taxi_license" property="taxiLicense" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
+    <result column="user_group_id" property="userGroupId" jdbcType="BIGINT" />
+    <result column="user_group_view" property="userGroupView" jdbcType="VARCHAR" />
+    <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+    <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, user_name, email, mobile, password, role, taxi_license, address, user_type, user_group_id, reg_date, mod_date
+  </sql>
+
+    <sql id="Base_Column_List_Aias" >
+    us.id, user_name, email, mobile, password, role, taxi_license, address, user_type, user_group_id , us.reg_date, us.mod_date
+  </sql>
+
+    <select id="count" resultType="long" parameterType="pagingModel" >
+        select count(id) as total
+        from users  us
+        where 1=1
+        <choose>
+            <when test="filterId != null and filterId > 0">
+                and us.user_group_id = #{filterId}
+            </when>
+            <otherwise>
+                <if test="search != null and search != ''" >
+                    and (user_name like '%' || #{search} || '%' or address like '%' || #{search} || '%' or mobile like '%' || #{search} || '%'
+                    or taxi_license like '%' || #{search} || '%' or email like '%' || #{search} || '%')
+                </if>
+            </otherwise>
+        </choose>
+    </select>
+  <select id="select" resultMap="userResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List_Aias" />  , usg.name as user_group_view
+    from users us left outer join user_group usg on us.user_group_id = usg.id
+      where 1=1
+      <choose>
+          <when test="filterId != null and filterId > 0">
+            and us.user_group_id = #{filterId}
+          </when>
+          <otherwise>
+              <if test="search != null and search != ''" >
+                  and (user_name like '%' || #{search} || '%' or address like '%' || #{search} || '%' or mobile like '%' || #{search} || '%'
+                  or taxi_license like '%' || #{search} || '%' or email like '%' || #{search} || '%')
+              </if>
+          </otherwise>
+      </choose>
+
+      <if test="name != null and name != ''" >
+          order by ${name} ${order}
+      </if>
+      <if test="limit > 0" >
+          limit ${limit} offset ${offset}
+      </if>
+
+  </select>
+
+    <select id="selectByLicense" resultMap="userResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List_Aias" />
+        from users us
+        where 1=1   and lower(taxi_license) like '%' || lower(#{value}) || '%'
+        limit 10 offset 0
+    </select>
+  
+  <select id="selectByID" resultMap="userResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where id = #{value}
+  </select>
+
+    <select id="findUserByEmail" resultMap="userResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from users
+        where email = #{value}
+    </select>
+  
+  <delete id="deleteByID" parameterType="java.lang.Long" >
+    delete from users
+    where id = #{value}
+  </delete>
+
+ <insert id="insert" parameterType="userModel" >
+    insert into users (user_name, email, mobile, password, role, taxi_license, address, user_type, user_group_id, reg_date)
+    values (
+    	#{userName,jdbcType=VARCHAR},
+    	#{email,jdbcType=VARCHAR},
+    	#{mobile,jdbcType=VARCHAR},
+    	#{password,jdbcType=VARCHAR},
+    	#{role,jdbcType=VARCHAR},
+    	#{taxiLicense,jdbcType=VARCHAR},
+    	#{address,jdbcType=VARCHAR},
+    	#{userType,jdbcType=VARCHAR},
+    	#{userGroupId,jdbcType=BIGINT},
+    	now()
+      )
+
+
+     <selectKey resultType="java.lang.Long" keyProperty="id" >
+         SELECT last_value as id FROM user_id_seq;
+     </selectKey>
+
+  </insert>
+  
+  
+  
+  <update id="update" parameterType="userModel" >
+    update users
+    set
+      user_name = #{userName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      role = #{role,jdbcType=VARCHAR},
+      taxi_license = #{taxiLicense,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=VARCHAR},
+      user_group_id = #{userGroupId,jdbcType=BIGINT},
+      mod_date = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+ <update id="assignGroup" parameterType="map" >
+    update users
+    set
+      user_group_id = #{userGroupId,jdbcType=BIGINT}
+    where id in
+    <foreach collection="ids" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+    <update id="resetUserGroup" parameterType="long" >
+        update users
+        set
+        user_group_id = NULL
+        where user_group_id =#{value}
+    </update>
+
+
+    <select id="selectAllId" resultMap="userResultMap" >
+        select  id
+        from users us
+        where 1=1
+    </select>
+
+    <select id="selectAllByGroup" resultMap="userResultMap" parameterType="long">
+        select  id
+        from users us
+        where 1=1  and us.user_group_id = #{value}
+    </select>
+</mapper>

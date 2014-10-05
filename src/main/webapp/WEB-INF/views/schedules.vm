@@ -1,0 +1,151 @@
+<script src="resources/js/schedules.js"></script>
+
+<div class="row" ng-controller="UserGroupCtrl">
+    <div class="col-xs-12">
+        <div class="box box-solid box-info" >
+            <div class="box-header">
+                <h3 class="box-title">Dashboard</h3>
+                <div class="box-tools pull-right">
+                    <span class="badge" style="background-color: #ebcccc">{{todayCnt}}</span>
+                    <span class="badge" style="background-color: #d0e9c6">{{tomorrowCnt}}</span>
+                    <span class="badge" style="background-color: #c4e3f3">{{nextCnt}}</span>
+                    <button class="btn btn-info btn-sm" data-widget="collapse" ng-click="isCollapsed = !isCollapsed"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body" collapse="isCollapsed">
+
+                <table id="dashboardTable" data-height="350" data-side-pagination="server" data-pagination="true"   data-toolbar="#custem-toolbaraa"
+                       data-page-list="[5, 10, 20, 50, 100, 200]"  data-row-style="rowBoardStyle">
+                    <thead>
+                    <tr>
+                        <th data-field="cruiseName" data-align="center" data-sortable="false">Cruise name</th>
+                        <th data-field="arrivalTimeStr" data-align="center" data-sortable="false">Arrival time</th>
+                        <th data-field="departureTimeStr" data-align="center" data-sortable="false">Depature time</th>
+                        <th data-field="passengers" data-sortable="false">Passengers</th>
+                        <th data-field="callType" data-sortable="false">Call type</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div><!-- /.box-body -->
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Schedules Management</h3>
+            </div>
+            <div class="panel-body">
+                <div id="custem-toolbar" class="aa">
+                    <div class="row" >
+                        <div class="col-xs-8">
+                            <button type="button" class="btn btn-primary" ng-click="open()">Add New</button>
+                            <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
+                            <div class="btn-group" id="userGroupFilter">
+                                <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Filter by cruise<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a ng-click="filterItemSelect($event, -1, 'All')" href="#">All</a></li>
+                                    #foreach($item in $cruises)
+                                        <li><a ng-click="filterItemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class='input-group date' id='datetimeSchedule'>
+                                <span class="input-group-btn">
+                                   <button tabindex="-1" type="button" class="btn btn-default " ng-click="clear($event);">Clear</button>
+                                </span>
+                                <input type="text"  ng-model="departureTime" class="form-control" id="inputName" data-date-format="YYYY/MM/DD">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"   data-toolbar="#custem-toolbar"
+                       data-page-list="[5, 10, 20, 50, 100, 200]"  data-query-params="queryParams" data-row-style="rowStyle">
+                    <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="cruiseName" data-align="center" data-sortable="false">Cruise name</th>
+                        <th data-field="arrivalTimeStr" data-align="center" data-sortable="true">Arrival time</th>
+                        <th data-field="departureTimeStr" data-align="center" data-sortable="true">Depature time</th>
+                        <th data-field="passengers" data-sortable="true">Passengers</th>
+                        <th data-field="callType" data-sortable="true">Call type</th>
+                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- we defind template here -->
+<script type="text/ng-template" id="addUserGroup.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Add new schedule</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal" name="form" ng-submit="submit(form)" novalidate>
+            <div class="form-group">
+                <label for="inputName" class="control-label col-xs-3">Cruise</label>
+                <div class="col-xs-9">
+                    <div class="btn-group" id="cruiseDropdown">
+                        <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{userForm.cruiseName}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            #foreach($item in $cruises)
+                                <li><a ng-click="itemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                            #end
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputName" class="control-label col-xs-3">Arrival time</label>
+                <div class="col-xs-9">
+                    <div class='input-group date' id='datetimepicker9'>
+                        <input type="text"  ng-model="userForm.arrivalTime" class="form-control" id="inputName" required data-date-format="YYYY/MM/DD H:mm">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="control-label col-xs-3">Departuare time</label>
+                <div class="col-xs-9">
+                    <div class='input-group date' id='datetimepicker10'>
+                        <input type="text" name="user111"  ng-model="userForm.departureTime" class="form-control" id="inputEmail" required data-date-format="YYYY/MM/DD H:mm">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputMobile" class="control-label col-xs-3">Passengers</label>
+                <div class="col-xs-9">
+                    <input type="number" name="user111"  ng-model="userForm.passengers"  required min="0" class="form-control" id="inputMobile" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPass"  class="control-label col-xs-3">Call type</label>
+                <div class="col-xs-9">
+                    <div class="btn-group" id="userGroupDropdown">
+                        <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{userForm.callType}} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="callTypeSelect($event, 'Transit', 'Transit')" href="#">Transit</a></li>
+                            <li><a ng-click="callTypeSelect($event, 'Turnaround', 'Turnaround')" href="#">Turnaround</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-offset-8 col-xs-4">
+                    <button class="btn btn-primary ng-hide" ng-hide="!userForm.isUpdate" type="submit">Update</button>
+                    <button class="btn btn-primary ng-hide" ng-hide="userForm.isUpdate" type="submit">Add</button>
+                    <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</script>

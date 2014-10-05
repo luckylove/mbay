@@ -1,0 +1,58 @@
+<script src="resources/js/profile.js"></script>
+
+<div class="row"  ng-controller="UserGroupCtrl">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Hi <strong>$!{loggedUser.userName}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" name="form" ng-submit="submit(form)" novalidate>
+                    <div class="form-group">
+                        <label for="inputName" class="control-label col-xs-3">User name</label>
+                        <div class="col-xs-9">
+                            <input type="hidden"  ng-model="userForm.id"/>
+                            <input type="text"  ng-model="userForm.userName" class="form-control" id="inputName" placeholder="user name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="control-label col-xs-3">Email</label>
+                        <div class="col-xs-9">
+                            <input type="email" name="user111"  ng-model="userForm.email" class="form-control" id="inputEmail" placeholder="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputMobile" class="control-label col-xs-3">Phone</label>
+                        <div class="col-xs-9">
+                            <input type="text" name="user111"  ng-model="userForm.mobile" class="form-control" id="inputMobile" placeholder="Phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPass"  class="control-label col-xs-3">Password</label>
+                        <div class="col-xs-9">
+                            <input type="password" name="pass111"  ng-model="userForm.password" class="form-control" id="inputPass" placeholder="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTaxi" class="control-label col-xs-3">Taxi License</label>
+                        <div class="col-xs-9">
+                            <input type="text"  ng-model="userForm.taxiLicense" class="form-control" id="inputTaxi" placeholder="taxi license">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddr" class="control-label col-xs-3">Address</label>
+                        <div class="col-xs-9">
+                            <textarea class="form-control"  ng-model="userForm.address" id="inputAddr" placeholder="Address"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="pull-right" style="margin-right: 20px">
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+<script src="resources/js/notification.js"></script>
+
+<div class="row" ng-controller="UserGroupCtrl">
+    <div class="col-xs-12">
+        <div class="box box-solid box-info" >
+            <div class="box-header">
+                <h3 class="box-title">Send push notification</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-info btn-sm" data-widget="collapse" ng-click="isCollapsed = !isCollapsed"><i class="glyphicon glyphicon-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body" collapse="isCollapsed">
+                <form class="form-horizontal" name="form" ng-submit="send(form)" novalidate>
+
+                    <div class="form-group">
+                        <label for="inputEmail" class="control-label col-xs-3"></label>
+                        <div class="col-xs-3 btn-group">
+                            <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select by group <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a ng-click="selectUser($event, -1, 'All')" href="#">All</a></li>
+                                <li><a ng-click="open('lg')" href="#">Select User</a></li>
+                                #foreach($item in $userGroup)
+                                    <li><a ng-click="selectUser($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                                #end
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputName" class="control-label col-xs-3">Message</label>
+                        <div class="col-xs-9">
+                            <textarea class="form-control" rows="4"  ng-model="message.message" id="inputDest" placeholder="message" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <button class="btn btn-primary pull-right"type="submit">Send</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div><!-- /.box-body -->
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Notification</h3>
+            </div>
+            <div class="panel-body">
+                <div id="custem-toolbar" class="aa">
+                    <div class="row" >
+                        <div class="col-xs-12">
+
+                            <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
+
+                        </div>
+                    </div>
+                </div>
+                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"   data-toolbar="#custem-toolbar"
+                       data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-query-params="queryParams" data-row-style="rowStyle">
+                    <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="id" data-align="center" data-sortable="false">Id</th>
+                        <th data-field="message" data-align="center" data-sortable="false">Message</th>
+                        <th data-field="regDateStr" data-align="center" data-sortable="false">Send date</th>
+                        <th data-field="userCnt" data-sortable="true">User sent</th>
+                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- we defind template here -->
+<script type="text/ng-template" id="listUser.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Select user</h3>
+    </div>
+    <div class="modal-body">
+        <div id="custem-toolbar12" class="aa">
+            <div class="row" >
+                <div class="col-xs-12">
+                    <div class="btn-group" id="userGroupFilter">
+                        <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Filter by group<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="filterItemSelect($event, -1, 'All')" href="#">All</a></li>
+                            #foreach($item in $userGroup)
+                                <li><a ng-click="filterItemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                            #end
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="userTable" data-height="350" data-side-pagination="server" data-pagination="true"   data-toolbar="#custem-toolbar12"
+               data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true" data-query-params="queryUserParams" data-row-style="rowStyle">
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="userName" data-align="center" data-sortable="true">Name</th>
+                <th data-field="email" data-align="center" data-sortable="true">Email</th>
+                <th data-field="mobile" data-align="center" data-sortable="true">Phone</th>
+                <th data-field="taxiLicense" data-sortable="true">License</th>
+                <th data-field="userGroupView" data-sortable="true">User Group</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="panel-footer clearfix">
+            <div class="pull-right">
+                <button class="btn btn-primary" type="button" ng-click="addUser();">Add</button>
+                <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</script>

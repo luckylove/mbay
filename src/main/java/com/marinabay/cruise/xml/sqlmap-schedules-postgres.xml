@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marinabay.cruise.dao.SchedulesDao" >
+
+
+  <resultMap id="resultMap" type="com.marinabay.cruise.model.Schedules" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="cruise_id" property="cruiseId" jdbcType="BIGINT" />
+    <result column="cruise_name" property="cruiseName" jdbcType="VARCHAR" />
+    <result column="arrival_time" property="arrivalTime" jdbcType="TIMESTAMP" />
+    <result column="departure_time" property="departureTime" jdbcType="TIMESTAMP" />
+    <result column="passengers" property="passengers" jdbcType="INTEGER" />
+    <result column="call_type" property="callType" jdbcType="VARCHAR" />
+    <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+    <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, cruise_id, arrival_time, departure_time, passengers, call_type, reg_date, mod_date
+  </sql>
+
+  <sql id="Base_Column_List_Aias" >
+    us.id, cruise_id, arrival_time, departure_time, passengers, call_type, us.reg_date, us.mod_date
+  </sql>
+  <select id="count" resultType="long" parameterType="pagingModel" >
+        select count(id) as total
+        from schedules  us
+        where 1=1
+        <choose>
+            <when test="filterId != null and filterId > 0">
+                and us.cruise_id = #{filterId}
+            </when>
+            <otherwise>
+                <if test="departureTime != null and departureTime != ''" >
+                    <![CDATA[ and to_date(#{departureTime}, 'YYYY/MM/DD') = departure_time::date ]]>
+                </if>
+            </otherwise>
+        </choose>
+    </select>
+  <select id="select" resultMap="resultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List_Aias" />  , cr.name as cruise_name
+    from schedules us left outer join cruise cr on us.cruise_id =cr.id
+      where 1=1
+      <choose>
+          <when test="filterId != null and filterId > 0">
+            and us.cruise_id = #{filterId}
+          </when>
+          <otherwise>
+              <if test="departureTime != null and departureTime != ''" >
+                  <![CDATA[ and to_date(#{departureTime}, 'YYYY/MM/DD') = departure_time::date ]]>
+              </if>
+          </otherwise>
+      </choose>
+
+      <if test="name != null and name != ''" >
+          order by ${name} ${order}
+      </if>
+      <if test="limit > 0" >
+          limit ${limit} offset ${offset}
+      </if>
+
+  </select>
+
+   <select id="countDashboard" resultType="long" parameterType="map" >
+        select count(id) as total
+        from schedules  us
+        where 1=1
+       <![CDATA[ and #{startTime} <=  departure_time and departure_time <= #{endTime}]]>
+    </select>
+    <select id="selectDashboard" resultMap="resultMap" parameterType="map" >
+        select
+        <include refid="Base_Column_List_Aias" />  , cr.name as cruise_name
+        from schedules us left outer join cruise cr on us.cruise_id =cr.id
+        where 1=1
+        <![CDATA[ and #{startTime} <=  departure_time and departure_time <= #{endTime}]]>
+        order by departure_time
+        <if test="limit > 0" >
+            limit ${limit} offset ${offset}
+        </if>
+    </select>
+  
+  <select id="selectByID" resultMap="resultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from schedules
+    where id = #{value}
+  </select>
+
+
+  <delete id="deleteByID" parameterType="java.lang.Long" >
+    delete from schedules
+    where id = #{value}
+  </delete>
+
+ <insert id="insert" parameterType="scheduleModel" >
+    insert into schedules (cruise_id, arrival_time, departure_time, passengers, call_type, reg_date)
+    values (
+    	#{cruiseId,jdbcType=BIGINT},
+    	#{arrivalTime,jdbcType=TIMESTAMP},
+    	#{departureTime,jdbcType=TIMESTAMP},
+    	#{passengers,jdbcType=INTEGER},
+    	#{callType,jdbcType=VARCHAR},
+    	now()
+      )
+
+
+     <selectKey resultType="java.lang.Long" keyProperty="id" >
+         SELECT last_value as id FROM schedules_id_seq;
+     </selectKey>
+
+  </insert>
+  
+  
+  
+  <update id="update" parameterType="scheduleModel" >
+    update schedules
+    set
+      cruise_id = #{userName,jdbcType=BIGINT},
+      arrival_time = #{email,jdbcType=TIMESTAMP},
+      departure_time = #{mobile,jdbcType=TIMESTAMP},
+      passengers = #{password,jdbcType=INTEGER},
+      call_type = #{role,jdbcType=VARCHAR},
+      mod_date = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

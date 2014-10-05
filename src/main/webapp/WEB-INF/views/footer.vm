@@ -1,0 +1,13 @@
+<div id="footer">
+        <div class="subFooter">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="pull-left">
+                            Copyright © Marina Bay. All rights reserved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

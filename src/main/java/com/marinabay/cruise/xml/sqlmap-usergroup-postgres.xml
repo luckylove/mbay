@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marinabay.cruise.dao.UserGroupDao" >
+
+  <resultMap id="mapResult" type="com.marinabay.cruise.model.UserGroup" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+      <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+      <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, name, description , reg_date, mod_date
+  </sql>
+
+ <select id="count" resultType="long" parameterType="pagingModel" >
+    select count(id) as total
+    from user_group
+     where 1=1
+    <if test="search !=null and search != ''" >
+      and (name like '%' || #{search} || '%' or description like '%' || #{search} || '%')
+    </if>
+ </select>
+
+  <select id="select" resultMap="mapResult" parameterType="pagingModel" >
+    select
+    <include refid="Base_Column_List" /> ,
+      (select count(us.id) from users us where us.user_group_id is not null and  us.user_group_id = ug.id group by ug.id) as userCount
+    from user_group ug
+      where 1=1
+    <if test="search !=null and search != ''" >
+      and (name like '%' || #{search} || '%' or description like '%' || #{search} || '%')
+    </if>
+    <if test="name != null and name != ''" >
+      order by ${name} ${order}
+    </if>
+  <if test="limit > 0" >
+      limit ${limit} offset ${offset}
+  </if>
+
+    
+  </select>
+  
+  <select id="selectByID" resultMap="mapResult" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_group
+    where id = #{value}
+  </select>
+
+    <select id="findByName" resultMap="mapResult" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from user_group
+        where lower(name) = lower(#{value})
+    </select>
+
+
+  <delete id="deleteByID" parameterType="java.lang.Long" >
+    delete from user_group
+    where id = #{value}
+  </delete>
+
+  <insert id="insert" parameterType="userGroupModel" >
+    insert into user_group (name, description, reg_date)
+    values (
+    	#{name,jdbcType=VARCHAR},
+    	#{description,jdbcType=VARCHAR},
+    	now()
+      )
+      
+    <selectKey resultType="java.lang.Long" keyProperty="id" >
+         SELECT last_value as id FROM user_group_id_seq;
+     </selectKey>
+
+  </insert>
+  
+  
+  
+  <update id="update" parameterType="userGroupModel" >
+    update user_group
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      mod_date = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+
+</mapper>
