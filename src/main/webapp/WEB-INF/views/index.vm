@@ -33,7 +33,7 @@
                             <ul class="list-unstyled collapse in">
                                 #if("$!loggedUser.role" == "ADMIN")
                                     <li> <a href="activeUser.html"><i class="glyphicon glyphicon-ok-sign"></i> Active User</a> </li>
-                                    <li> <a href=""><i class="glyphicon glyphicon-compressed"></i> Cruise Port</a> </li>
+                                    <li> <a href="cruisePort.html"><i class="glyphicon glyphicon-compressed"></i> Cruise Port</a> </li>
                                 #end
                                 <li> <a href="profile.html"><i class="glyphicon glyphicon-cog"></i> My Profile</a> </li>
                                 #if("$!loggedUser.role" == "ADMIN")

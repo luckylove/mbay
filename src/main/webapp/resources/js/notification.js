@@ -84,7 +84,7 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
                 if(result) {
                     $.ajax({
                         type: "GET",
-                        url: 'deleteUser.json',
+                        url: 'deleteMessage.json',
                         data: {
                             ids: ids.join(',')
                         },
@@ -156,7 +156,7 @@ window.operateEvents = {
             if(result) {
                 $.ajax({
                     type: "GET",
-                    url: 'deleteUser.json',
+                    url: 'deleteMessage.json',
                     data: {
                         ids: row.id
                     },

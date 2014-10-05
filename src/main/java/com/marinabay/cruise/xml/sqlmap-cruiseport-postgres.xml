@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marinabay.cruise.dao.CruisePortDao" >
+
+  <resultMap id="mapResult" type="com.marinabay.cruise.model.CruisePort" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="lati" property="lati" jdbcType="VARCHAR" />
+    <result column="longti" property="longti" jdbcType="VARCHAR" />
+    <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+    <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, name, address, lati, longti, reg_date, mod_date
+  </sql>
+
+
+  <select id="selectByID" resultMap="mapResult" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cruise_port
+    where id = #{value}
+  </select>
+
+
+  <delete id="deleteByID" parameterType="java.lang.Long" >
+    delete from cruise_port
+    where id = #{value}
+  </delete>
+
+  <insert id="insert" parameterType="cruisePortModel" >
+    insert into cruise_port (name, address, lati, longti, reg_date)
+    values (
+    	#{name,jdbcType=VARCHAR},
+    	#{address,jdbcType=VARCHAR},
+    	#{lati,jdbcType=VARCHAR},
+    	#{longti,jdbcType=VARCHAR},
+    	now()
+      )
+      
+    <selectKey resultType="java.lang.Long" keyProperty="id" >
+         SELECT last_value as id FROM cruise_port_id_seq;
+     </selectKey>
+
+  </insert>
+  
+  
+  
+  <update id="update" parameterType="cruisePortModel" >
+    update cruise_port
+    set name = #{name,jdbcType=VARCHAR},
+        address =#{address,jdbcType=VARCHAR},
+        lati= #{lati,jdbcType=VARCHAR},
+        longti=#{longti,jdbcType=VARCHAR},
+      mod_date = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+
+</mapper>

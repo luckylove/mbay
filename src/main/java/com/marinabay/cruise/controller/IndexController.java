@@ -1,8 +1,10 @@
 package com.marinabay.cruise.controller;
 
+import com.marinabay.cruise.model.CruisePort;
 import com.marinabay.cruise.model.JSonResult;
 import com.marinabay.cruise.model.PagingModel;
 import com.marinabay.cruise.model.User;
+import com.marinabay.cruise.service.CruisePortService;
 import com.marinabay.cruise.service.UserService;
 import com.marinabay.cruise.utils.RequestUtls;
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +28,9 @@ public class IndexController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CruisePortService cruisePortService;
+
 
 	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
 	public String home(HttpServletRequest request, ModelMap model) {
@@ -40,6 +45,27 @@ public class IndexController {
         model.addAttribute("viewType", "profile");
         return "/index";
     }
+
+    @RequestMapping(value = {"/cruisePort.html"}, method = RequestMethod.GET)
+    public String cruisePort(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("viewType", "cruisePort");
+        return "/index";
+    }
+
+
+    @RequestMapping(value = {"/getCruisePort.json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSonResult<User> getCruisePort(HttpServletRequest request, PagingModel model) {
+        return JSonResult.ofSuccess(cruisePortService.selectByID(-1));
+    }
+
+    @RequestMapping(value = {"/updateCruisePort.json"}, method = RequestMethod.POST)
+    @ResponseBody
+    public JSonResult<User> updateCruisePort(HttpServletRequest request, CruisePort cruisePort) {
+        cruisePortService.update(cruisePort);
+        return JSonResult.ofSuccess("Update is ok");
+    }
+
 
     @RequestMapping(value = {"/getLogUser.json"}, method = RequestMethod.GET)
     @ResponseBody
