@@ -1,7 +1,10 @@
 package com.marinabay.cruise.model;
 
 import com.marinabay.cruise.utils.RequestUtls;
+import org.apache.commons.lang.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -94,5 +97,36 @@ public class Schedules extends GenericModel{
 
     public void setCruiseName(String cruiseName) {
         this.cruiseName = cruiseName;
+    }
+
+    public Date toDate(String departureTimeStr) {
+        if (StringUtils.isNotEmpty(departureTimeStr)) {
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            try {
+                return sf.parse(departureTimeStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    public void setData(int cell, String data){
+        //mapping data here
+        switch (cell){
+            case 0:
+                this.cruiseName = data;
+                break;
+            case 1:
+                this.arrivalTime = toDate(data);
+                break;
+
+            case 2:
+                this.departureTime = toDate(data);
+                break;
+
+            case 4:
+                this.callType = data;
+                break;
+        }
     }
 }

@@ -36,6 +36,7 @@ public class IndexController {
 	public String home(HttpServletRequest request, ModelMap model) {
         User loggedUser = RequestUtls.getLoggedUser(request);
         model.addAttribute("loggedUser", loggedUser);
+        model.addAttribute("viewType", "profile");
         return "/index";
     }
 

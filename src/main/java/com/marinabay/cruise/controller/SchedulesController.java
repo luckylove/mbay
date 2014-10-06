@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.CruiseService;
 import com.marinabay.cruise.service.SchedulesService;
+import com.marinabay.cruise.service.imports.impl.ExcelReader;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class SchedulesController {
@@ -78,7 +80,16 @@ public class SchedulesController {
         return JSonResult.ofSuccess("Delete success");
     }
 
-
+    @RequestMapping(value = "/importSchedules.html", method = RequestMethod.POST)
+    public String importSchedules(FileUploadBean uploadItem) {
+        try {
+            List<Schedules> endResults = ExcelReader.getEndResults(uploadItem.getFile().getInputStream(), uploadItem.getFile().getOriginalFilename());
+            schedulesService.importSchedueles(endResults);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/schedules.html";
+    }
 
 
 

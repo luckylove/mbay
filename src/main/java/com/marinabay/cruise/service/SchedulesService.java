@@ -1,18 +1,18 @@
 package com.marinabay.cruise.service;
 
 import com.google.common.collect.ImmutableMap;
+import com.marinabay.cruise.dao.CruiseDao;
 import com.marinabay.cruise.dao.SchedulesDao;
-import com.marinabay.cruise.model.JSonPagingResult;
-import com.marinabay.cruise.model.PagingModel;
-import com.marinabay.cruise.model.Schedules;
-import com.marinabay.cruise.model.SchelduePagingModel;
+import com.marinabay.cruise.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * User: son.nguyen
@@ -24,6 +24,10 @@ public class SchedulesService extends GenericService<Schedules>{
 
     @Autowired
     private SchedulesDao schedulesDao;
+
+
+    @Autowired
+    private CruiseDao cruiseDao;
 
     @Override
     public SchedulesDao getDao() {
@@ -58,6 +62,22 @@ public class SchedulesService extends GenericService<Schedules>{
         ImmutableMap<String, ? extends Serializable> immutableMap = ImmutableMap.of("startTime", now, "endTime", next, "limit", model.getLimit(), "offset", model.getOffset());
         Long count = schedulesDao.countDashboard(immutableMap);
         return JSonPagingResult.ofSuccess(count, schedulesDao.selectDashboard(immutableMap));
+    }
+
+
+    @Transactional
+    public void importSchedueles(List<Schedules> schedulesList) {
+        for (Schedules schedules : schedulesList) {
+            Cruise byName = cruiseDao.findByName(schedules.getCruiseName().trim());
+            if(byName == null){
+                //create cruise
+                byName = new Cruise();
+                byName.setName(schedules.getCruiseName().trim());
+                cruiseDao.insert(byName);
+            }
+            schedules.setCruiseId(byName.getId());
+            schedulesDao.insert(schedules);
+        }
     }
 
 }

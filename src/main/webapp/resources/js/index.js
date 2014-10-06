@@ -28,7 +28,7 @@ var cruiseApp = angular.module('cruiseApp', ['ui.bootstrap'])
         }
     };
 });
-function AccordionDemoCtrl($scope) {
+function AccordionDemoCtrl($scope, $modal) {
     $scope.oneAtATime = false;
 
     $scope.groups = [
@@ -53,5 +53,28 @@ function AccordionDemoCtrl($scope) {
         isFirstOpen: true,
         isFirstDisabled: false
     };
+
+    $scope.open = function (size) {
+        var modalInstance = $modal.open({
+            templateUrl: 'uploadFile.html',
+            controller: UploadCtrl,
+            size: size,
+            backdrop: 'static',
+            windowClass: 'modal-top',
+            resolve: {
+
+            }
+        });
+    };
 }
+
+var UploadCtrl = function ($scope, $modalInstance, $http) {
+
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
+
+};
 
