@@ -57,7 +57,7 @@ public class IndexController {
     @RequestMapping(value = {"/getCruisePort.json"}, method = RequestMethod.GET)
     @ResponseBody
     public JSonResult<User> getCruisePort(HttpServletRequest request, PagingModel model) {
-        return JSonResult.ofSuccess(cruisePortService.selectByID(-1));
+        return JSonResult.ofSuccess(cruisePortService.selectByID(1));
     }
 
     @RequestMapping(value = {"/updateCruisePort.json"}, method = RequestMethod.POST)
@@ -76,7 +76,9 @@ public class IndexController {
     }
 
     @RequestMapping(value = {"/login.html"}, method = RequestMethod.GET)
-	public String login() {
+	public String login(ModelMap model, String st, String error) {
+        model.addAttribute("st", st);
+        model.addAttribute("error", error);
         return "/login";
     }
 

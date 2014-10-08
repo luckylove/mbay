@@ -17,7 +17,7 @@ angular.module('cruiseApp', []).controller('LoginCtrl', function ($scope) {
         $scope.regForm = false;
     }
 
-    $scope.showLogin();
+    //$scope.showLogin();
 }).directive('focusMe', function($timeout, $parse) {
     return {
         //scope: true,   // optionally create a child scope

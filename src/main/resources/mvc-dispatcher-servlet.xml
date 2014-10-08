@@ -15,6 +15,7 @@
             <mvc:mapping path="/*.html" />
             <mvc:exclude-mapping path="/login.html"/>
             <mvc:exclude-mapping path="/loginSubmit.html"/>
+            <mvc:exclude-mapping path="/addUser.html"/>
             <bean class="com.marinabay.cruise.intercepter.SecurityInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>

@@ -129,6 +129,25 @@ public class UserController {
         }
     }
 
+
+    @RequestMapping(value = {"/addUser.html"}, method = RequestMethod.POST)
+    public String registerUser(HttpServletRequest request, ModelMap model, User user) {
+        if (StringUtils.isNotEmpty(user.getEmail()) || StringUtils.isNotEmpty(user.getUserName())) {
+            if (userService.findUserByEmail(user.getEmail()) != null) {
+                return "redirect:/login.html?st=register&error=1";
+            } else {
+                user.setRole(ROLE.USER);
+                user.setUserType(USERTYPE.WEB);
+                userService.insert(user);
+                return "redirect:/login.html";
+            }
+        } else {
+            model.addAttribute("st", "register");
+            model.addAttribute("error", "Some fields is required");
+            return "redirect:/login.html?st=register&error=2";
+        }
+    }
+
     @RequestMapping(value = {"/listUser.json"}, method = RequestMethod.GET)
     @ResponseBody
     public JSonPagingResult<User> listUser(HttpServletRequest request, PagingModel model) {
