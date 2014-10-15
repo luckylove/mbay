@@ -20,7 +20,26 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             }
         });
     };
+    $scope.openActive = function (size, userForm) {
+        var modalInstance = $modal.open({
+            templateUrl: 'listActiveUser.html',
+            controller: ModalActiveInstanceCtrl,
+            size: size,
+            backdrop: 'static',
+            windowClass: 'modal-top',
+            resolve: {
+                userForm: function () {
+                    return userForm;
+                }
+            }
+        });
+    };
     $scope.message = {};
+    $scope.selectType = function($event, id, name){
+        $scope.message.sendType = id;
+        $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
+    }
+
     $scope.selectUser = function($event, id, name){
         $scope.message.selectedUserId = id;
         if(id == '-1'){
@@ -141,6 +160,73 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
 
 };
 
+var ModalActiveInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
+    //attach reference here
+    var prSscope = angular.element('[ng-controller=UserGroupCtrl]').scope();
+    prSscope.modalActiveInstanceCtrlScope = $scope;
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.addUser = function () {
+        var selected = $('#userTable').bootstrapTable('getSelections');
+        var ids = [];
+        if(selected && selected.length >0) {
+            $.each(selected, function(idx, row){
+                ids.push(row.id);
+            });
+            prSscope.addSelectedUser(ids);
+            $scope.cancel();
+        } else {
+            bootbox.alert("Please select user");
+        }
+
+    };
+
+    $scope.fileter = function () {
+        $('#userActiveTable').bootstrapTable('refresh');
+    };
+
+    $scope.filterItemSelect = function($event, id, name){
+        $scope.filterId = id;
+        $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
+        //trigger refesh table
+        $('#userTable').bootstrapTable('refresh');
+    }
+
+    $scope.$watch(
+        function () { return document.getElementById('startDate').innerHTML },
+        function(newval, oldval){
+            $('#startDate').datetimepicker({
+                showToday: true
+            });
+            $("#startDate").on("dp.change",function (e) {
+                $('#endDate').data("DateTimePicker").setMinDate(e.date);
+                $scope.startDate = e.date.format('YYYY/MM/DD');
+            });
+        }, true);
+
+    $scope.$watch(
+        function () { return document.getElementById('endDate').innerHTML },
+        function(newval, oldval){
+            $('#endDate').datetimepicker({
+                showToday: true
+            });
+            $("#endDate").on("dp.change",function (e) {
+                $scope.endDate = e.date.format('YYYY/MM/DD');
+                $('#startDate').data("DateTimePicker").setMaxDate(e.date);
+            });
+        }, true);
+
+    //init table
+    setTimeout(function(){$('#userActiveTable').bootstrapTable({
+        url: 'listTopActiveUser.json'
+    })}, 100);
+
+
+
+};
+
 function operateFormatter(value, row, index) {
     return [
 
@@ -185,12 +271,24 @@ function queryParams(params) {
     };
 }
 
+function  queryActiveUserParams(params) {
+    var activeScope = angular.element('[ng-controller=UserGroupCtrl]').scope().modalActiveInstanceCtrlScope;
+    return {
+        limit: params.pageSize,
+        offset: params.pageSize * (params.pageNumber - 1),
+        search: params.searchText,
+        name: params.sortName,
+        order: params.sortOrder,
+        startDate: activeScope.startDate,
+        endDate: activeScope.endDate
+    };
+}
+
 function queryUserParams(params) {
     var scope = angular.element('[ng-controller=UserGroupCtrl]').scope().modalInstanceCtrlScope;
     return {
         limit: params.pageSize,
         offset: params.pageSize * (params.pageNumber - 1),
-        search: params.searchText,
         name: params.sortName,
         order: params.sortOrder,
         filterId: scope.filterId

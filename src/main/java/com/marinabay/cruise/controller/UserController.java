@@ -213,6 +213,12 @@ public class UserController {
         return activeUserService.list(model);
     }
 
+    @RequestMapping(value = {"/listTopActiveUser.json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSonPagingResult<ActiveUser> listTopActiveUser(HttpServletRequest request, ActivePagingModel model) {
+        return activeUserService.listByGroup(model);
+    }
+
 
 
 }

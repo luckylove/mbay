@@ -32,7 +32,7 @@ public class IndexController {
     private CruisePortService cruisePortService;
 
 
-	@RequestMapping(value = {"/", "/index.html"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/index.html"}, method = RequestMethod.GET)
 	public String home(HttpServletRequest request, ModelMap model) {
         User loggedUser = RequestUtls.getLoggedUser(request);
         model.addAttribute("loggedUser", loggedUser);
@@ -115,6 +115,8 @@ public class IndexController {
         model.addAttribute("viewType", "activeUser");
         return "/index";
     }
+
+
 
 
 

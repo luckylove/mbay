@@ -37,9 +37,11 @@
                 <div id="custem-toolbar" class="aa">
                     <div class="row" >
                         <div class="col-xs-8">
+                            #if("$!loggedUser.role" == "ADMIN")
                             <button type="button" class="btn btn-primary" ng-click="open()">Add New</button>
                             <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
-                            <div class="btn-group" id="userGroupFilter">
+                            #end
+                                <div class="btn-group" id="userGroupFilter">
                                 <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Filter by cruise<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a ng-click="filterItemSelect($event, -1, 'All')" href="#">All</a></li>
@@ -72,7 +74,9 @@
                         <th data-field="departureTimeStr" data-align="center" data-sortable="true">Depature time</th>
                         <th data-field="passengers" data-sortable="true">Passengers</th>
                         <th data-field="callType" data-sortable="true">Call type</th>
+                        #if("$!loggedUser.role" == "ADMIN")
                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                        #end
                     </tr>
                     </thead>
                 </table>

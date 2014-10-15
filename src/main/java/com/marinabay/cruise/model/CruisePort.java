@@ -9,10 +9,19 @@ public class CruisePort extends GenericModel{
 
     private String name;
     private String address;
+    private String aboutUs;
     private String longti;
     private String lati;
 
     public CruisePort() {
+    }
+
+    public String getAboutUs() {
+        return aboutUs;
+    }
+
+    public void setAboutUs(String aboutUs) {
+        this.aboutUs = aboutUs;
     }
 
     public String getName() {

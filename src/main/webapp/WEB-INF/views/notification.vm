@@ -14,14 +14,22 @@
 
                     <div class="form-group">
                         <label for="inputEmail" class="control-label col-xs-3"></label>
-                        <div class="col-xs-3 btn-group">
+                        <div class="col-xs-2 btn-group">
                             <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select by group <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a ng-click="selectUser($event, -1, 'All')" href="#">All</a></li>
                                 <li><a ng-click="open('lg')" href="#">Select User</a></li>
+                                <li><a ng-click="openActive('lg')" href="#">Select Active User</a></li>
                                 #foreach($item in $userGroup)
                                     <li><a ng-click="selectUser($event, $item.id, '$item.name')" href="#">$item.name</a></li>
                                 #end
+                            </ul>
+                        </div>
+                        <div class="col-xs-2 btn-group">
+                            <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Send type <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a ng-click="selectType($event, 'SMS', 'SMS')" href="#">SMS</a></li>
+                                <li><a ng-click="selectType($event, 'WEB', 'WEB')" href="#">WEB</a></li>
                             </ul>
                         </div>
                     </div>
@@ -104,6 +112,53 @@
                 <th data-field="mobile" data-align="center" data-sortable="true">Phone</th>
                 <th data-field="taxiLicense" data-sortable="true">License</th>
                 <th data-field="userGroupView" data-sortable="true">User Group</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="panel-footer clearfix">
+            <div class="pull-right">
+                <button class="btn btn-primary" type="button" ng-click="addUser();">Add</button>
+                <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- Active user -->
+
+<script type="text/ng-template" id="listActiveUser.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Select Active user</h3>
+    </div>
+    <div class="modal-body">
+        <div id="custem-toolbar1">
+            <div class="col-xs-3">
+                <div class='input-group date' id='startDate'>
+                    <input type="text"  ng-model="userForm.arrivalTime" class="form-control" id="inputName" required data-date-format="YYYY/MM/DD">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class='input-group date' id='endDate'>
+                    <input type="text"  ng-model="userForm.arrivalTime" class="form-control" id="inputName" required data-date-format="YYYY/MM/DD">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="button" ng-click="fileter();">Filter</button>
+        </div>
+        <table id="userActiveTable" data-height="350" data-side-pagination="server" data-pagination="true"    data-toolbar="#custem-toolbar1"
+               data-page-list="[5, 10, 20, 50, 100, 200]" data-search="false" data-query-params="queryActiveUserParams">
+            <thead>
+            <tr>
+             <th data-field="state" data-checkbox="true"></th>
+                <th data-field="id" data-align="right" data-sortable="false">ID</th>
+                <th data-field="userName" data-align="center" data-sortable="false">Name</th>
+                <th data-field="userLicense" data-sortable="false">License</th>
+                <th data-field="activeCount" data-sortable="true">Active Count</th>
+                <th data-field="activeDateStr" data-sortable="false">Date</th>
+            #*<th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>*#
             </tr>
             </thead>
         </table>

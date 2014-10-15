@@ -1,0 +1,23 @@
+<!doctype html>
+<html ng-app="cruiseApp">
+<head>
+    <script src="resources/js/angular-1.2.10.js"></script>
+    <script src="resources/js/ui-bootstrap-tpls-0.11.0.js"></script>
+    <link href="resources/css/bootstrap.css" rel="stylesheet">
+    <link href="resources/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="resources/css/index.css" rel="stylesheet">
+    <link href="resources/css/login.css" rel="stylesheet">
+
+
+    <script src="resources/js/login.js"></script>
+</head>
+<body>
+<div id="wrap">
+      #parse("/nav.vm")
+    <div class="container" >
+        Error page
+    </div>
+</div>
+    #parse("/footer.vm")
+</body>
+</html>

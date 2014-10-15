@@ -36,6 +36,10 @@ public class ActiveUserService extends GenericService<ActiveUser>{
         return JSonPagingResult.ofSuccess(count, activeUserDao.select(model));
     }
 
+    public JSonPagingResult<ActiveUser> listByGroup(PagingModel model) {
+        Long count = activeUserDao.countTopActive(model);
+        return JSonPagingResult.ofSuccess(count, activeUserDao.topActiveUser(model));
+    }
 
     public ActiveUser selectByDate(Long id) {
         LocalDate lc = new LocalDate();
