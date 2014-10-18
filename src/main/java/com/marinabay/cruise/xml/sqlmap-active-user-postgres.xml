@@ -93,6 +93,12 @@
         <if test="startDate !='' and startDate != null and endDate !=null and endDate !=''" >
             <![CDATA[AND ug.active_date::date >= to_date(#{startDate}, 'YYYY/MM/DD') and  ug.active_date::date <= to_date(#{endDate}, 'YYYY/MM/DD')]]>
         </if>
+        <if test="notInIds != null and notInIds != ''">
+            and us.id not in
+            <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
+                #{it}
+            </foreach>
+        </if>
          group by  us.user_name, us.taxi_license, us.id) as tmp
      </select>
     <select id="topActiveUser" resultMap="mapResult" parameterType="pagingModel" >
@@ -102,6 +108,12 @@
         where 1=1
         <if test="startDate !='' and startDate != null and endDate !=null and endDate !=''" >
             <![CDATA[AND ug.active_date::date >= to_date(#{startDate}, 'YYYY/MM/DD') and  ug.active_date::date <= to_date(#{endDate}, 'YYYY/MM/DD')]]>
+        </if>
+        <if test="notInIds != null and notInIds != ''">
+            and us.id not in
+            <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
+                #{it}
+            </foreach>
         </if>
         group by  us.user_name, us.taxi_license, us.id
         order by active_count desc

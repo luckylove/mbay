@@ -16,7 +16,10 @@ public interface UserDao extends GenericDao<User> {
 
     public List<User> selectByLicense(String license) ;
 
-    public List<Long> selectAllByGroup(Long groupId) ;
+    public List<User> selectAllByGroup(Long groupId) ;
+
+    public List<User> loadAllUserByIds(List<Long> userIds) ;
+
     public List<Long> selectAllId() ;
 
 }

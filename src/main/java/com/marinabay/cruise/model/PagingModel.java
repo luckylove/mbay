@@ -14,6 +14,7 @@ public class PagingModel {
     private String order;
     private Integer filterId;
 
+
     public Integer getFilterId() {
         return filterId;
     }

@@ -15,8 +15,17 @@ public class Notification extends GenericModel{
     private String userIds;
     private Integer userCnt;
     private String type;
+    private String sendType;
 
     public Notification() {
+    }
+
+    public String getSendType() {
+        return sendType;
+    }
+
+    public void setSendType(String sendType) {
+        this.sendType = sendType;
     }
 
     public String getUserIds() {

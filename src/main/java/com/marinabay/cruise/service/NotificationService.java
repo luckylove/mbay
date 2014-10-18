@@ -6,10 +6,16 @@ import com.marinabay.cruise.dao.UserDao;
 import com.marinabay.cruise.model.JSonPagingResult;
 import com.marinabay.cruise.model.Notification;
 import com.marinabay.cruise.model.PagingModel;
+import com.marinabay.cruise.model.User;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * User: son.nguyen
@@ -24,6 +30,21 @@ public class NotificationService extends GenericService<Notification>{
 
     @Autowired
     private UserDao userDao;
+
+    @Value("${cruise.sms.user}")
+    protected String username ;
+
+    @Value("${cruise.sms.pass}")
+    protected String password ;
+
+    @Value("${cruise.sms.port}")
+    protected String port ;
+
+    @Value("${cruise.sms.url}")
+    protected String url ;
+
+
+    private ExecutorService exeService = Executors.newFixedThreadPool(10);
 
     @Override
     public NotificationDao getDao() {
@@ -41,19 +62,38 @@ public class NotificationService extends GenericService<Notification>{
     }
 
 
-    public void insertAndSend(Notification message) {
-        if ("all".equals(message.getType())) {
-            List<Long> ids = userDao.selectAllId();
-            message.setUserCnt(ids.size());
-        } else if ("group".equals(message.getType())) {
-            List<Long> ids = userDao.selectAllByGroup(Long.valueOf(message.getUserIds()));
-            message.setUserCnt(ids.size());
-        } else {
-            List<String> ids = Splitter.on(',').omitEmptyStrings().splitToList(message.getUserIds());
-            message.setUserCnt(ids.size());
+    public void insertAndSend(final Notification message) {
+        if (StringUtils.isNotEmpty(message.getMessage())) {
+            List<String> idstr = Splitter.on(',').omitEmptyStrings().splitToList(message.getUserIds());
+            List<Long> userIDs = new ArrayList<Long>(idstr.size());
+            for (String userID : idstr) {
+                userIDs.add(Long.valueOf(userID));
+            }
+            int sendCnt = 0;
+            final List<User> users = userDao.loadAllUserByIds(userIDs);
+            if ("WEB".equals(message.getSendType())) {
+                for (User user : users) {
+
+                }
+            } else if ("SMS".equals(message.getSendType())) {
+                for (User user : users) {
+                    if (StringUtils.isNotEmpty(user.getMobile())) {
+
+                    }
+                }
+            }
+            message.setUserCnt(userIDs.size());
+            notificationDao.insert(message);
         }
-        notificationDao.insert(message);
         //should be insert table ??
+
+    }
+
+    private void sendToDB(User user, String messgage){
+
+    }
+
+    private void sendToSMS(User user, String messgage){
 
     }
 

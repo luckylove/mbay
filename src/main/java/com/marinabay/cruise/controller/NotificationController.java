@@ -1,13 +1,10 @@
 package com.marinabay.cruise.controller;
 
 import com.google.common.base.Splitter;
-import com.marinabay.cruise.model.JSonPagingResult;
-import com.marinabay.cruise.model.JSonResult;
-import com.marinabay.cruise.model.Notification;
-import com.marinabay.cruise.model.PagingModel;
-import com.marinabay.cruise.service.CruiseService;
+import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.NotificationService;
 import com.marinabay.cruise.service.UserGroupService;
+import com.marinabay.cruise.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class NotificationController {
@@ -28,7 +26,7 @@ public class NotificationController {
     private final String VIEW_TYPE = "viewType";
 
     @Autowired
-    private CruiseService cruiseService;
+    private UserService userService;
 
 
     @Autowired
@@ -83,6 +81,12 @@ public class NotificationController {
             }
         }
         return JSonResult.ofSuccess("Delete success");
+    }
+
+    @RequestMapping(value = {"/listUserOfGroup.json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List<User> listUser(HttpServletRequest request, Long groupId) {
+        return userService.selectAllByGroup(groupId);
     }
 
 

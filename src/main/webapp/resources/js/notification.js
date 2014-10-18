@@ -34,25 +34,35 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             }
         });
     };
-    $scope.message = {};
+    $scope.message = {sendType: 'WEB'};
     $scope.selectType = function($event, id, name){
         $scope.message.sendType = id;
         $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
     }
 
     $scope.selectUser = function($event, id, name){
-        $scope.message.selectedUserId = id;
+        //$scope.message.selectedUserId = id;
         if(id == '-1'){
-            $scope.message.type = "all";
+            //$scope.message.type = "all";
         } else {
-            $scope.message.type = "group";
+            //$scope.message.type = "group";
+            //call ajax to get list users
+            $http({
+                method: "get",
+                url: "listUserOfGroup.json?groupId=" + id
+            }).success(function(data, status, headers, config) {
+                    $scope.addSelectedUser(data);
+            });
         }
         $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
     }
-
+    $scope.message.selectedUserId = {};
     $scope.addSelectedUser = function(ids){
         $scope.message.type = "users";
-        $scope.message.selectedUserId = ids.join(",");
+        $.each(ids, function(idx, row){
+            $('#inputUserTag').tagsinput('add',  row);
+            $scope.message.selectedUserId[row.id] = row.id;
+        });
 
     }
 
@@ -67,12 +77,13 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
                 url: "sendMessage.json",
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 data: $.param({
-                    userIds: $scope.message.selectedUserId,
+                    userIds: $scope.serializeUserId(),
                     message: $scope.message.message,
-                    type: $scope.message.type
+                   // type: $scope.message.type,
+                    sendType: $scope.message.sendType
                 })
             }).success(function(data, status, headers, config) {
-                    console.log(data);
+                    //console.log(data);
                     if(!data.success){
                         bootbox.alert(data.errorMsg);
                     } else {
@@ -120,6 +131,19 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
         }
     };
 
+    $scope.serializeUserId = function(){
+        var ids = [];
+        $.each($scope.message.selectedUserId, function(key, val){
+            ids.push(val);
+        })
+        return ids.join(",");
+    }
+
+    $('#inputUserTag').tagsinput({
+        itemValue: 'id',
+        itemText: 'userName'
+    });
+
 });
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
@@ -132,17 +156,12 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
 
     $scope.addUser = function () {
         var selected = $('#userTable').bootstrapTable('getSelections');
-        var ids = [];
         if(selected && selected.length >0) {
-            $.each(selected, function(idx, row){
-                ids.push(row.id);
-            });
-            prSscope.addSelectedUser(ids);
+            prSscope.addSelectedUser(selected);
             $scope.cancel();
         } else {
             bootbox.alert("Please select user");
         }
-
     };
 
     $scope.filterItemSelect = function($event, id, name){
@@ -151,10 +170,9 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
         //trigger refesh table
         $('#userTable').bootstrapTable('refresh');
     }
-
     //init table
     setTimeout(function(){$('#userTable').bootstrapTable({
-        url: 'listUser.json'
+        url: 'listUser.json?notInIds='+ prSscope.serializeUserId()
     })}, 100);
 
 
@@ -169,13 +187,9 @@ var ModalActiveInstanceCtrl = function ($scope, $modalInstance, $http, userForm)
     };
 
     $scope.addUser = function () {
-        var selected = $('#userTable').bootstrapTable('getSelections');
-        var ids = [];
+        var selected = $('#userActiveTable').bootstrapTable('getSelections');
         if(selected && selected.length >0) {
-            $.each(selected, function(idx, row){
-                ids.push(row.id);
-            });
-            prSscope.addSelectedUser(ids);
+            prSscope.addSelectedUser(selected);
             $scope.cancel();
         } else {
             bootbox.alert("Please select user");
@@ -183,16 +197,10 @@ var ModalActiveInstanceCtrl = function ($scope, $modalInstance, $http, userForm)
 
     };
 
-    $scope.fileter = function () {
+    $scope.filter = function () {
         $('#userActiveTable').bootstrapTable('refresh');
     };
 
-    $scope.filterItemSelect = function($event, id, name){
-        $scope.filterId = id;
-        $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
-        //trigger refesh table
-        $('#userTable').bootstrapTable('refresh');
-    }
 
     $scope.$watch(
         function () { return document.getElementById('startDate').innerHTML },
@@ -220,7 +228,7 @@ var ModalActiveInstanceCtrl = function ($scope, $modalInstance, $http, userForm)
 
     //init table
     setTimeout(function(){$('#userActiveTable').bootstrapTable({
-        url: 'listTopActiveUser.json'
+        url: 'listTopActiveUser.json?notInIds='+ prSscope.serializeUserId()
     })}, 100);
 
 
@@ -290,6 +298,7 @@ function queryUserParams(params) {
         limit: params.pageSize,
         offset: params.pageSize * (params.pageNumber - 1),
         name: params.sortName,
+        search: params.searchText,
         order: params.sortOrder,
         filterId: scope.filterId
     };

@@ -58,4 +58,8 @@ public class UserService extends GenericService<User>{
     public List<User> selectByLicense(String license) {
         return getDao().selectByLicense(license);
     }
+
+    public List<User> selectAllByGroup(Long groupId) {
+        return userDao.selectAllByGroup(groupId);
+    }
 }

@@ -11,10 +11,8 @@ import java.util.List;
  * Date: 9/24/14
  * Time: 10:29 PM
  */
-public class ActivePagingModel extends PagingModel{
+public class UserPagingModel extends PagingModel {
 
-    private String startDate;
-    private String endDate;
 
     private String notInIds;
 
@@ -36,21 +34,5 @@ public class ActivePagingModel extends PagingModel{
 
     public void setNotInIds(String notInIds) {
         this.notInIds = notInIds;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 }

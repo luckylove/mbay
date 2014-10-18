@@ -34,11 +34,24 @@
         <choose>
             <when test="filterId != null and filterId > 0">
                 and us.user_group_id = #{filterId}
+                <if test="notInIds != null and notInIds != ''">
+                    and us.id not in
+                    <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
+                        #{it}
+                    </foreach>
+                </if>
             </when>
             <otherwise>
                 <if test="search != null and search != ''" >
                     and (user_name like '%' || #{search} || '%' or address like '%' || #{search} || '%' or mobile like '%' || #{search} || '%'
                     or taxi_license like '%' || #{search} || '%' or email like '%' || #{search} || '%')
+                </if>
+
+                <if test="notInIds != null and notInIds != ''">
+                    and us.id not in
+                    <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
+                        #{it}
+                    </foreach>
                 </if>
             </otherwise>
         </choose>
@@ -51,11 +64,23 @@
       <choose>
           <when test="filterId != null and filterId > 0">
             and us.user_group_id = #{filterId}
+              <if test="notInIds != null and notInIds != ''">
+                  and us.id not in
+                  <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
+                      #{it}
+                  </foreach>
+              </if>
           </when>
           <otherwise>
               <if test="search != null and search != ''" >
                   and (user_name like '%' || #{search} || '%' or address like '%' || #{search} || '%' or mobile like '%' || #{search} || '%'
                   or taxi_license like '%' || #{search} || '%' or email like '%' || #{search} || '%')
+              </if>
+              <if test="notInIds != null and notInIds != ''">
+                  and us.id not in
+                  <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
+                      #{it}
+                  </foreach>
               </if>
           </otherwise>
       </choose>
@@ -161,8 +186,19 @@
     </select>
 
     <select id="selectAllByGroup" resultMap="userResultMap" parameterType="long">
-        select  id
+        select  *
         from users us
         where 1=1  and us.user_group_id = #{value}
+    </select>
+
+    <select id="loadAllUserByIds" resultMap="userResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List" />
+    from users us
+    where 1=1
+        and us.id in
+        <foreach collection="userIds" item="it" separator="," open="("  close=")">
+            #{it}
+        </foreach>
     </select>
 </mapper>

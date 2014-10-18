@@ -150,7 +150,7 @@ public class UserController {
 
     @RequestMapping(value = {"/listUser.json"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSonPagingResult<User> listUser(HttpServletRequest request, PagingModel model) {
+    public JSonPagingResult<User> listUser(HttpServletRequest request, UserPagingModel model) {
         return userService.list(model);
     }
 
