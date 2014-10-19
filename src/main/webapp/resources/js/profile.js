@@ -5,7 +5,7 @@
  * Time: 12:25 PM
  * To change this template use File | Settings | File Templates.
  */
-var addModelURL = "addUser.json";
+var addModelURL = "updateProfile.json";
 
 cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
     $http({
@@ -18,11 +18,20 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             $scope.userForm = data.result;
             delete  $scope.userForm['regDate'];
             delete  $scope.userForm['modDate'];
+            if($scope.userForm.nricNo == '0') {
+                $scope.userForm.nricNo = '';
+            }
         }
     }).
     error(function(data, status, headers, config) {
         alert("have error")
     });
+
+    $scope.selectTaxi = function($event, id, name){
+        $scope.userForm.taxiId = id;
+        $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
+    }
+
 
 
     $scope.submit = function (form) {
@@ -37,7 +46,8 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
                     if(!data.success){
                         bootbox.alert(data.errorMsg);
                     } else {
-                        bootbox.alert("Your  profile is updated");
+                       // bootbox.alert("Your  profile is updated");
+                        document.location.reload();
                     }
                 }).
                 error(function(data, status, headers, config) {

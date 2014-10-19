@@ -5,6 +5,7 @@ import com.marinabay.cruise.model.JSonResult;
 import com.marinabay.cruise.model.PagingModel;
 import com.marinabay.cruise.model.User;
 import com.marinabay.cruise.service.CruisePortService;
+import com.marinabay.cruise.service.TaxiService;
 import com.marinabay.cruise.service.UserService;
 import com.marinabay.cruise.utils.RequestUtls;
 import org.apache.commons.lang.StringUtils;
@@ -31,12 +32,16 @@ public class IndexController {
     @Autowired
     private CruisePortService cruisePortService;
 
+    @Autowired
+    private TaxiService taxiService;
+
 
 	@RequestMapping(value = {"/index.html"}, method = RequestMethod.GET)
 	public String home(HttpServletRequest request, ModelMap model) {
         User loggedUser = RequestUtls.getLoggedUser(request);
         model.addAttribute("loggedUser", loggedUser);
         model.addAttribute("viewType", "profile");
+        model.addAttribute("taxis", taxiService.listAll());
         return "/index";
     }
 
@@ -44,6 +49,7 @@ public class IndexController {
     public String profile(HttpServletRequest request, ModelMap model) {
         model.addAttribute("loggedUser", RequestUtls.getLoggedUser(request));
         model.addAttribute("viewType", "profile");
+        model.addAttribute("taxis", taxiService.listAll());
         return "/index";
     }
 
@@ -73,6 +79,18 @@ public class IndexController {
     public JSonResult<User> getLogUser(HttpServletRequest request, PagingModel model) {
         User loggedUser = RequestUtls.getLoggedUser(request);
         return JSonResult.ofSuccess(userService.selectByID(loggedUser.getId()));
+    }
+
+    @RequestMapping(value = {"/updateProfile.json"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public JSonResult updateProfile(HttpServletRequest request, User user) {
+        if (user.getId() != null && user.getId() > 0) {
+            userService.update(user);
+            RequestUtls.logged(request, user);
+            return JSonResult.ofSuccess("Update user success");
+        } else {
+            return JSonResult.ofError("Some of fields can not empty");
+        }
     }
 
     @RequestMapping(value = {"/login.html"}, method = RequestMethod.GET)

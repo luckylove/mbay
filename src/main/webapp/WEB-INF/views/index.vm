@@ -19,6 +19,13 @@
     <script src="resources/js/bootstrap-datetimepicker.min.js"></script>
     <script src="resources/js/bootstrap-tagsinput.js"></script>
     <script src="resources/js/index.js"></script>
+    <script type="text/javascript">
+        var isNric = '${loggedUser.nricNo}';
+        if(isNric === '0' && document.location.href.indexOf('profile.html') < 0 && document.location.href.indexOf('index.html') < 0 ){
+            alert('This is the first login , You should update your nric number');
+            document.location.href = 'profile.html';
+        }
+    </script>
 </head>
 <body>
 <div id="wrap">
@@ -28,7 +35,7 @@
             <div class="col-sm-3">
                 <div ng-controller="AccordionDemoCtrl">
                     <accordion close-others="oneAtATime">
-                        <accordion-group heading="User Management" is-open="true">
+                        <accordion-group heading="User Management" is-open="true" >
                             #if("$!loggedUser.role" == "ADMIN")
                             <p>Here you can add, delete, edit user or change  your profile </p>
                             #end
@@ -107,6 +114,7 @@
         </form>
     </div>
 </script>
+
 
 #parse("/footer.vm")
 </body>

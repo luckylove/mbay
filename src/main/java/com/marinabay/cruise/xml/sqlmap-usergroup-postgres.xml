@@ -27,7 +27,7 @@
   <select id="select" resultMap="mapResult" parameterType="pagingModel" >
     select
     <include refid="Base_Column_List" /> ,
-      (select count(us.id) from users us where us.user_group_id is not null and  us.user_group_id = ug.id group by ug.id) as userCount
+      (select count(usg.group_id) from user_group_user usg where usg.group_id = ug.id) as userCount
     from user_group ug
       where 1=1
     <if test="search !=null and search != ''" >

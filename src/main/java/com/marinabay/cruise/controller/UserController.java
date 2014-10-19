@@ -7,6 +7,7 @@ import com.marinabay.cruise.constant.ROLE;
 import com.marinabay.cruise.constant.USERTYPE;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.ActiveUserService;
+import com.marinabay.cruise.service.TaxiService;
 import com.marinabay.cruise.service.UserGroupService;
 import com.marinabay.cruise.service.UserService;
 import org.apache.commons.lang.StringUtils;
@@ -37,8 +38,10 @@ public class UserController {
     @Autowired
     private ActiveUserService activeUserService;
 
+    @Autowired
+    private TaxiService taxiService;
 
-	@RequestMapping(value = {"/userGroup.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/userGroup.html"}, method = RequestMethod.GET)
 	public String userGroup(HttpServletRequest request, ModelMap model) {
         model.addAttribute(VIEW_TYPE, "userGroup");
         return "/index";
@@ -103,6 +106,7 @@ public class UserController {
     public String userList(HttpServletRequest request, ModelMap model) {
         model.addAttribute(VIEW_TYPE, "userList");
         //load all user group
+        model.addAttribute("taxis", taxiService.listAll());
         model.addAttribute("userGroup", userGroupService.listAlll(new PagingModel()));
         return "/index";
     }

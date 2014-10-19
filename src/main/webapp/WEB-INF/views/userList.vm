@@ -11,9 +11,10 @@
                     <div class="row" ng-controller="UserGroupCtrl">
                         <div class="col-xs-12">
                             <button type="button" class="btn btn-primary" ng-click="open()">Add New</button>
+                            <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
                             <div class="btn-group" dropdown is-open="status.isopen">
                                 <button type="button" class="btn btn-primary dropdown-toggle" ng-disabled="disabled">
-                                   Assign <span class="caret"></span>
+                                   Assign group <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     #foreach($item in $userGroup)
@@ -21,11 +22,12 @@
                                     #end
                                 </ul>
                             </div>
-                            <button type="button" class="btn btn-danger" ng-click="delete()">Delete</button>
+
                             <div class="btn-group" id="userGroupFilter">
                                 <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Filter by group<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a ng-click="filterItemSelect($event, -1, 'All')" href="#">All</a></li>
+                                    <li><a ng-click="filterItemSelect($event, 0, 'Not Assign')" href="#">Not Assign</a></li>
                                     #foreach($item in $userGroup)
                                         <li><a ng-click="filterItemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
                                     #end
@@ -40,10 +42,10 @@
                     <tr>
                         <th data-field="state" data-checkbox="true"></th>
                         <th data-field="userName" data-align="center" data-sortable="true">Name</th>
-                        <th data-field="email" data-align="center" data-sortable="true">Email</th>
+                        <th data-field="userType" data-align="center" data-sortable="true">SignUp</th>
                         <th data-field="mobile" data-align="center" data-sortable="true">Phone</th>
                         <th data-field="taxiLicense" data-sortable="true">License</th>
-                        <th data-field="userGroupView" data-sortable="true">User Group</th>
+                        <th data-field="nricNo" data-sortable="true">NRIC</th>
                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                     </tr>
                     </thead>
@@ -59,7 +61,7 @@
     </div>
     <div class="modal-body">
         <form class="form-horizontal" name="form" ng-submit="submit(form)" novalidate>
-            <div class="form-group">
+            #*<div class="form-group">
                 <label for="inputName" class="control-label col-xs-3">User group</label>
                 <div class="col-xs-9">
                     <div class="btn-group" id="userGroupDropdown">
@@ -71,7 +73,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>*#
             <div class="form-group">
                 <label for="inputName" class="control-label col-xs-3">User name</label>
                 <div class="col-xs-9">
@@ -80,33 +82,51 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputEmail" class="control-label col-xs-3">Email</label>
+                <label for="inputEmail" class="control-label col-xs-3">Name</label>
                 <div class="col-xs-9">
-                    <input type="email" name="user111"  ng-model="userForm.email" class="form-control" id="inputEmail" placeholder="email" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputMobile" class="control-label col-xs-3">Phone</label>
-                <div class="col-xs-9">
-                    <input type="text" name="user111"  ng-model="userForm.mobile" class="form-control" id="inputMobile" placeholder="Phone">
+                    <input type="text" name="user111"  ng-model="userForm.name" class="form-control" id="inputEmail" placeholder="name" >
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputPass"  class="control-label col-xs-3">Password</label>
                 <div class="col-xs-9">
-                    <input type="password" name="pass111"  ng-model="userForm.password" class="form-control" id="inputPass" placeholder="password">
+                    <input type="password" name="pass111"  ng-model="userForm.password" class="form-control" id="inputPass" placeholder="password" required>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="nricNo" class="control-label col-xs-3">NRIC</label>
+                <div class="col-xs-9">
+                    <input type="text" name="user111"  ng-model="userForm.nricNo" class="form-control" id="nricNo" placeholder="nric no" required >
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputMobile" class="control-label col-xs-3">Contact No</label>
+                <div class="col-xs-9">
+                    <input type="text" name="user111"  ng-model="userForm.mobile" class="form-control" id="inputMobile" placeholder="8 digit mobile no" ng-pattern="/^\d{8}$/g" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="uiNum" class="control-label col-xs-3">UI Number</label>
+                <div class="col-xs-9">
+                    <input type="text" name="user111"  ng-model="userForm.uiNum" class="form-control" id="uiNum" placeholder="10 digit ui no"  ng-pattern="/^\d{10}$/g" required>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="inputTaxi" class="control-label col-xs-3">Taxi License</label>
                 <div class="col-xs-9">
-                    <input type="text"  ng-model="userForm.taxiLicense" class="form-control" id="inputTaxi" placeholder="taxi license">
+                    <input type="text"  ng-model="userForm.taxiLicense" class="form-control" id="inputTaxi" placeholder="taxi license" required>
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputAddr" class="control-label col-xs-3">Address</label>
-                <div class="col-xs-9">
-                    <textarea class="form-control"  ng-model="userForm.address" id="inputAddr" placeholder="Address"></textarea>
+                <label for="inputTaxi" class="control-label col-xs-3">Taxi Company</label>
+                <div class="col-xs-2 btn-group">
+                    <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{userForm.taxiCompany}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        #foreach($item in $taxis)
+                            <li><a ng-click="selectTaxi($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                        #end
+                    </ul>
                 </div>
             </div>
             <div class="form-group">

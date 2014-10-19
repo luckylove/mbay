@@ -21,6 +21,7 @@
         <typeAlias alias="notificationModel" type="com.marinabay.cruise.model.Notification"/>
         <typeAlias alias="cruisePortModel" type="com.marinabay.cruise.model.CruisePort"/>
         <typeAlias alias="taxiModel" type="com.marinabay.cruise.model.Taxi"/>
+        <typeAlias alias="userGroupUser" type="com.marinabay.cruise.model.UserGroupUser"/>
 
     </typeAliases>
 </configuration>

@@ -11,6 +11,9 @@ import com.marinabay.cruise.constant.USERTYPE;
 public class User extends GenericModel{
 
     private String userName;
+    private String name;
+    private String nricNo;
+    private String uiNum;
     private String email;
     private String password;
     private ROLE role;
@@ -18,7 +21,48 @@ public class User extends GenericModel{
     private String taxiLicense;
     private String address;
     private USERTYPE userType;
-    private Long userGroupId;
+    private Long taxiId;
+    private String taxiCompany;
+
+    public String getTaxiCompany() {
+        return taxiCompany;
+    }
+
+    public void setTaxiCompany(String taxiCompany) {
+        this.taxiCompany = taxiCompany;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNricNo() {
+        return nricNo;
+    }
+
+    public void setNricNo(String nricNo) {
+        this.nricNo = nricNo;
+    }
+
+    public String getUiNum() {
+        return uiNum;
+    }
+
+    public void setUiNum(String uiNum) {
+        this.uiNum = uiNum;
+    }
+
+    public Long getTaxiId() {
+        return taxiId;
+    }
+
+    public void setTaxiId(Long taxiId) {
+        this.taxiId = taxiId;
+    }
 
     //custom field
     private String userGroupView;
@@ -41,15 +85,6 @@ public class User extends GenericModel{
     public void setUserType(USERTYPE userType) {
         this.userType = userType;
     }
-
-    public Long getUserGroupId() {
-        return userGroupId;
-    }
-
-    public void setUserGroupId(Long userGroupId) {
-        this.userGroupId = userGroupId;
-    }
-
     public ROLE getRole() {
         return role;
     }

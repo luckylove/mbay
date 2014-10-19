@@ -66,6 +66,7 @@ function AccordionDemoCtrl($scope, $modal) {
             }
         });
     };
+
 }
 
 var UploadCtrl = function ($scope, $modalInstance, $http) {

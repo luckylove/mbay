@@ -6,6 +6,9 @@
   <resultMap id="userResultMap" type="com.marinabay.cruise.model.User" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="nric_no" property="nricNo" jdbcType="VARCHAR" />
+    <result column="ui_num" property="uiNum" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
@@ -13,18 +16,18 @@
     <result column="taxi_license" property="taxiLicense" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="user_type" property="userType" jdbcType="VARCHAR" />
-    <result column="user_group_id" property="userGroupId" jdbcType="BIGINT" />
-    <result column="user_group_view" property="userGroupView" jdbcType="VARCHAR" />
+    <result column="taxi_id" property="taxiId" jdbcType="BIGINT" />
+    <result column="taxi_company" property="taxiCompany" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, user_name, email, mobile, password, role, taxi_license, address, user_type, user_group_id, reg_date, mod_date
+    id, user_name, nric_no, ui_num, name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, reg_date, mod_date
   </sql>
 
     <sql id="Base_Column_List_Aias" >
-    us.id, user_name, email, mobile, password, role, taxi_license, address, user_type, user_group_id , us.reg_date, us.mod_date
+    us.id, user_name, nric_no, ui_num, us.name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, us.reg_date, us.mod_date
   </sql>
 
     <select id="count" resultType="long" parameterType="pagingModel" >
@@ -32,8 +35,15 @@
         from users  us
         where 1=1
         <choose>
-            <when test="filterId != null and filterId > 0">
-                and us.user_group_id = #{filterId}
+            <when test="filterId != null and filterId >= 0">
+                <choose>
+                    <when test="filterId == 0">
+                        and us.id not in (select ugs.user_id from user_group_user ugs where ugs.user_id=us.id)
+                    </when>
+                    <otherwise>
+                        and us.id in (select ugs.user_id from user_group_user ugs where ugs.group_id = #{filterId} and ugs.user_id=us.id)
+                    </otherwise>
+                </choose>
                 <if test="notInIds != null and notInIds != ''">
                     and us.id not in
                     <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
@@ -58,12 +68,19 @@
     </select>
   <select id="select" resultMap="userResultMap" parameterType="map" >
     select
-    <include refid="Base_Column_List_Aias" />  , usg.name as user_group_view
-    from users us left outer join user_group usg on us.user_group_id = usg.id
+    <include refid="Base_Column_List_Aias" /> , x.name as taxiCompany
+    from users us  left outer join taxi x on us.taxi_id = x.id
       where 1=1
       <choose>
-          <when test="filterId != null and filterId > 0">
-            and us.user_group_id = #{filterId}
+          <when test="filterId != null and filterId >= 0">
+              <choose>
+                  <when test="filterId == 0">
+                      and us.id not in (select ugs.user_id from user_group_user ugs where ugs.user_id=us.id)
+                  </when>
+                  <otherwise>
+                      and us.id in (select ugs.user_id from user_group_user ugs where ugs.group_id = #{filterId} and ugs.user_id=us.id)
+                  </otherwise>
+              </choose>
               <if test="notInIds != null and notInIds != ''">
                   and us.id not in
                   <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
@@ -104,9 +121,10 @@
   
   <select id="selectByID" resultMap="userResultMap" parameterType="java.lang.Long" >
     select 
-    <include refid="Base_Column_List" />
-    from users
-    where id = #{value}
+    <include refid="Base_Column_List_Aias" /> , x.name as taxi_company
+    from users us
+      left outer join taxi x on us.taxi_id= x.id
+    where us.id = #{value}
   </select>
 
     <select id="findUserByEmail" resultMap="userResultMap" parameterType="java.lang.String" >
@@ -122,17 +140,18 @@
   </delete>
 
  <insert id="insert" parameterType="userModel" >
-    insert into users (user_name, email, mobile, password, role, taxi_license, address, user_type, user_group_id, reg_date)
+    insert into users (user_name, name, nric_no, ui_num, mobile, password, role, taxi_license, user_type, taxi_id, reg_date)
     values (
     	#{userName,jdbcType=VARCHAR},
-    	#{email,jdbcType=VARCHAR},
+    	#{name,jdbcType=VARCHAR},
+    	#{nricNo,jdbcType=VARCHAR},
+    	#{uiNum,jdbcType=VARCHAR},
     	#{mobile,jdbcType=VARCHAR},
     	#{password,jdbcType=VARCHAR},
     	#{role,jdbcType=VARCHAR},
     	#{taxiLicense,jdbcType=VARCHAR},
-    	#{address,jdbcType=VARCHAR},
     	#{userType,jdbcType=VARCHAR},
-    	#{userGroupId,jdbcType=BIGINT},
+    	#{taxiId,jdbcType=BIGINT},
     	now()
       )
 
@@ -149,36 +168,39 @@
     update users
     set
       user_name = #{userName,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      nric_no = #{nricNo,jdbcType=VARCHAR},
+      ui_num = #{uiNum,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       role = #{role,jdbcType=VARCHAR},
       taxi_license = #{taxiLicense,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       user_type = #{userType,jdbcType=VARCHAR},
-      user_group_id = #{userGroupId,jdbcType=BIGINT},
+      taxi_id = #{taxiId,jdbcType=BIGINT},
       mod_date = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
 
- <update id="assignGroup" parameterType="map" >
-    update users
-    set
-      user_group_id = #{userGroupId,jdbcType=BIGINT}
-    where id in
-    <foreach collection="ids" item="item" open="(" close=")" separator=",">
-      #{item}
-    </foreach>
-  </update>
+   <insert id="insertUserGroup" parameterType="userGroupUser" >
+        insert into user_group_user (user_id, group_id, reg_date)
+        values (
+        #{userId,jdbcType=BIGINT},
+        #{groupId,jdbcType=BIGINT},
+        now()
+        )
+    </insert>
 
-    <update id="resetUserGroup" parameterType="long" >
-        update users
-        set
-        user_group_id = NULL
-        where user_group_id =#{value}
-    </update>
+    <select id="hasByUserAndGroup" resultType="long" parameterType="userGroupUser" >
+        select count(user_id)
+        from user_group_user
+        where group_id=#{groupId} AND user_id = #{userId}
+    </select>
 
-
+  <delete id="resetUserGroup" parameterType="java.lang.Long" >
+    delete from user_group_user
+    where group_id = #{value}
+  </delete>
     <select id="selectAllId" resultMap="userResultMap" >
         select  id
         from users us

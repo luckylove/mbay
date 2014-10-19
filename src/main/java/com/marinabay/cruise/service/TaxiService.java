@@ -31,6 +31,10 @@ public class TaxiService extends GenericService<Taxi>{
         return JSonPagingResult.ofSuccess(count, userGroups);
     }
 
+    public List<Taxi> listAll() {
+        return taxiDao.select(new PagingModel());
+    }
+
 
     public Taxi findByName(String name) {
         return taxiDao.findByName(name);

@@ -26,27 +26,24 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $log) {
         if(selected.length <= 0) {
             bootbox.alert("Please select users");
         } else {
-            bootbox.confirm("All selected users will be move to <strong>" + name + "</strong> group !", function(result) {
-                if(result) {
-                    var ids = [];
-                    $.each(selected, function(idx, row){
-                        if(row.role != 'ADMIN'){
-                            ids.push(row.id);
-                        }
-                    });
-                    $.ajax({
-                        type: "GET",
-                        url: 'assignUserGroup.json',
-                        data: {
-                            ids: ids.join(',') ,
-                            groupId: id
-                        },
-                        dataType: 'json'
-                    })
-                    .done(function(data) {
-                        $('#userGroupTable').bootstrapTable('refresh');
-                    });
+            var ids = [];
+            $.each(selected, function(idx, row){
+                if(row.role != 'ADMIN'){
+                    ids.push(row.id);
                 }
+            });
+            $.ajax({
+                type: "GET",
+                url: 'assignUserGroup.json',
+                data: {
+                    ids: ids.join(',') ,
+                    groupId: id
+                },
+                dataType: 'json'
+            })
+            .done(function(data) {
+                bootbox.alert("Users have assigned to " + name + " group");
+                $('#userGroupTable').bootstrapTable('refresh');
             });
         }
     }
@@ -96,8 +93,9 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
     $scope.userForm = userForm || {};
     $scope.userForm.isUpdate = $scope.userForm.id > 0;
 
-    if(!$scope.userForm.userGroupId) {
-        $scope.userForm.userGroupView = 'Select user group';
+    if(!$scope.userForm.taxiId) {
+        //$scope.userForm.userGroupView = 'Select user group';
+        $scope.userForm.taxiCompany = 'Select taxi';
     }
 
     $scope.cancel = function () {
@@ -108,6 +106,10 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
         $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
     }
 
+    $scope.selectTaxi = function($event, id, name){
+        $scope.userForm.taxiId = id;
+        $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
+    }
     $scope.submit = function (form) {
         if(form.$valid) {
             $http({
