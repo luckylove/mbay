@@ -65,6 +65,12 @@
                 </if>
             </otherwise>
         </choose>
+        <if test="userType != null and userType == 'WEB'">
+            AND us.user_type = 'WEB'
+        </if>
+        <if test="userType != null and userType == 'SMS'">
+            AND us.user_type = 'MOBILE'
+        </if>
     </select>
   <select id="select" resultMap="userResultMap" parameterType="map" >
     select
@@ -101,6 +107,12 @@
               </if>
           </otherwise>
       </choose>
+      <if test="userType != null and userType == 'WEB'">
+          AND us.user_type = 'WEB'
+      </if>
+      <if test="userType != null and userType == 'SMS'">
+          AND us.user_type = 'MOBILE'
+      </if>
 
       <if test="name != null and name != ''" >
           order by ${name} ${order}
@@ -127,12 +139,19 @@
     where us.id = #{value}
   </select>
 
-    <select id="findUserByEmail" resultMap="userResultMap" parameterType="java.lang.String" >
+  <select id="findUserByEmail" resultMap="userResultMap" parameterType="java.lang.String" >
         select
         <include refid="Base_Column_List" />
         from users
         where email = #{value}
-    </select>
+  </select>
+
+ <select id="findByUserName" resultMap="userResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from users
+        where user_name = #{value}
+  </select>
   
   <delete id="deleteByID" parameterType="java.lang.Long" >
     delete from users
@@ -207,10 +226,12 @@
         where 1=1
     </select>
 
-    <select id="selectAllByGroup" resultMap="userResultMap" parameterType="long">
+    <select id="selectAllByGroup" resultMap="userResultMap" parameterType="map">
         select  *
         from users us
-        where 1=1  and us.user_group_id = #{value}
+        where 1=1
+        and us.id in (select ugs.user_id from user_group_user ugs where ugs.group_id = #{groupId} and ugs.user_id=us.id)
+        and us.user_type = #{userType}
     </select>
 
     <select id="loadAllUserByIds" resultMap="userResultMap" parameterType="map">

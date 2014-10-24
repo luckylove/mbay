@@ -1,8 +1,11 @@
 <!doctype html>
 <html ng-app="cruiseApp">
 <head>
+    <script src="resources/js/jquery.min.js"></script>
     <script src="resources/js/angular-1.2.10.js"></script>
+    <script src="resources/js/bootstrap.min.js"></script>
     <script src="resources/js/ui-bootstrap-tpls-0.11.0.js"></script>
+
     <link href="resources/css/bootstrap.css" rel="stylesheet">
     <link href="resources/css/bootstrap-theme.css" rel="stylesheet">
     <link href="resources/css/index.css" rel="stylesheet">
@@ -24,7 +27,7 @@
                         </h2>
                         <h3>Please <strong>Login</strong> or <strong>Register</strong></h3>
                         <h5 style="color: red;text-align: center;">
-                            #if("$!{error}" == "1") This email is already used #end
+                            #if("$!{error}" == "1") This username is already used #end
                             #if("$!{error}" == "2") Some of fields can not empty #end
                         </h5>
                     </div>
@@ -33,8 +36,8 @@
                             <div class="form-group">
                                 <div class="col-xs-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                        <input type="email" ng-model="email" focus-me="focusInput" name="email" class="form-control input-lg" placeholder="Email" autocomplete="off" required>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                        <input type="text" ng-model="userName" focus-me="focusInput" name="userName" class="form-control input-lg" placeholder="User name" autocomplete="off" required>
                                     </div>
                                 </div>
                             </div>
@@ -61,20 +64,34 @@
                             </div>
                         </form>
 
-                        <form action="addUser.html" id="regForm" method="post" class="form-horizontal ng-hide" ng-hide="regForm" novalidate>
+                        <form action="addUser.html" id="regForm" name="rForm" method="post" class="form-horizontal ng-hide" ng-hide="regForm" novalidate>
+                            <div class="form-group">
+                                <div class="col-xs-8 btn-group">
+                                    <input type="hidden" name="taxiId" ng-value="register.taxiId">
+                                    <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select Taxi<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        #foreach($item in $taxis)
+                                            <li><a ng-click="selectTaxi($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                                        #end
+                                    </ul>
+                                </div>
+
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-xs-12">
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                        <input type="text" class="form-control input-lg" ng-model="userName" placeholder="Username" name="userName" autocomplete="off" required>
+                                        <input type="text" class="form-control input-lg" ng-model="register.userName" placeholder="Username" name="userName" autocomplete="off" required>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                        <input type="email" name="email" class="form-control input-lg" ng-model="email" placeholder="Email" autocomplete="off" required>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                        <input type="text" class="form-control input-lg" ng-model="register.name" placeholder="Name" name="name" autocomplete="off" >
                                     </div>
                                 </div>
                             </div>
@@ -82,31 +99,46 @@
                                 <div class="col-xs-12">
                                     <div class="input-group">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                        <input type="password" class="form-control input-lg" ng-model="password" placeholder="Password" autocomplete="off" required>
+                                        <input type="password" name="password" class="form-control input-lg" ng-model="register.password" placeholder="Password" autocomplete="off" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-12">
+                                <div class="col-xs-6">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                        <input type="text" name="mobile" class="form-control input-lg" ng-model="mobile" placeholder="Mobile" autocomplete="off">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-plus-sign"></span></span>
+                                        <input type="text" name="nricNo" class="form-control input-lg" ng-model="register.nricNo" placeholder="Nric No" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-earphone"></span></span>
+                                        <input type="text" name="mobile" class="form-control input-lg" ng-model="register.mobile" autocomplete="off" placeholder="8 digit mobile no" ng-pattern="/^\d{8}$/g" required>
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="form-group">
-                                <div class="col-xs-12">
+                                <div class="col-xs-6">
                                     <div class="input-group">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                        <input type="text" name="address" class="form-control input-lg" ng-model="address" placeholder="Address" autocomplete="off">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-plus-sign"></span></span>
+                                        <input type="text" name="uiNum" class="form-control input-lg" ng-model="register.uiNum" autocomplete="off" placeholder="10 digit ui no"  ng-pattern="/^\d{10}$/g" required>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-plus-sign"></span></span>
+                                        <input type="text" name="taxiLicense" class="form-control input-lg" ng-model="register.taxiLicense" placeholder="Taxi license" autocomplete="off" required>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="form-group formSubmit">
                                 <div class="col-sm-7">
                                 </div>
                                 <div class="col-sm-5 submitWrap">
-                                    <button type="submit" class="btn btn-success btn-lg">Register</button>
+                                    <button type="submit" class="btn btn-success btn-lg" ng-disabled="rForm.$invalid || !register.taxiId">Register</button>
                                 </div>
                             </div>
                             <div class="form-group formNotice">

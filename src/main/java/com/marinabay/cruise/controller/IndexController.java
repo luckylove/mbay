@@ -97,6 +97,7 @@ public class IndexController {
 	public String login(ModelMap model, String st, String error) {
         model.addAttribute("st", st);
         model.addAttribute("error", error);
+        model.addAttribute("taxis", taxiService.listAll());
         return "/login";
     }
 
@@ -107,9 +108,9 @@ public class IndexController {
     }
 
     @RequestMapping(value = {"/loginSubmit.html"}, method = RequestMethod.POST)
-	public String loginSubmit(HttpServletRequest request, ModelMap model, String email, String password) {
-        if (StringUtils.isNotEmpty(email) && StringUtils.isNotEmpty(password)) {
-            User userByEmail = userService.findUserByEmail(email);
+	public String loginSubmit(HttpServletRequest request, ModelMap model, String userName, String password) {
+        if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(password)) {
+            User userByEmail = userService.findByUserName(userName);
             if (userByEmail != null) {
                 if (userByEmail.getPassword().equals(password)) {
                     RequestUtls.logged(request, userByEmail);

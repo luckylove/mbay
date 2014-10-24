@@ -49,7 +49,7 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             //call ajax to get list users
             $http({
                 method: "get",
-                url: "listUserOfGroup.json?groupId=" + id
+                url: "listUserOfGroup.json?groupId=" + id + "&userType=" +  $scope.message.sendType
             }).success(function(data, status, headers, config) {
                     $scope.addSelectedUser(data);
             });
@@ -172,7 +172,7 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
     }
     //init table
     setTimeout(function(){$('#userTable').bootstrapTable({
-        url: 'listUser.json?notInIds='+ prSscope.serializeUserId()
+        url: 'listUser.json?notInIds='+ prSscope.serializeUserId() + "&userType=" + prSscope.message.sendType
     })}, 100);
 
 
@@ -228,7 +228,7 @@ var ModalActiveInstanceCtrl = function ($scope, $modalInstance, $http, userForm)
 
     //init table
     setTimeout(function(){$('#userActiveTable').bootstrapTable({
-        url: 'listTopActiveUser.json?notInIds='+ prSscope.serializeUserId()
+        url: 'listTopActiveUser.json?notInIds='+ prSscope.serializeUserId()  + "&userType=" + prSscope.message.sendType
     })}, 100);
 
 

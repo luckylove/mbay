@@ -118,9 +118,9 @@ public class UserController {
             userService.update(user);
             return JSonResult.ofSuccess("Update user success");
         } else {
-            if (StringUtils.isNotEmpty(user.getEmail()) || StringUtils.isNotEmpty(user.getUserName())) {
-                if (userService.findUserByEmail(user.getEmail()) != null) {
-                    return JSonResult.ofError("This email is already used");
+            if (StringUtils.isNotEmpty(user.getUserName())) {
+                if (userService.findByUserName(user.getUserName()) != null) {
+                    return JSonResult.ofError("This username is already used");
                 } else {
                     user.setRole(ROLE.USER);
                     user.setUserType(USERTYPE.WEB);
@@ -136,8 +136,8 @@ public class UserController {
 
     @RequestMapping(value = {"/addUser.html"}, method = RequestMethod.POST)
     public String registerUser(HttpServletRequest request, ModelMap model, User user) {
-        if (StringUtils.isNotEmpty(user.getEmail()) || StringUtils.isNotEmpty(user.getUserName())) {
-            if (userService.findUserByEmail(user.getEmail()) != null) {
+        if (StringUtils.isNotEmpty(user.getUserName())) {
+            if (userService.findByUserName(user.getUserName()) != null) {
                 return "redirect:/login.html?st=register&error=1";
             } else {
                 user.setRole(ROLE.USER);

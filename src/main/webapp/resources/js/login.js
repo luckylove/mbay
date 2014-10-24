@@ -7,6 +7,7 @@
  */
 angular.module('cruiseApp', []).controller('LoginCtrl', function ($scope) {
     $scope.focusInput = true;
+    $scope.register = {};
     $scope.showLogin = function(){
         $scope.logForm = false;
         $scope.regForm = true;
@@ -15,6 +16,10 @@ angular.module('cruiseApp', []).controller('LoginCtrl', function ($scope) {
     $scope.showRegister = function(){
         $scope.logForm = true;
         $scope.regForm = false;
+    }
+    $scope.selectTaxi = function($event, id, name){
+        $scope.register.taxiId = id;
+        $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
     }
 
     //$scope.showLogin();

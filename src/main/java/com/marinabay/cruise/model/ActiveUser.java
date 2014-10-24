@@ -17,8 +17,17 @@ public class ActiveUser extends GenericModel{
     private Date activeDate;
 
     private String userName;
+    private String userType;
     private String userLicense;
     private String activeDateStr;
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
     public String getActiveDateStr() {
         if (activeDate != null) {

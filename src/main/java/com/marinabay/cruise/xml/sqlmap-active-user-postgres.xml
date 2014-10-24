@@ -7,7 +7,8 @@
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="active_count" property="activeCount" jdbcType="INTEGER" />
     <result column="active_date" property="activeDate" jdbcType="DATE" />
-    <result column="user_name" property="userName" jdbcType="DATE" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_type" property="userType" jdbcType="VARCHAR" />
     <result column="taxi_license" property="userLicense" jdbcType="DATE" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
@@ -31,7 +32,7 @@
     select
     <include refid="Base_Column_List_Alias" /> , us.user_name, us.taxi_license
     from active_user ug inner join users us on ug.user_id = us.id
-      where 1=1
+    where 1=1
     order by ${name} ${order}
     <if test="limit > 0" >
       limit ${limit} offset ${offset}
@@ -99,11 +100,17 @@
                 #{it}
             </foreach>
         </if>
+        <if test="userType != null and userType == 'WEB'">
+            AND us.user_type = 'WEB'
+        </if>
+        <if test="userType != null and userType == 'SMS'">
+            AND us.user_type = 'MOBILE'
+        </if>
          group by  us.user_name, us.taxi_license, us.id) as tmp
      </select>
     <select id="topActiveUser" resultMap="mapResult" parameterType="pagingModel" >
         select
-        us.id, us.user_name, us.taxi_license, sum(ug.active_count) as active_count
+        us.id, us.user_name, us.taxi_license, us.user_type ,sum(ug.active_count) as active_count
         from active_user ug inner join users us on ug.user_id = us.id
         where 1=1
         <if test="startDate !='' and startDate != null and endDate !=null and endDate !=''" >
@@ -114,6 +121,12 @@
             <foreach collection="notInIdsArr" item="it" separator="," close=")" open="(">
                 #{it}
             </foreach>
+        </if>
+        <if test="userType != null and userType == 'WEB'">
+            AND us.user_type = 'WEB'
+        </if>
+        <if test="userType != null and userType == 'SMS'">
+            AND us.user_type = 'MOBILE'
         </if>
         group by  us.user_name, us.taxi_license, us.id
         order by active_count desc
