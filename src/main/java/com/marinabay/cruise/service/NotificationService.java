@@ -187,9 +187,19 @@ public class NotificationService extends GenericService<Notification>{
     }
 
 
+    public JSonPagingResult<UserNotificationView> getAllSentNotification(PagingModel model) {
+        Long total = notificationDao.countAllSentNotification(model);
+        return JSonPagingResult.ofSuccess(total, notificationDao.getAllSentNotification(model));
+    }
+
+    public void deleteUserNotification(Long val) {
+        notificationDao.deleteUserNotification(val);
+        notificationDao.deleteByID(val);
+    }
+
     public void shutDownService() {
-        sendService.shutdown();
-        checkService.shutdown();
+        checkService.shutdownNow();
+        sendService.shutdownNow();
     }
 
 

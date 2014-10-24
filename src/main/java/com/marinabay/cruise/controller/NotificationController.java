@@ -47,6 +47,13 @@ public class NotificationController {
         return "/index";
     }
 
+    @RequestMapping(value = {"/sentUserList.html"}, method = RequestMethod.GET)
+	public String sentUserList(HttpServletRequest request, ModelMap model, Long sendId) {
+        model.addAttribute(VIEW_TYPE, "sentUserList");
+        model.addAttribute("sendId", sendId);
+        return "/index";
+    }
+
     @RequestMapping(value = {"/listNotification.json"}, method = RequestMethod.GET)
     @ResponseBody
     public JSonPagingResult<Notification> listNotification(HttpServletRequest request, PagingModel model) {
@@ -76,7 +83,7 @@ public class NotificationController {
             try {
                 Iterable<String> strings = Splitter.on(",").omitEmptyStrings().split(ids);
                 for (String id : strings) {
-                    notificationService.deleteByID(Long.valueOf(id));
+                    notificationService.deleteUserNotification(Long.valueOf(id));
                 }
             } catch (Exception e) {
                 LOG.error("", e);
@@ -90,6 +97,12 @@ public class NotificationController {
     @ResponseBody
     public List<User> listUser(HttpServletRequest request, Long groupId, String userType) {
         return userService.selectAllByGroup(groupId, userType);
+    }
+
+    @RequestMapping(value = {"/sentUserList.json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSonPagingResult<UserNotificationView>  sentUserList(HttpServletRequest request, PagingModel model) {
+        return notificationService.getAllSentNotification(model);
     }
 
 

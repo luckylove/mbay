@@ -45,23 +45,21 @@ public class CheckSMSJob implements Callable {
         LOG.info("send sms", sendUrl);
         try {
             String result = sendGet(sendUrl);
-            nf.setStatus(SEND_STATUS.SENT);
-            nf.setSendId(parseText(result));
+            LOG.info("receive sms", result);
+            if ("201".equals(result.trim())) {
+                //receive is ok
+                nf.setStatus(SEND_STATUS.RECEIVED);
+                notificationDao.updateUserNotification(nf);
+            } else if ("300".equals(result.trim())) {
+                //receive is ok
+                nf.setStatus(SEND_STATUS.ERROR);
+                notificationDao.updateUserNotification(nf);
+            } else {
+                //decrease check count
+                notificationDao.decreaseCheckCnt(nf);
+            }
         } catch (Exception e) {
             LOG.error("",e);
-            nf.setStatus(SEND_STATUS.ERROR);
-        }
-        //update status to db
-        notificationDao.updateUserNotification(nf);
-        return null;
-    }
-
-    private String parseText(String string) {
-        if (StringUtils.isNotEmpty(string)) {
-            String[] split = string.split(":");
-            if (split.length > 1) {
-                return split[1].trim();
-            }
         }
         return null;
     }

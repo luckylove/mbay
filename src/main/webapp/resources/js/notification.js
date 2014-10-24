@@ -240,6 +240,9 @@ function operateFormatter(value, row, index) {
 
         '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
         '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>   '+
+        '<a class="detail ml10" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-arrow-right"></i>',
         '</a>'
     ].join('');
 }
@@ -264,6 +267,10 @@ window.operateEvents = {
                 });
             }
         });
+    } ,
+    'click .detail': function (e, value, row, index) {
+        document.location.href = "sentUserList.html?sendId=" + row.id;
+        return false;
     }
 };
 

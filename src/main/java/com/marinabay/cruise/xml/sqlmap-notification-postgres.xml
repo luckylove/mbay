@@ -21,6 +21,14 @@
         <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     </resultMap>
 
+    <resultMap id="userMapResultView" type="com.marinabay.cruise.model.UserNotificationView" >
+        <result column="sender_name" property="senderName" jdbcType="VARCHAR" />
+        <result column="receiver_name" property="receiverName" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+
   <sql id="Base_Column_List" >
     id, message, user_cnt, reg_date, sender_id, sender_name
   </sql>
@@ -56,6 +64,11 @@
   <delete id="deleteByID" parameterType="java.lang.Long" >
     delete from notification
     where id = #{value}
+  </delete>
+
+  <delete id="deleteUserNotification" parameterType="java.lang.Long" >
+    delete from user_notification
+    where notification_id = #{value}
   </delete>
 
   <insert id="insert" parameterType="notificationModel" >
@@ -104,12 +117,36 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-    <select id="getAllSendMsg" resultMap="userMapResult">
-        select id, user_id , notification_id, type, status, send_id, reg_date
-        from user_notification
-        where status = 'SENT' and send_id is not null
+    <update id="decreaseCheckCnt" parameterType="userNotification" >
+    update user_notification
+    set
+      check_count = check_count -1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="countAllSentNotification" resultType="long" parameterType="pagingModel">
+        select count(1) as cnt
+        from user_notification  un
+        inner join users us on un.user_id = us.id
+        inner join notification nf on   un.notification_id = nf.id
+        where un.notification_id = #{filterId}
     </select>
 
-  
+    <select id="getAllSentNotification" resultMap="userMapResultView" parameterType="pagingModel">
+        select nf.sender_name, us.user_name as receiver_name, un.status, un.reg_date , un.type
+        from user_notification  un
+        inner join users us on un.user_id = us.id
+        inner join notification nf on   un.notification_id = nf.id
+        where un.notification_id = #{filterId}
+        <if test="limit > 0" >
+            limit ${limit} offset ${offset}
+        </if>
+    </select>
+
+    <select id="getAllSendMsg" resultMap="userMapResult" parameterType="long">
+        select *
+        from user_notification  un
+        where un.status = 'SENT' and send_id is not null   and check_count >=0
+    </select>
 
 </mapper>
