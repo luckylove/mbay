@@ -9,13 +9,16 @@
     <result column="about_us" property="aboutUs" jdbcType="VARCHAR" />
     <result column="lati" property="lati" jdbcType="VARCHAR" />
     <result column="longti" property="longti" jdbcType="VARCHAR" />
+    <result column="information" property="information" jdbcType="VARCHAR" />
+    <result column="surcharge" property="surcharge" jdbcType="VARCHAR" />
+    <result column="direction" property="direction" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
 
   <sql id="Base_Column_List" >
-    id, name, address, about_us, lati, longti, reg_date, mod_date
+    id, name, address, information, surcharge, direction, about_us, lati, longti, reg_date, mod_date
   </sql>
 
 
@@ -33,11 +36,14 @@
   </delete>
 
   <insert id="insert" parameterType="cruisePortModel" >
-    insert into cruise_port (name, address, about_us, lati, longti, reg_date)
+    insert into cruise_port (name, address, about_us, information, surcharge, direction, lati, longti, reg_date)
     values (
     	#{name,jdbcType=VARCHAR},
     	#{address,jdbcType=VARCHAR},
     	#{aboutUs,jdbcType=VARCHAR},
+    	#{information,jdbcType=VARCHAR},
+    	#{surcharge,jdbcType=VARCHAR},
+    	#{direction,jdbcType=VARCHAR},
     	#{lati,jdbcType=VARCHAR},
     	#{longti,jdbcType=VARCHAR},
     	now()
@@ -56,6 +62,9 @@
     set name = #{name,jdbcType=VARCHAR},
         address =#{address,jdbcType=VARCHAR},
         about_us =#{aboutUs,jdbcType=VARCHAR},
+        information =#{information,jdbcType=VARCHAR},
+        surcharge =#{surcharge,jdbcType=VARCHAR},
+        direction =#{direction,jdbcType=VARCHAR},
         lati= #{lati,jdbcType=VARCHAR},
         longti=#{longti,jdbcType=VARCHAR},
       mod_date = now()

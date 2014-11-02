@@ -16,6 +16,9 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
     }).success(function(data, status, headers, config) {
         if(data.success){
             $scope.userForm = data.result;
+            $('#summernoteInfo').code(data.result.information);
+            $('#summernoteSurcharge').code(data.result.surcharge);
+            $('#summernoteDirection').code(data.result.direction);
             delete  $scope.userForm['regDate'];
             delete  $scope.userForm['modDate'];
         }
@@ -28,6 +31,14 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
     $scope.submit = function (form) {
         if(form.$valid) {
 
+            var info = $('#summernoteInfo').code();
+            var sur = $('#summernoteSurcharge').code();
+            var dir = $('#summernoteDirection').code();
+            $.extend($scope.userForm, {
+                information: info,
+                surcharge: sur,
+                direction: dir
+            })
             $http({
                 method: "post",
                 url: addModelURL,
@@ -47,6 +58,60 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             alert("Please input required field");
         }
     };
+
+    $scope.$watch(
+        function () { return document.getElementById('summernoteInfo').innerHTML },
+        function(newval, oldval){
+            $('#summernoteInfo').summernote({
+                height: 200  ,
+                toolbar: [
+                    //[groupname, [button list]]
+
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                ]
+            });
+        }, true);
+
+    $scope.$watch(
+        function () { return document.getElementById('summernoteSurcharge').innerHTML },
+        function(newval, oldval){
+            $('#summernoteSurcharge').summernote({
+                height: 200   ,
+                toolbar: [
+                    //[groupname, [button list]]
+
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                ]
+            });
+        }, true);
+
+    $scope.$watch(
+        function () { return document.getElementById('summernoteDirection').innerHTML },
+        function(newval, oldval){
+            $('#summernoteDirection').summernote({
+                height: 200    ,
+                toolbar: [
+                    //[groupname, [button list]]
+
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                ]
+            });
+        }, true);
 
 
 });

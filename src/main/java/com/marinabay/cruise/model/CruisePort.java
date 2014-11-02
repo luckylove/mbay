@@ -12,8 +12,35 @@ public class CruisePort extends GenericModel{
     private String aboutUs;
     private String longti;
     private String lati;
+    private String information;
+    private String surcharge;
+    private String direction;
 
     public CruisePort() {
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+    }
+
+    public String getSurcharge() {
+        return surcharge;
+    }
+
+    public void setSurcharge(String surcharge) {
+        this.surcharge = surcharge;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
     public String getAboutUs() {
