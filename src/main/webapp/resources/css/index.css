@@ -123,6 +123,10 @@ body {
     border-color: #FA787E;
 }
 
+input.ng-invalid {
+    border-color: #FA787E;
+}
+
 /*
    component: Boxes
 -------------------------
@@ -518,4 +522,9 @@ body {
 .box > .loading-img {
     z-index: 1020;
     background: transparent url('../img/ajax-loader1.gif') 50% 50% no-repeat;
+}
+
+.dropdown-menu {
+    max-height: 300px !important;
+    overflow: auto;
 }

@@ -74,7 +74,9 @@
                         <th data-field="departureTimeStr" data-align="center" data-sortable="true">Depature time</th>
                         <th data-field="passengers" data-sortable="true">Passengers</th>
                         <th data-field="callType" data-sortable="true">Call type</th>
+
                         #if("$!loggedUser.role" == "ADMIN")
+                        <th data-field="taxiOnQueue">Queue</th>
                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                         #end
                     </tr>
@@ -98,7 +100,7 @@
                         <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{userForm.cruiseName}} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             #foreach($item in $cruises)
-                                <li><a ng-click="itemSelect($event, $item.id, '$item.name')" href="#">$item.name</a></li>
+                                <li><a ng-click="itemSelect($event, $item.id, '$item.name', $item.passenger)" href="#">$item.name</a></li>
                             #end
                         </ul>
                     </div>

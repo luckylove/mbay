@@ -80,4 +80,15 @@ public class SchedulesService extends GenericService<Schedules>{
         }
     }
 
+    public Integer updateTaxiOnQueue(Long id, String type) {
+        if ("decrease".equals(type)) {
+            Integer taxiOnQueue = schedulesDao.getTaxiOnQueue(id);
+            if (taxiOnQueue == 0) {
+                return 0;
+            }
+        }
+        schedulesDao.updateTaxiOnQueue(ImmutableMap.of("id", id, "type", type));
+        return schedulesDao.getTaxiOnQueue(id);
+    }
+
 }

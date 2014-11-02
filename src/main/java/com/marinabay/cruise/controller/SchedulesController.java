@@ -92,5 +92,11 @@ public class SchedulesController {
     }
 
 
+    @RequestMapping(value = {"/addTaxiOnQueue.json"}, method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public JSonResult addTaxiOnQueue(HttpServletRequest request, Long id, String type) {
+        return JSonResult.ofSuccess(schedulesService.updateTaxiOnQueue(id, type));
+    }
+
 
 }

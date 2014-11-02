@@ -8,6 +8,15 @@ package com.marinabay.cruise.model;
 public class Cruise extends GenericModel{
 
     private String name;
+    private Integer passenger;
+
+    public Integer getPassenger() {
+        return passenger;
+    }
+
+    public void setPassenger(Integer passenger) {
+        this.passenger = passenger;
+    }
 
     public String getName() {
         return name;

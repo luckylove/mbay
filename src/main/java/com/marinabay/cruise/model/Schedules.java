@@ -2,9 +2,13 @@ package com.marinabay.cruise.model;
 
 import com.marinabay.cruise.utils.RequestUtls;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.Days;
+import org.joda.time.LocalDateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,6 +22,7 @@ public class Schedules extends GenericModel{
     private Date arrivalTime;
     private Date departureTime;
     private Integer passengers;
+    private Integer taxiOnQueue;
     private String callType;
 
     //custom field
@@ -25,6 +30,26 @@ public class Schedules extends GenericModel{
 
     private String arrivalTimeStr;
     private String departureTimeStr;
+    private boolean isToday;
+
+    public boolean isToday() {
+        if (departureTime != null) {
+            return DateUtils.isSameDay(Calendar.getInstance().getTime(), departureTime);
+        }
+        return false;
+    }
+
+    public void setToday(boolean today) {
+        isToday = today;
+    }
+
+    public Integer getTaxiOnQueue() {
+        return taxiOnQueue;
+    }
+
+    public void setTaxiOnQueue(Integer taxiOnQueue) {
+        this.taxiOnQueue = taxiOnQueue;
+    }
 
     public String getArrivalTimeStr() {
         if (arrivalTime != null) {

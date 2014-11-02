@@ -5,13 +5,14 @@
   <resultMap id="mapResult" type="com.marinabay.cruise.model.Cruise" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="passenger" property="passenger" jdbcType="INTEGER" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
 
   <sql id="Base_Column_List" >
-    id, name, reg_date, mod_date
+    id, name, passenger, reg_date, mod_date
   </sql>
 
  <select id="count" resultType="long" parameterType="pagingModel" >
@@ -62,9 +63,10 @@
   </delete>
 
   <insert id="insert" parameterType="cruiseModel" >
-    insert into cruise (name, reg_date)
+    insert into cruise (name, passenger, reg_date)
     values (
     	#{name,jdbcType=VARCHAR},
+    	#{passenger,jdbcType=INTEGER},
     	now()
       )
       
@@ -79,6 +81,7 @@
   <update id="update" parameterType="cruiseModel" >
     update cruise
     set name = #{name,jdbcType=VARCHAR},
+        passenger = #{passenger,jdbcType=INTEGER},
       mod_date = now()
     where id = #{id,jdbcType=BIGINT}
   </update>

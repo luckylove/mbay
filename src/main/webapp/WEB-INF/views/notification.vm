@@ -14,14 +14,14 @@
 
                     <div class="form-group">
                         <label for="inputEmail" class="control-label col-xs-3"></label>
-                        <div class="col-xs-1 btn-group">
+                        <div class="col-xs-2 btn-group">
                             <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{message.sendType}} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a ng-click="selectType($event, 'SMS', 'SMS')" href="#">SMS</a></li>
-                                <li><a ng-click="selectType($event, 'WEB', 'WEB')" href="#">WEB</a></li>
+                                <li><a ng-click="selectType($event, 'SMS', 'InApp')" href="#">InApp</a></li>
+                                <li><a ng-click="selectType($event, 'WEB', 'NonApp')" href="#">NonApp</a></li>
                             </ul>
                         </div>
-                        <div class="col-xs-2 btn-group">
+                        <div class="col-xs-3 btn-group">
                             <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">Select by group <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                #* <li><a ng-click="selectUser($event, -1, 'All')" href="#">All</a></li>*#

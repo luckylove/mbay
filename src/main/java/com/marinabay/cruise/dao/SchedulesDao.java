@@ -12,4 +12,8 @@ public interface SchedulesDao extends GenericDao<Schedules> {
 
     public Long countDashboard(Map map);
 
+    public void updateTaxiOnQueue(Map map);
+
+    public Integer getTaxiOnQueue(Long id);
+
 }

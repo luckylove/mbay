@@ -117,8 +117,9 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
-    $scope.itemSelect = function($event, id, name){
+    $scope.itemSelect = function($event, id, name, passenger){
         $scope.userForm.cruiseId = id;
+        $scope.userForm.passengers = passenger;
         $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');
     }
 
@@ -183,11 +184,27 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
 };
 
 function operateFormatter(value, row, index) {
-    return [
-        '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
-        '<i class="glyphicon glyphicon-remove"></i>',
-        '</a>'
-    ].join('');
+    if(row.today) {
+        return [
+            '<a class="decrease ml10" href="javascript:void(0)" title="Decrease">',
+            '<i class="glyphicon glyphicon-minus"></i>',
+            '</a>' ,
+            ' <a class="increase ml10" href="javascript:void(0)" title="Increase">',
+            '<i class="glyphicon glyphicon-plus"></i>',
+            '</a>' ,
+            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
+            '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    } else {
+        return [
+
+            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
+            '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>'
+        ].join('');
+    }
+
 }
 
 window.operateEvents = {
@@ -210,6 +227,34 @@ window.operateEvents = {
 
                 });
             }
+        });
+    } ,
+    'click .increase': function (e, value, row, index) {
+        $.ajax({
+            type: "GET",
+            url: 'addTaxiOnQueue.json',
+            data: {
+                id: row.id,
+                type:'increase'
+            },
+            dataType: 'json'
+        })
+            .done(function(data) {
+                $('#userGroupTable').find("tr[data-index=" + index + "] td:eq(6)").html(data.result);
+            });
+    },
+    'click .decrease': function (e, value, row, index) {
+        $.ajax({
+            type: "GET",
+            url: 'addTaxiOnQueue.json',
+            data: {
+                id: row.id  ,
+                type:'decrease'
+            },
+            dataType: 'json'
+        })
+        .done(function(data) {
+                $('#userGroupTable').find("tr[data-index=" + index + "] td:eq(6)").html(data.result);
         });
     }
 };

@@ -34,7 +34,7 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             }
         });
     };
-    $scope.message = {sendType: 'WEB'};
+    $scope.message = {sendType: 'NonApp'};
     $scope.selectType = function($event, id, name){
         $scope.message.sendType = id;
         $($event.target).parents('.btn-group').find('.dropdown-toggle').html(name+' <span class="caret"></span>');

@@ -10,17 +10,18 @@
     <result column="arrival_time" property="arrivalTime" jdbcType="TIMESTAMP" />
     <result column="departure_time" property="departureTime" jdbcType="TIMESTAMP" />
     <result column="passengers" property="passengers" jdbcType="INTEGER" />
+    <result column="taxi_on_queue" property="taxiOnQueue" jdbcType="INTEGER" />
     <result column="call_type" property="callType" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, cruise_id, arrival_time, departure_time, passengers, call_type, reg_date, mod_date
+    id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, call_type, reg_date, mod_date
   </sql>
 
   <sql id="Base_Column_List_Aias" >
-    us.id, cruise_id, arrival_time, departure_time, passengers, call_type, us.reg_date, us.mod_date
+    us.id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, call_type, us.reg_date, us.mod_date
   </sql>
   <select id="count" resultType="long" parameterType="pagingModel" >
         select count(id) as total
@@ -124,5 +125,25 @@
       mod_date = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+    <update id="updateTaxiOnQueue" parameterType="map" >
+    update schedules
+    set
+        <choose>
+            <when test="type == 'increase'">
+                taxi_on_queue =   taxi_on_queue + 1
+            </when>
+            <otherwise>
+                taxi_on_queue =   taxi_on_queue - 1
+            </otherwise>
+        </choose>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <select id="getTaxiOnQueue" resultType="integer" parameterType="java.lang.Long" >
+        select taxi_on_queue
+        from schedules
+        where id = #{value}
+    </select>
 
 </mapper>
