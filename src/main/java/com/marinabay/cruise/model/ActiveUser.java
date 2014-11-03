@@ -1,5 +1,6 @@
 package com.marinabay.cruise.model;
 
+import com.marinabay.cruise.constant.USERTYPE;
 import com.marinabay.cruise.utils.RequestUtls;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +21,10 @@ public class ActiveUser extends GenericModel{
     private String userType;
     private String userLicense;
     private String activeDateStr;
+
+    public String getUserTypeView() {
+        return USERTYPE.valueOf(userType).getView();
+    }
 
     public String getUserType() {
         return userType;

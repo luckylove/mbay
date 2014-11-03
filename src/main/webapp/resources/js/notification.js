@@ -144,6 +144,12 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
         itemText: 'userName'
     });
 
+    $scope.$watch(
+        function () { return document.getElementById('myTextarea').innerHTML },
+        function(newval, oldval){
+            $('#myTextarea').limit('168','#charsLeft');
+        }, true);
+
 });
 
 var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {

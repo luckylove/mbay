@@ -192,13 +192,18 @@ function operateFormatter(value, row, index) {
             ' <a class="increase ml10" href="javascript:void(0)" title="Increase">',
             '<i class="glyphicon glyphicon-plus"></i>',
             '</a>' ,
+            '<a class="edit pdr-10" href="javascript:void(0)" title="Edit">',
+            '<i class="glyphicon glyphicon-edit" ></i>',
+            '</a>',
             '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
             '<i class="glyphicon glyphicon-remove"></i>',
             '</a>'
         ].join('');
     } else {
         return [
-
+            '<a class="edit pdr-10" href="javascript:void(0)" title="Edit">',
+            '<i class="glyphicon glyphicon-edit" ></i>',
+            '</a>',
             '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
             '<i class="glyphicon glyphicon-remove"></i>',
             '</a>'
@@ -208,6 +213,16 @@ function operateFormatter(value, row, index) {
 }
 
 window.operateEvents = {
+    'click .edit': function (e, value, row, index) {
+        var $scope = angular.element('[ng-controller=UserGroupCtrl]').scope();
+        var record = $.extend(row, {
+            arrivalTime: row.arrivalTimeStr,
+            departureTime: row.departureTimeStr
+        });
+        delete record['regDate'];
+        delete record['modDate'];
+        $scope.open(null, record);
+    } ,
 
     'click .remove': function (e, value, row, index) {
         bootbox.confirm("Are  you sure you want to remove it", function(result) {

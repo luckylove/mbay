@@ -53,7 +53,7 @@ public class Schedules extends GenericModel{
 
     public String getArrivalTimeStr() {
         if (arrivalTime != null) {
-            arrivalTimeStr = RequestUtls.date2Str(arrivalTime);
+            arrivalTimeStr = RequestUtls.date2Str(arrivalTime,  new SimpleDateFormat("yyyy/MM/dd HH:mm"));
         }
         return arrivalTimeStr;
     }
@@ -64,7 +64,7 @@ public class Schedules extends GenericModel{
 
     public String getDepartureTimeStr() {
         if (departureTime != null) {
-            departureTimeStr = RequestUtls.date2Str(departureTime);
+            departureTimeStr = RequestUtls.date2Str(departureTime,  new SimpleDateFormat("yyyy/MM/dd HH:mm"));
         }
         return departureTimeStr;
     }

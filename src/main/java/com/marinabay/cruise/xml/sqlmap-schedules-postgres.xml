@@ -117,11 +117,11 @@
   <update id="update" parameterType="scheduleModel" >
     update schedules
     set
-      cruise_id = #{userName,jdbcType=BIGINT},
-      arrival_time = #{email,jdbcType=TIMESTAMP},
-      departure_time = #{mobile,jdbcType=TIMESTAMP},
-      passengers = #{password,jdbcType=INTEGER},
-      call_type = #{role,jdbcType=VARCHAR},
+      cruise_id = #{cruiseId,jdbcType=BIGINT},
+      arrival_time = #{arrivalTime,jdbcType=TIMESTAMP},
+      departure_time = #{departureTime,jdbcType=TIMESTAMP},
+      passengers = #{passengers,jdbcType=INTEGER},
+      call_type = #{callType,jdbcType=VARCHAR},
       mod_date = now()
     where id = #{id,jdbcType=BIGINT}
   </update>

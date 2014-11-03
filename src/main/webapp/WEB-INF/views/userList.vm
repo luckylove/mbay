@@ -42,7 +42,7 @@
                     <tr>
                         <th data-field="state" data-checkbox="true"></th>
                         <th data-field="userName" data-align="center" data-sortable="true">Name</th>
-                        <th data-field="userType" data-align="center" data-sortable="true">SignUp</th>
+                        <th data-field="userTypeView" data-align="center" data-sortable="true">SignUp</th>
                         <th data-field="mobile" data-align="center" data-sortable="true">Phone</th>
                         <th data-field="taxiLicense" data-sortable="true">License</th>
                         <th data-field="nricNo" data-sortable="true">NRIC</th>

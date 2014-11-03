@@ -82,6 +82,10 @@ public class User extends GenericModel{
         return userType;
     }
 
+    public String getUserTypeView() {
+        return userType.getView();
+    }
+
     public void setUserType(USERTYPE userType) {
         this.userType = userType;
     }

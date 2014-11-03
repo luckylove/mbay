@@ -1,3 +1,4 @@
+<script src="resources/js/jquery.limit-1.2.js"></script>
 <script src="resources/js/notification.js"></script>
 
 <div class="row" ng-controller="UserGroupCtrl">
@@ -41,9 +42,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputName" class="control-label col-xs-3">Message</label>
+                        <label for="myTextarea" class="control-label col-xs-3">Message</label>
                         <div class="col-xs-9">
-                            <textarea class="form-control" rows="4"  ng-model="message.message" id="inputDest" placeholder="message" required></textarea>
+                            <textarea class="form-control" rows="4"  ng-model="message.message" id="myTextarea" placeholder="message" required></textarea>
+                            You have <span id="charsLeft"></span> chars left.
                         </div>
                     </div>
 
@@ -111,7 +113,7 @@
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
                 <th data-field="userName" data-align="center" data-sortable="true">Name</th>
-                <th data-field="userType" data-align="center" data-sortable="true">SignType</th>
+                <th data-field="userTypeView" data-align="center" data-sortable="true">SignType</th>
                 <th data-field="mobile" data-align="center" data-sortable="true">Phone</th>
                 <th data-field="taxiLicense" data-sortable="true">License</th>
                 <th data-field="userGroupView" data-sortable="true">User Group</th>
@@ -157,7 +159,7 @@
                 <th data-field="userName" data-align="center" data-sortable="false">Name</th>
                 <th data-field="userLicense" data-sortable="false">License</th>
                 <th data-field="activeCount" data-sortable="false">Active Count</th>
-                <th data-field="userType" data-sortable="false">SignUp</th>
+                <th data-field="userTypeView" data-sortable="false">SignUp</th>
             #*<th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>*#
             </tr>
             </thead>
