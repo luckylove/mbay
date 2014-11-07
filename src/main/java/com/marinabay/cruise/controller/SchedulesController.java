@@ -5,6 +5,7 @@ import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.CruiseService;
 import com.marinabay.cruise.service.SchedulesService;
 import com.marinabay.cruise.service.imports.impl.ExcelReader;
+import com.marinabay.cruise.utils.RequestUtls;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,10 @@ public class SchedulesController {
     @RequestMapping(value = {"/listSchedules.json"}, method = RequestMethod.GET)
     @ResponseBody
     public JSonPagingResult<Schedules> listSchedules(HttpServletRequest request, SchelduePagingModel model) {
+        User loggedUser = RequestUtls.getLoggedUser(request);
+        if (loggedUser != null && loggedUser.isQCordinator()) {
+            model.setToday(true);
+        }
         return schedulesService.list(model);
     }
 

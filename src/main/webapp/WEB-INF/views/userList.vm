@@ -75,6 +75,12 @@
                 </div>
             </div>*#
             <div class="form-group">
+                <label for="inputName" class="control-label col-xs-3">Queue Coordinator</label>
+                <div class="col-xs-4">
+                    <input type="checkbox"  ng-model="userForm.isQc" class="" id="inputName">
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="inputName" class="control-label col-xs-3">User name</label>
                 <div class="col-xs-9">
                     <input type="hidden"  ng-model="userForm.id"/>

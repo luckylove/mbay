@@ -6,5 +6,5 @@ package com.marinabay.cruise.constant;
  * Time: 10:10 PM
  */
 public enum  ROLE {
-    ADMIN, USER
+    ADMIN, USER, QC
 }

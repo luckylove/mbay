@@ -184,32 +184,42 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, $http, userForm) {
 };
 
 function operateFormatter(value, row, index) {
-    if(row.today) {
+    if(role === 'QC'){
         return [
             '<a class="decrease ml10" href="javascript:void(0)" title="Decrease">',
             '<i class="glyphicon glyphicon-minus"></i>',
             '</a>' ,
-            ' <a class="increase ml10" href="javascript:void(0)" title="Increase">',
+            ' <a class="increase pdr-10" href="javascript:void(0)" title="Increase">',
             '<i class="glyphicon glyphicon-plus"></i>',
-            '</a>' ,
-            '<a class="edit pdr-10" href="javascript:void(0)" title="Edit">',
-            '<i class="glyphicon glyphicon-edit" ></i>',
-            '</a>',
-            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
-            '<i class="glyphicon glyphicon-remove"></i>',
             '</a>'
         ].join('');
     } else {
-        return [
-            '<a class="edit pdr-10" href="javascript:void(0)" title="Edit">',
-            '<i class="glyphicon glyphicon-edit" ></i>',
-            '</a>',
-            '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
-            '<i class="glyphicon glyphicon-remove"></i>',
-            '</a>'
-        ].join('');
+        if(row.today) {
+            return [
+                '<a class="decrease ml10" href="javascript:void(0)" title="Decrease">',
+                '<i class="glyphicon glyphicon-minus"></i>',
+                '</a>' ,
+                ' <a class="increase pdr-10" href="javascript:void(0)" title="Increase">',
+                '<i class="glyphicon glyphicon-plus"></i>',
+                '</a>' ,
+                '<a class="edit" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-edit" ></i>',
+                '</a>',
+                ' <a class="remove ml10" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+            ].join('');
+        } else {
+            return [
+                '<a class="edit" href="javascript:void(0)" title="Edit">',
+                '<i class="glyphicon glyphicon-edit" ></i>',
+                '</a>',
+                ' <a class="remove ml10" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+            ].join('');
+        }
     }
-
 }
 
 window.operateEvents = {

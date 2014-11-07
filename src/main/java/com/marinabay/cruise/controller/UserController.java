@@ -115,6 +115,11 @@ public class UserController {
     @ResponseBody
     public JSonResult addUser(HttpServletRequest request, User user) {
         if (user.getId() != null && user.getId() > 0) {
+            if (user.isQc()) {
+                user.setRole(ROLE.QC);
+            } else {
+                user.setRole(ROLE.USER);
+            }
             userService.update(user);
             return JSonResult.ofSuccess("Update user success");
         } else {
@@ -122,7 +127,11 @@ public class UserController {
                 if (userService.findByUserName(user.getUserName()) != null) {
                     return JSonResult.ofError("This username is already used");
                 } else {
-                    user.setRole(ROLE.USER);
+                    if (user.isQc()) {
+                        user.setRole(ROLE.QC);
+                    } else {
+                        user.setRole(ROLE.USER);
+                    }
                     user.setUserType(USERTYPE.WEB);
                     userService.insert(user);
                     return JSonResult.ofSuccess("Add group success");

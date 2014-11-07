@@ -37,6 +37,9 @@
                 </if>
             </otherwise>
         </choose>
+      <if test="isToday == true" >
+          <![CDATA[ and departure_time::date = now()::date ]]>
+      </if>
     </select>
   <select id="select" resultMap="resultMap" parameterType="map" >
     select
@@ -53,7 +56,9 @@
               </if>
           </otherwise>
       </choose>
-
+      <if test="isToday == true" >
+          <![CDATA[ and departure_time::date = now()::date ]]>
+      </if>
       <if test="name != null and name != ''" >
           order by ${name} ${order}
       </if>

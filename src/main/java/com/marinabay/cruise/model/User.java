@@ -23,6 +23,19 @@ public class User extends GenericModel{
     private USERTYPE userType;
     private Long taxiId;
     private String taxiCompany;
+    private boolean isQc;
+
+    public boolean isQCordinator() {
+        return ROLE.QC == role;
+    }
+
+    public boolean isQc() {
+        return isQc;
+    }
+
+    public void setIsQc(boolean qc) {
+        isQc = qc;
+    }
 
     public String getTaxiCompany() {
         return taxiCompany;
@@ -83,7 +96,10 @@ public class User extends GenericModel{
     }
 
     public String getUserTypeView() {
-        return userType.getView();
+        if (userType != null) {
+            return userType.getView();
+        }
+        return "";
     }
 
     public void setUserType(USERTYPE userType) {

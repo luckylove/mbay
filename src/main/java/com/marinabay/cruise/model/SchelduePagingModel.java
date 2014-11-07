@@ -8,6 +8,15 @@ package com.marinabay.cruise.model;
 public class SchelduePagingModel extends PagingModel{
 
     private String departureTime;
+    private boolean isToday;
+
+    public boolean isToday() {
+        return isToday;
+    }
+
+    public void setToday(boolean today) {
+        isToday = today;
+    }
 
     public String getDepartureTime() {
         return departureTime;
