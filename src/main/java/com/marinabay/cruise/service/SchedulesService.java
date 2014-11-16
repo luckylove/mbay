@@ -1,6 +1,7 @@
 package com.marinabay.cruise.service;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.marinabay.cruise.dao.CruiseDao;
 import com.marinabay.cruise.dao.SchedulesDao;
 import com.marinabay.cruise.model.*;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -89,6 +91,13 @@ public class SchedulesService extends GenericService<Schedules>{
         }
         schedulesDao.updateTaxiOnQueue(ImmutableMap.of("id", id, "type", type));
         return schedulesDao.getTaxiOnQueue(id);
+    }
+
+    public List<Schedules> listMobile(String startdate, String enddate) {
+        HashMap<Object,Object> hashMap = Maps.newHashMap();
+        hashMap.put("startdate", startdate);
+        hashMap.put("enddate", enddate);
+        return schedulesDao.selectMobile(hashMap);
     }
 
 }

@@ -1,10 +1,7 @@
 package com.marinabay.cruise.controller;
 
 import com.marinabay.cruise.model.*;
-import com.marinabay.cruise.service.CruisePortService;
-import com.marinabay.cruise.service.CruiseService;
-import com.marinabay.cruise.service.TaxiService;
-import com.marinabay.cruise.service.UserService;
+import com.marinabay.cruise.service.*;
 import com.marinabay.cruise.utils.RequestUtls;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +22,9 @@ public class MobileRestCruiseController {
 
     @Autowired
     private CruiseService cruiseService;
+
+    @Autowired
+    private SchedulesService schedulesService;
 
     @Autowired
     private CruisePortService cruisePortService;
@@ -81,16 +81,16 @@ public class MobileRestCruiseController {
 
     @RequestMapping(value = {"/getSchedules.json"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public JSonResult getSchedules(HttpServletRequest request, String fromdate, String enddate) {
-        if (StringUtils.isEmpty(fromdate)) {
+    public JSonResult getSchedules(HttpServletRequest request, String startdate, String enddate) {
+        if (StringUtils.isEmpty(startdate)) {
             return JSonResult.ofError("startdate is required", 400);
         }
-
-        return JSonResult.ofSuccess(taxiService.listAll());
+        try {
+            return JSonResult.ofSuccess(schedulesService.listMobile(startdate, enddate));
+        } catch (Exception e) {
+            LOG.error("", e);
+            return JSonResult.ofError("Has error form server", 401);
+        }
     }
-
-
-
-
 
 }

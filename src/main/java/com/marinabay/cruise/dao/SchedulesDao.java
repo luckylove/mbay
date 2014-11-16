@@ -10,6 +10,8 @@ public interface SchedulesDao extends GenericDao<Schedules> {
 
     public List<Schedules> selectDashboard(Map map);
 
+    public List<Schedules> selectMobile(Map map);
+
     public Long countDashboard(Map map);
 
     public void updateTaxiOnQueue(Map map);

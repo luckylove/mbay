@@ -68,6 +68,19 @@
 
   </select>
 
+  <select id="selectMobile" resultMap="resultMap" parameterType="map" >
+        select
+        <include refid="Base_Column_List_Aias" />  , cr.name as cruise_name
+        from schedules us left outer join cruise cr on us.cruise_id =cr.id
+        where 1=1
+          <if test="startdate != null and startdate != ''" >
+              <![CDATA[ and to_date(#{startdate}, 'YYYY/MM/DD') <= departure_time::date ]]>
+          </if>
+          <if test="enddate != null and enddate != ''" >
+              <![CDATA[ and to_date(#{enddate}, 'YYYY/MM/DD') >= departure_time::date ]]>
+          </if>
+  </select>
+
    <select id="countDashboard" resultType="long" parameterType="map" >
         select count(id) as total
         from schedules  us
