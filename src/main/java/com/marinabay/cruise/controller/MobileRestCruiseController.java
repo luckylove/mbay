@@ -35,6 +35,11 @@ public class MobileRestCruiseController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(value = {"/error.json"}, method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public JSonResult error(HttpServletRequest request) {
+        return JSonResult.ofError("You need to login!", 500);
+    }
 
     @RequestMapping(value = {"/login.json"}, method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
