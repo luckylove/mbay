@@ -19,7 +19,13 @@
             <mvc:exclude-mapping path="/addUser.html"/>
             <bean class="com.marinabay.cruise.intercepter.SecurityInterceptor" />
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/m/*.json" />
+            <mvc:exclude-mapping path="/m/login.json"/>
+            <bean class="com.marinabay.cruise.intercepter.MobileSecurityInterceptor" />
+        </mvc:interceptor>
     </mvc:interceptors>
+
     <!-- Scans the classpath of this application for @Components to deploy as beans -->
     <context:component-scan base-package="com.marinabay.cruise.controller" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
