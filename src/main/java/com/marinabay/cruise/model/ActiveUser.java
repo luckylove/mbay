@@ -23,7 +23,10 @@ public class ActiveUser extends GenericModel{
     private String activeDateStr;
 
     public String getUserTypeView() {
-        return USERTYPE.valueOf(userType).getView();
+        if (userType != null) {
+            return USERTYPE.valueOf(userType).getView();
+        }
+        return "";
     }
 
     public String getUserType() {

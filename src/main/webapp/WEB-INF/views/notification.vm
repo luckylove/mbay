@@ -16,10 +16,10 @@
                     <div class="form-group">
                         <label for="inputEmail" class="control-label col-xs-3"></label>
                         <div class="col-xs-2 btn-group">
-                            <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{message.sendType}} <span class="caret"></span></a>
+                            <a class="btn btn-default dropdown-toggle btn-select2" data-toggle="dropdown" href="#">{{message.sendTypeView}} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a ng-click="selectType($event, 'SMS', 'InApp')" href="#">InApp</a></li>
-                                <li><a ng-click="selectType($event, 'WEB', 'NonApp')" href="#">NonApp</a></li>
+                                <li><a ng-click="selectType($event, 'PUSH', 'InApp')" href="#">InApp</a></li>
+                                <li><a ng-click="selectType($event, 'SMS', 'NonApp')" href="#">NonApp</a></li>
                             </ul>
                         </div>
                         <div class="col-xs-3 btn-group">
@@ -80,6 +80,7 @@
                         <th data-field="id" data-align="center" data-sortable="false">Id</th>
                         <th data-field="message" data-align="center" data-sortable="false">Message</th>
                         <th data-field="regDateStr" data-align="center" data-sortable="false">Send date</th>
+                        <th data-field="sendTypeView" data-sortable="false">Send Type</th>
                         <th data-field="userCnt" data-sortable="true">User sent</th>
                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                     </tr>

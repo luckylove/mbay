@@ -64,21 +64,22 @@
   </delete>
 
   <insert id="insert" parameterType="userGroupModel" >
-    insert into user_group (name, description, reg_date)
+      <selectKey keyProperty="id"
+                 resultType="java.lang.Long" order="BEFORE">
+          SELECT nextVal('user_group_id_seq')
+      </selectKey>
+
+    insert into user_group (id, name, description, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{name,jdbcType=VARCHAR},
     	#{description,jdbcType=VARCHAR},
     	now()
       )
       
-    <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM user_group_id_seq;
-     </selectKey>
 
   </insert>
-  
-  
-  
+
   <update id="update" parameterType="userGroupModel" >
     update user_group
     set name = #{name,jdbcType=VARCHAR},

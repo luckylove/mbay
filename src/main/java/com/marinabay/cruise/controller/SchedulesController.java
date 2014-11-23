@@ -103,5 +103,11 @@ public class SchedulesController {
         return JSonResult.ofSuccess(schedulesService.updateTaxiOnQueue(id, type));
     }
 
+    @RequestMapping(value = {"/addPassOnQueue.json"}, method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public JSonResult addPassOnQueue(HttpServletRequest request, Long id, String type) {
+        return JSonResult.ofSuccess(schedulesService.updatePassOnQueue(id, type));
+    }
+
 
 }

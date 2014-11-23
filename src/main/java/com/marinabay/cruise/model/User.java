@@ -23,7 +23,16 @@ public class User extends GenericModel{
     private USERTYPE userType;
     private Long taxiId;
     private String taxiCompany;
+    private String sendPush;
     private boolean isQc;
+
+    public String getSendPush() {
+        return sendPush;
+    }
+
+    public void setSendPush(String sendPush) {
+        this.sendPush = sendPush;
+    }
 
     public boolean isQCordinator() {
         return ROLE.QC == role;

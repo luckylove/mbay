@@ -36,8 +36,14 @@
   </delete>
 
   <insert id="insert" parameterType="cruisePortModel" >
-    insert into cruise_port (name, address, about_us, information, surcharge, direction, lati, longti, reg_date)
+      <selectKey keyProperty="id"
+                 resultType="java.lang.Long" order="BEFORE">
+          SELECT nextVal('cruise_port_id_seq')
+      </selectKey>
+
+    insert into cruise_port (id, name, address, about_us, information, surcharge, direction, lati, longti, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{name,jdbcType=VARCHAR},
     	#{address,jdbcType=VARCHAR},
     	#{aboutUs,jdbcType=VARCHAR},
@@ -49,10 +55,6 @@
     	now()
       )
       
-    <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM cruise_port_id_seq;
-     </selectKey>
-
   </insert>
   
   

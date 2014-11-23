@@ -93,6 +93,17 @@ public class SchedulesService extends GenericService<Schedules>{
         return schedulesDao.getTaxiOnQueue(id);
     }
 
+    public Integer updatePassOnQueue(Long id, String type) {
+        if ("decrease".equals(type)) {
+            Integer taxiOnQueue = schedulesDao.getPassOnQueue(id);
+            if (taxiOnQueue == 0) {
+                return 0;
+            }
+        }
+        schedulesDao.updatePassOnQueue(ImmutableMap.of("id", id, "type", type));
+        return schedulesDao.getPassOnQueue(id);
+    }
+
     public List<Schedules> listMobile(String startdate, String enddate) {
         HashMap<Object,Object> hashMap = Maps.newHashMap();
         hashMap.put("startdate", startdate);

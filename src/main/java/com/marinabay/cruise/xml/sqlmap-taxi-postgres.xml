@@ -62,16 +62,19 @@
   </delete>
 
   <insert id="insert" parameterType="taxiModel" >
-    insert into taxi (name, reg_date)
+
+      <selectKey keyProperty="id"
+                 resultType="java.lang.Long" order="BEFORE">
+          SELECT nextVal('taxi_id_seq')
+      </selectKey>
+
+    insert into taxi (id, name, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{name,jdbcType=VARCHAR},
     	now()
       )
       
-    <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM taxi_id_seq;
-     </selectKey>
-
   </insert>
   
   

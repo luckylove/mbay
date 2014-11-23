@@ -1,5 +1,6 @@
 package com.marinabay.cruise.model;
 
+import com.marinabay.cruise.constant.SENDTYPE;
 import com.marinabay.cruise.constant.SEND_STATUS;
 import com.marinabay.cruise.constant.USERTYPE;
 import com.marinabay.cruise.utils.RequestUtls;
@@ -53,7 +54,7 @@ public class UserNotificationView extends GenericModel{
     }
 
     public String getType() {
-        return USERTYPE.valueOf(type).getView();
+        return SENDTYPE.valueOf(type).getView();
     }
 
     public void setType(String type) {

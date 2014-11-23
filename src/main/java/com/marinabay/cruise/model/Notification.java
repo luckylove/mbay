@@ -39,6 +39,13 @@ public class Notification extends GenericModel{
         this.senderId = senderId;
     }
 
+    public String getSendTypeView() {
+        if ("SMS".equals(sendType)) {
+            return "NonApp";
+        }
+        return "InApp";
+    }
+
     public String getSendType() {
         return sendType;
     }

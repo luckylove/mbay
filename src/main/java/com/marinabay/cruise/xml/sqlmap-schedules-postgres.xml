@@ -11,17 +11,18 @@
     <result column="departure_time" property="departureTime" jdbcType="TIMESTAMP" />
     <result column="passengers" property="passengers" jdbcType="INTEGER" />
     <result column="taxi_on_queue" property="taxiOnQueue" jdbcType="INTEGER" />
+    <result column="pass_on_queue" property="passOnQueue" jdbcType="INTEGER" />
     <result column="call_type" property="callType" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, call_type, reg_date, mod_date
+    id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, pass_on_queue, call_type, reg_date, mod_date
   </sql>
 
   <sql id="Base_Column_List_Aias" >
-    us.id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, call_type, us.reg_date, us.mod_date
+    us.id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, pass_on_queue, call_type, us.reg_date, us.mod_date
   </sql>
   <select id="count" resultType="long" parameterType="pagingModel" >
         select count(id) as total
@@ -113,8 +114,15 @@
   </delete>
 
  <insert id="insert" parameterType="scheduleModel" >
-    insert into schedules (cruise_id, arrival_time, departure_time, passengers, call_type, reg_date)
+
+     <selectKey keyProperty="id"
+                resultType="java.lang.Long" order="BEFORE">
+         SELECT nextVal('schedules_id_seq')
+     </selectKey>
+
+    insert into schedules (id, cruise_id, arrival_time, departure_time, passengers, call_type, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{cruiseId,jdbcType=BIGINT},
     	#{arrivalTime,jdbcType=TIMESTAMP},
     	#{departureTime,jdbcType=TIMESTAMP},
@@ -122,11 +130,6 @@
     	#{callType,jdbcType=VARCHAR},
     	now()
       )
-
-
-     <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM schedules_id_seq;
-     </selectKey>
 
   </insert>
   
@@ -144,7 +147,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-    <update id="updateTaxiOnQueue" parameterType="map" >
+  <update id="updateTaxiOnQueue" parameterType="map" >
     update schedules
     set
         <choose>
@@ -158,8 +161,28 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+    <update id="updatePassOnQueue" parameterType="map" >
+        update schedules
+        set
+        <choose>
+            <when test="type == 'increase'">
+                pass_on_queue =   pass_on_queue + 1
+            </when>
+            <otherwise>
+                pass_on_queue =   pass_on_queue - 1
+            </otherwise>
+        </choose>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
     <select id="getTaxiOnQueue" resultType="integer" parameterType="java.lang.Long" >
         select taxi_on_queue
+        from schedules
+        where id = #{value}
+    </select>
+
+    <select id="getPassOnQueue" resultType="integer" parameterType="java.lang.Long" >
+        select pass_on_queue
         from schedules
         where id = #{value}
     </select>

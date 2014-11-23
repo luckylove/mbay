@@ -63,18 +63,21 @@
   </delete>
 
   <insert id="insert" parameterType="activeUserModel" >
-    insert into active_user (user_id, active_count, active_date, reg_date)
+
+  <selectKey keyProperty="id"
+             resultType="java.lang.Long" order="BEFORE">
+      SELECT nextVal('active_user_id_seq')
+  </selectKey>
+
+    insert into active_user (id, user_id, active_count, active_date, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{userId,jdbcType=BIGINT},
     	#{activeCount,jdbcType=INTEGER},
     	#{activeDate,jdbcType=DATE},
     	now()
       )
       
-    <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM active_user_id_seq;
-     </selectKey>
-
   </insert>
   
   
@@ -100,11 +103,11 @@
                 #{it}
             </foreach>
         </if>
-        <if test="userType != null and userType == 'WEB'">
-            AND us.user_type = 'WEB'
+        <if test="userType != null and userType == 'PUSH'">
+            AND us.user_type = 'MOBILE'
         </if>
         <if test="userType != null and userType == 'SMS'">
-            AND us.user_type = 'MOBILE'
+            AND us.user_type = 'WEB'
         </if>
          group by  us.user_name, us.taxi_license, us.id) as tmp
      </select>
@@ -122,11 +125,11 @@
                 #{it}
             </foreach>
         </if>
-        <if test="userType != null and userType == 'WEB'">
-            AND us.user_type = 'WEB'
+        <if test="userType != null and userType == 'PUSH'">
+            AND us.user_type = 'MOBILE'
         </if>
         <if test="userType != null and userType == 'SMS'">
-            AND us.user_type = 'MOBILE'
+            AND us.user_type = 'WEB'
         </if>
         group by  us.user_name, us.taxi_license, us.id
         order by active_count desc

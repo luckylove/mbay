@@ -40,6 +40,7 @@ public class CheckSMSJob implements Callable {
         this.params = params;
         this.sendUrl = sendUrl;
     }
+
     @Override
     public Object call() throws Exception {
         LOG.info("send sms", sendUrl);

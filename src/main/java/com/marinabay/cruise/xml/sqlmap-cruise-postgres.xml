@@ -63,17 +63,19 @@
   </delete>
 
   <insert id="insert" parameterType="cruiseModel" >
-    insert into cruise (name, passenger, reg_date)
+
+      <selectKey keyProperty="id"
+                 resultType="java.lang.Long" order="BEFORE">
+          SELECT nextVal('cruise_id_seq')
+      </selectKey>
+
+    insert into cruise (id, name, passenger, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{name,jdbcType=VARCHAR},
     	#{passenger,jdbcType=INTEGER},
     	now()
       )
-      
-    <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM cruise_id_seq;
-     </selectKey>
-
   </insert>
   
   

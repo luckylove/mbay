@@ -18,16 +18,17 @@
     <result column="user_type" property="userType" jdbcType="VARCHAR" />
     <result column="taxi_id" property="taxiId" jdbcType="BIGINT" />
     <result column="taxi_company" property="taxiCompany" jdbcType="VARCHAR" />
+    <result column="send_push" property="sendPush" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, user_name, nric_no, ui_num, name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, reg_date, mod_date
+    id, user_name, nric_no, ui_num, name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, reg_date, mod_date, send_push
   </sql>
 
     <sql id="Base_Column_List_Aias" >
-    us.id, user_name, nric_no, ui_num, us.name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, us.reg_date, us.mod_date
+    us.id, user_name, nric_no, ui_num, us.name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, us.reg_date, us.mod_date, us.send_push
   </sql>
 
     <select id="count" resultType="long" parameterType="pagingModel" >
@@ -65,11 +66,11 @@
                 </if>
             </otherwise>
         </choose>
-        <if test="userType != null and userType == 'WEB'">
-            AND us.user_type = 'WEB'
+        <if test="userType != null and userType == 'PUSH'">
+            AND us.user_type = 'MOBILE'
         </if>
         <if test="userType != null and userType == 'SMS'">
-            AND us.user_type = 'MOBILE'
+            AND us.user_type = 'WEB'
         </if>
     </select>
   <select id="select" resultMap="userResultMap" parameterType="map" >
@@ -107,11 +108,11 @@
               </if>
           </otherwise>
       </choose>
-      <if test="userType != null and userType == 'WEB'">
-          AND us.user_type = 'WEB'
+      <if test="userType != null and userType == 'PUSH'">
+          AND us.user_type = 'MOBILE'
       </if>
       <if test="userType != null and userType == 'SMS'">
-          AND us.user_type = 'MOBILE'
+          AND us.user_type = 'WEB'
       </if>
 
       <if test="name != null and name != ''" >
@@ -159,8 +160,13 @@
   </delete>
 
  <insert id="insert" parameterType="userModel" >
-    insert into users (user_name, name, nric_no, ui_num, mobile, password, role, taxi_license, user_type, taxi_id, reg_date)
+     <selectKey keyProperty="id"
+                resultType="java.lang.Long" order="BEFORE">
+         SELECT nextVal('user_id_seq')
+     </selectKey>
+    insert into users (id, user_name, name, nric_no, ui_num, mobile, password, role, taxi_license, user_type, taxi_id, reg_date)
     values (
+    	#{id,jdbcType=BIGINT},
     	#{userName,jdbcType=VARCHAR},
     	#{name,jdbcType=VARCHAR},
     	#{nricNo,jdbcType=VARCHAR},
@@ -173,12 +179,6 @@
     	#{taxiId,jdbcType=BIGINT},
     	now()
       )
-
-
-     <selectKey resultType="java.lang.Long" keyProperty="id" >
-         SELECT last_value as id FROM user_id_seq;
-     </selectKey>
-
   </insert>
   
   
@@ -231,7 +231,12 @@
         from users us
         where 1=1
         and us.id in (select ugs.user_id from user_group_user ugs where ugs.group_id = #{groupId} and ugs.user_id=us.id)
-        and us.user_type = #{userType}
+        <if test="userType != null and userType == 'PUSH'">
+            AND us.user_type = 'MOBILE'
+        </if>
+        <if test="userType != null and userType == 'SMS'">
+            AND us.user_type = 'WEB'
+        </if>
     </select>
 
     <select id="loadAllUserByIds" resultMap="userResultMap" parameterType="map">

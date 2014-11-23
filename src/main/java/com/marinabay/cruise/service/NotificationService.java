@@ -78,13 +78,13 @@ public class NotificationService extends GenericService<Notification>{
             public void run() {
                 try {
                     LOG.info("Go to check sms status");
-                    List<UserNotification> allSendMsg = notificationDao.getAllSendMsg();
+                    /*List<UserNotification> allSendMsg = notificationDao.getAllSendMsg();
                     for (UserNotification nf : allSendMsg) {
                         if ("SMS".equals(nf.getType())) {
-                            CheckSMSJob smsJob = new CheckSMSJob(notificationDao, nf, getSMSCheckURL(), getCheckSMSParams(nf.getSendId()));
-                            sendService.submit(smsJob);
+                            //CheckSMSJob smsJob = new CheckSMSJob(notificationDao, nf, getSMSCheckURL(), getCheckSMSParams(nf.getSendId()));
+                            //sendService.submit(smsJob);
                         }
-                    }
+                    }*/
                 } catch (Exception e) {
                     LOG.error("", e);
                 }
@@ -120,7 +120,8 @@ public class NotificationService extends GenericService<Notification>{
                 notificationDao.insert(message);
 
                 final List<User> users = userService.loadAllUserByIds(userIDs);
-                if ("WEB".equals(message.getSendType())) {
+                //web mean push
+                if ("PUSH".equals(message.getSendType())) {
 
                     for (User user : users) {
                         //store into db

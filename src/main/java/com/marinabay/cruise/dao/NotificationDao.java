@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface NotificationDao extends GenericDao<Notification> {
 
-    public void insertUserNotification(UserNotification record);
+    public Integer insertUserNotification(UserNotification record);
 
     public void updateUserNotification(UserNotification record);
 

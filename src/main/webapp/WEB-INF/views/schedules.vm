@@ -79,7 +79,8 @@
                         <th data-field="callType" data-sortable="true">Call type</th>
 
                         #if("$!loggedUser.role" == "ADMIN" || "$!loggedUser.role" == "QC")
-                        <th data-field="taxiOnQueue">Queue</th>
+                        <th data-field="taxiOnQueue" data-formatter="iconFormatter" data-events="taxiOnQEvents">Tx Queue</th>
+                        <th data-field="passOnQueue"  data-formatter="iconFormatter" data-events="passOnQEvents">Ps Queue</th>
                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                         #end
                     </tr>

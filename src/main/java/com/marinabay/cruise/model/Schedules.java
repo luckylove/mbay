@@ -23,6 +23,7 @@ public class Schedules extends GenericModel{
     private Date departureTime;
     private Integer passengers;
     private Integer taxiOnQueue;
+    private Integer passOnQueue;
     private String callType;
 
     //custom field
@@ -37,6 +38,14 @@ public class Schedules extends GenericModel{
             return DateUtils.isSameDay(Calendar.getInstance().getTime(), departureTime);
         }
         return false;
+    }
+
+    public Integer getPassOnQueue() {
+        return passOnQueue;
+    }
+
+    public void setPassOnQueue(Integer passOnQueue) {
+        this.passOnQueue = passOnQueue;
     }
 
     public void setToday(boolean today) {

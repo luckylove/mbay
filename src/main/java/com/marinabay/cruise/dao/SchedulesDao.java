@@ -16,6 +16,10 @@ public interface SchedulesDao extends GenericDao<Schedules> {
 
     public void updateTaxiOnQueue(Map map);
 
+    public void updatePassOnQueue(Map map);
+
     public Integer getTaxiOnQueue(Long id);
+
+    public Integer getPassOnQueue(Long id);
 
 }

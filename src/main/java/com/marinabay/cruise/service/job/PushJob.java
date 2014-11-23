@@ -1,5 +1,6 @@
 package com.marinabay.cruise.service.job;
 
+import com.marinabay.cruise.constant.SEND_STATUS;
 import com.marinabay.cruise.dao.NotificationDao;
 import com.marinabay.cruise.model.UserNotification;
 import org.slf4j.Logger;
@@ -28,18 +29,19 @@ public class PushJob implements Callable {
     }
     @Override
     public Object call() throws Exception {
-        LOG.info("insert to db {}", nf.getUserId());
         notificationDao.insertUserNotification(nf);
-        /*LOG.info("send push", sendUrl);
+        LOG.info("insert to db {} {}", nf.getUserId(), nf.getId());
+        LOG.info("send push", sendUrl);
         try {
-            String result = sendGet(sendUrl);
+            //String result = sendGet(sendUrl);
             nf.setStatus(SEND_STATUS.SENT);
-            nf.setSendId(result);
+            //nf.setSendId(result);
         } catch (Exception e) {
             nf.setStatus(SEND_STATUS.ERROR);
         }
         //update status to db
-        notificationDao.updateUserNotification(nf);*/
+        notificationDao.updateUserNotification(nf);
+        LOG.info("update to db {} {}", nf.getUserId(), nf.getId());
         return null;
     }
 
