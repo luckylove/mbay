@@ -347,12 +347,44 @@ $(function () {
     setTimeout(function(){$('#userGroupTable').bootstrapTable({
         url: 'listNotification.json'  ,
         onAll: function (name, args) {
-            $("[name='my-checkbox']").bootstrapSwitch({
+            $("[name='my-checkbox']:checked").bootstrapSwitch({
                 size: 'mini',
+                onBefore: function(event, it){
+                    bootbox.confirm("Are  you sure you want to inactive it", function(result) {
+                        if(result) {
+                            $.ajax({
+                                type: "GET",
+                                url: 'inactivePushNotification.json',
+                                data: {
+                                    id: $(event.currentTarget).val()
+                                },
+                                dataType: 'json'
+                            })
+                            .done(function(data) {
+                                it.options.notBefore = true;
+                                it.$element.bootstrapSwitch('toggleState', true, true);
+                                it.$element.bootstrapSwitch('toggleDisabled', true, true);
+                            })
+                            .fail(function() {
+
+                            });
+                        }
+                    });
+                    return false;
+                },
                 onSwitchChange: function(event, state) {
+                    if(!state){
+
+                    }
 
                 }
             });
+
+            $("[name='my-checkbox']:not(:checked)").bootstrapSwitch({
+                size: 'mini',
+                disabled: true
+            });
+
         }
     })}, 100);
 });

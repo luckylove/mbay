@@ -14,6 +14,8 @@ public interface NotificationDao extends GenericDao<Notification> {
 
     public void updateUserNotification(UserNotification record);
 
+    public void inactiveNotification(Long record);
+
     public void decreaseCheckCnt(UserNotification record);
 
     public void deleteUserNotification(Long val);

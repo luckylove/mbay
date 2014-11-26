@@ -17,7 +17,7 @@ public class UserNotification extends GenericModel{
     private String type;
     private String sendId;
     private Date lastSent;
-    private Integer checkCount;
+    private Integer checkCount = 0;
 
     public Integer getCheckCount() {
         return checkCount;

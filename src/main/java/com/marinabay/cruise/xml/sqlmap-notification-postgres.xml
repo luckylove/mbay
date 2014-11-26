@@ -171,4 +171,11 @@
         and EXTRACT(EPOCH FROM now()-last_sent)/60 >= 30;
     </select>
 
+    <update id="inactiveNotification" parameterType="long" >
+    update notification
+    set
+      push_status = 0
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
 </mapper>

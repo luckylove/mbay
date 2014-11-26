@@ -38,6 +38,7 @@ public class PushJob implements Callable {
             nf.setCheckCount(nf.getCheckCount() + 1);
             //nf.setSendId(result);
         } catch (Exception e) {
+            LOG.error("", e);
             nf.setStatus(SEND_STATUS.ERROR);
         }
         //update status to db

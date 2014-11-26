@@ -20,8 +20,8 @@ public class SnsContextLoaderListener extends ContextLoaderListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        ApplicationInit.shutdown();
         super.contextDestroyed(event);
+        ApplicationInit.shutdown();
     }
 
 

@@ -196,6 +196,10 @@ public class NotificationService extends GenericService<Notification>{
         return JSonPagingResult.ofSuccess(total, notificationDao.getAllSentNotification(model));
     }
 
+    public void  inactiveNotification(Long id) {
+       notificationDao.inactiveNotification(id);
+    }
+
     public void deleteUserNotification(Long val) {
         notificationDao.deleteUserNotification(val);
         notificationDao.deleteByID(val);

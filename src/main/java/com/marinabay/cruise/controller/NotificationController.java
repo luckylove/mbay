@@ -99,6 +99,13 @@ public class NotificationController {
         return userService.selectAllByGroup(groupId, userType);
     }
 
+    @RequestMapping(value = {"/inactivePushNotification.json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSonResult<Boolean> inactivePushNotification(HttpServletRequest request, Long id) {
+        notificationService.inactiveNotification(id);
+        return JSonResult.ofSuccess(true);
+    }
+
     @RequestMapping(value = {"/sentUserList.json"}, method = RequestMethod.GET)
     @ResponseBody
     public JSonPagingResult<UserNotificationView>  sentUserList(HttpServletRequest request, PagingModel model) {

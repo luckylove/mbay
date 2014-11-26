@@ -19,7 +19,7 @@
     <script src="resources/js/moment.min.js"></script>
     <script src="resources/js/bootstrap-datetimepicker.min.js"></script>
     <script src="resources/js/bootstrap-tagsinput.js"></script>
-    <script src="resources/js/bootstrap-switch.min.js"></script>
+    <script src="resources/js/bootstrap-switch.js"></script>
     <script src="resources/js/index.js"></script>
     <script type="text/javascript">
         var isNric = '${loggedUser.nricNo}';
