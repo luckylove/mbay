@@ -17,6 +17,15 @@ public class UserNotificationView extends GenericModel{
     private SEND_STATUS status;
     private String type;
     private String sendDate;
+    private Integer checkCount;
+
+    public Integer getCheckCount() {
+        return checkCount;
+    }
+
+    public void setCheckCount(Integer checkCount) {
+        this.checkCount = checkCount;
+    }
 
     public String getSendDate() {
         if(this.getRegDate() != null) {

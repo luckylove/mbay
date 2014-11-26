@@ -9,6 +9,7 @@
     <result column="sender_name" property="senderName" jdbcType="VARCHAR" />
     <result column="send_type" property="sendType" jdbcType="VARCHAR" />
     <result column="user_cnt" property="userCnt" jdbcType="INTEGER" />
+    <result column="push_status" property="pushStatus" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
@@ -20,6 +21,9 @@
         <result column="type" property="type" jdbcType="VARCHAR" />
         <result column="send_id" property="sendId" jdbcType="VARCHAR" />
         <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+        <result column="last_sent" property="lastSent" jdbcType="TIMESTAMP" />
+        <result column="message" property="message" jdbcType="VARCHAR" />
+        <result column="check_count" property="checkCount" jdbcType="INTEGER" />
     </resultMap>
 
     <resultMap id="userMapResultView" type="com.marinabay.cruise.model.UserNotificationView" >
@@ -28,10 +32,11 @@
         <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="type" property="type" jdbcType="VARCHAR" />
         <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
+        <result column="check_count" property="checkCount" jdbcType="INTEGER" />
     </resultMap>
 
   <sql id="Base_Column_List" >
-    id, message, user_cnt, reg_date, sender_id, sender_name , send_type
+    id, message, user_cnt, reg_date, sender_id, sender_name , send_type, push_status
   </sql>
 
  <select id="count" resultType="long" parameterType="pagingModel" >
@@ -103,13 +108,14 @@
             SELECT nextVal('user_notification_id_seq')
         </selectKey>
 
-        insert into user_notification (id, user_id, notification_id, type, status, reg_date)
+        insert into user_notification (id, user_id, notification_id, type, status, reg_date, last_sent)
         values (
         #{id,jdbcType=BIGINT},
         #{userId,jdbcType=BIGINT},
         #{notificationId,jdbcType=BIGINT},
         #{type,jdbcType=VARCHAR},
         #{status,jdbcType=VARCHAR},
+        now() ,
         now()
         )
 
@@ -119,7 +125,9 @@
     update user_notification
     set
       status = #{status,jdbcType=VARCHAR},
-      send_id = #{sendId,jdbcType=VARCHAR}
+      send_id = #{sendId,jdbcType=VARCHAR},
+      check_count = #{checkCount,jdbcType=INTEGER} ,
+      last_sent = now()
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -139,7 +147,7 @@
     </select>
 
     <select id="getAllSentNotification" resultMap="userMapResultView" parameterType="pagingModel">
-        select nf.sender_name, us.user_name as receiver_name, un.status, un.reg_date , un.type
+        select nf.sender_name, us.user_name as receiver_name, un.status, un.reg_date , un.type ,un.check_count
         from user_notification  un
         inner join users us on un.user_id = us.id
         inner join notification nf on   un.notification_id = nf.id
@@ -153,6 +161,14 @@
         select *
         from user_notification  un
         where un.status = 'SENT' and send_id is not null   and check_count >=0
+    </select>
+
+    <select id="getResendSentNotification" resultMap="userMapResult">
+       select un.*, n.message from user_notification un
+        inner join notification n on un.notification_id = n.id
+        inner join users u on un.user_id = u.id where
+        un.type ='PUSH' AND u.send_push ='1' AND n.push_status = '1'
+        and EXTRACT(EPOCH FROM now()-last_sent)/60 >= 30;
     </select>
 
 </mapper>

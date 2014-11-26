@@ -20,6 +20,8 @@ public interface NotificationDao extends GenericDao<Notification> {
 
     public List<UserNotification> getAllSendMsg();
 
+    public List<UserNotification> getResendSentNotification();
+
     public List<UserNotificationView> getAllSentNotification(PagingModel model);
 
     public Long countAllSentNotification(PagingModel model);

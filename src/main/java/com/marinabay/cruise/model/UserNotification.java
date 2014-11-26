@@ -2,6 +2,8 @@ package com.marinabay.cruise.model;
 
 import com.marinabay.cruise.constant.SEND_STATUS;
 
+import java.util.Date;
+
 /**
  * User: son.nguyen
  * Date: 9/21/14
@@ -14,6 +16,34 @@ public class UserNotification extends GenericModel{
     private SEND_STATUS status;
     private String type;
     private String sendId;
+    private Date lastSent;
+    private Integer checkCount;
+
+    public Integer getCheckCount() {
+        return checkCount;
+    }
+
+    public void setCheckCount(Integer checkCount) {
+        this.checkCount = checkCount;
+    }
+
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Date getLastSent() {
+        return lastSent;
+    }
+
+    public void setLastSent(Date lastSent) {
+        this.lastSent = lastSent;
+    }
 
     public Long getUserId() {
         return userId;

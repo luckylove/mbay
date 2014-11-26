@@ -8,6 +8,7 @@ import com.marinabay.cruise.dao.UserDao;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.job.CheckSMSJob;
 import com.marinabay.cruise.service.job.PushJob;
+import com.marinabay.cruise.service.job.RePushJob;
 import com.marinabay.cruise.service.job.SMSJob;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -78,18 +79,16 @@ public class NotificationService extends GenericService<Notification>{
             public void run() {
                 try {
                     LOG.info("Go to check sms status");
-                    /*List<UserNotification> allSendMsg = notificationDao.getAllSendMsg();
+                    List<UserNotification> allSendMsg = notificationDao.getResendSentNotification();
                     for (UserNotification nf : allSendMsg) {
-                        if ("SMS".equals(nf.getType())) {
-                            //CheckSMSJob smsJob = new CheckSMSJob(notificationDao, nf, getSMSCheckURL(), getCheckSMSParams(nf.getSendId()));
-                            //sendService.submit(smsJob);
-                        }
-                    }*/
+                        //only for push type
+                        sendService.submit(new PushJob(notificationDao, nf, getPUSH_URL(null, null, null)));
+                    }
                 } catch (Exception e) {
                     LOG.error("", e);
                 }
             }
-        }, 3, 1, TimeUnit.MINUTES);
+        }, 3, 3, TimeUnit.MINUTES);
     }
 
     public JSonPagingResult<Notification> list(PagingModel model) {
@@ -130,10 +129,14 @@ public class NotificationService extends GenericService<Notification>{
                         nf.setType(message.getSendType());
                         nf.setUserId(user.getId());
                         nf.setStatus(SEND_STATUS.NOT_SEND);
-                        PushJob smsJob = new PushJob(notificationDao, nf, getPUSH_URL(user.getUserName(), sendUser.getUserName(), message.getMessage()));
+                        notificationDao.insertUserNotification(nf);
+                        if("1".equals(user.getSendPush())){
+                            PushJob smsJob = new PushJob(notificationDao, nf, getPUSH_URL(user.getUserName(), sendUser.getUserName(), message.getMessage()));
+                            sendService.submit(smsJob);
+                        }
                         //store to db and send to push job
-                        sendCnt ++;
-                        sendService.submit(smsJob);
+                        //sendCnt ++;
+
                     }
                 } else if ("SMS".equals(message.getSendType())) {
                     for (User user : users) {
@@ -146,12 +149,12 @@ public class NotificationService extends GenericService<Notification>{
                             SMSJob smsJob = new SMSJob(notificationDao, nf, getSMSURL()
                             ,getSMSParams(user.getMobile(), sendUser.getUserName(), message.getMessage()));
                             sendService.submit(smsJob);
-                            sendCnt ++;
+                            //sendCnt ++;
                         }
                     }
                 }
-                message.setUserCnt(sendCnt);
-                notificationDao.update(message);
+                //message.setUserCnt(sendCnt);
+                //notificationDao.update(message);
             }
         }
     }

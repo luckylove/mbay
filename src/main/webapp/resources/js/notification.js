@@ -241,6 +241,18 @@ var ModalActiveInstanceCtrl = function ($scope, $modalInstance, $http, userForm)
 
 };
 
+function stateFormatter(value, row, index) {
+    if(row.sendType == 'PUSH'){
+        var checked = value === '1' ? 'checked' : '';
+        return [
+            '<input type="checkbox" name="my-checkbox" value="' + row.id + '" ' + checked + '>'
+        ].join('');
+    } else {
+        return '';
+    }
+
+}
+
 function operateFormatter(value, row, index) {
     return [
 
@@ -333,6 +345,14 @@ function rowStyle(row, index) {
 
 $(function () {
     setTimeout(function(){$('#userGroupTable').bootstrapTable({
-        url: 'listNotification.json'
+        url: 'listNotification.json'  ,
+        onAll: function (name, args) {
+            $("[name='my-checkbox']").bootstrapSwitch({
+                size: 'mini',
+                onSwitchChange: function(event, state) {
+
+                }
+            });
+        }
     })}, 100);
 });

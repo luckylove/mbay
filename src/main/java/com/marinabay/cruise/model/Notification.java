@@ -16,11 +16,20 @@ public class Notification extends GenericModel{
     private Integer userCnt;
     private String type;
     private String sendType;
+    private String pushStatus;
     private Long senderId;
     private String senderName;
 
 
     public Notification() {
+    }
+
+    public String getPushStatus() {
+        return pushStatus;
+    }
+
+    public void setPushStatus(String pushStatus) {
+        this.pushStatus = pushStatus;
     }
 
     public String getSenderName() {

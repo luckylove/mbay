@@ -13,9 +13,9 @@ import java.util.concurrent.Callable;
  * Date: 9/23/14
  * Time: 7:15 PM
  */
-public class PushJob implements Callable {
+public class RePushJob implements Callable {
 
-    private Logger LOG = LoggerFactory.getLogger(PushJob.class);
+    private Logger LOG = LoggerFactory.getLogger(RePushJob.class);
 
     private NotificationDao notificationDao;
     private UserNotification nf;
@@ -23,7 +23,7 @@ public class PushJob implements Callable {
     private String pushReceive;
 
 
-    public PushJob(NotificationDao notificationDao, UserNotification nf, String sendUrl) {
+    public RePushJob(NotificationDao notificationDao, UserNotification nf, String sendUrl) {
         this.notificationDao = notificationDao;
         this.nf = nf;
         this.sendUrl = sendUrl;
@@ -35,7 +35,6 @@ public class PushJob implements Callable {
         try {
             //String result = sendGet(sendUrl);
             nf.setStatus(SEND_STATUS.SENT);
-            nf.setCheckCount(nf.getCheckCount() + 1);
             //nf.setSendId(result);
         } catch (Exception e) {
             nf.setStatus(SEND_STATUS.ERROR);

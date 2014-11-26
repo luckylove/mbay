@@ -7,6 +7,7 @@
     <link href="resources/css/bootstrap-table.min.css" rel="stylesheet">
     <link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="resources/css/bootstrap-tagsinput.css" rel="stylesheet">
+    <link href="resources/css/bootstrap-switch.min.css" rel="stylesheet">
     <link href="resources/css/index.css" rel="stylesheet">
 
     <script src="resources/js/jquery.min.js"></script>
@@ -18,6 +19,7 @@
     <script src="resources/js/moment.min.js"></script>
     <script src="resources/js/bootstrap-datetimepicker.min.js"></script>
     <script src="resources/js/bootstrap-tagsinput.js"></script>
+    <script src="resources/js/bootstrap-switch.min.js"></script>
     <script src="resources/js/index.js"></script>
     <script type="text/javascript">
         var isNric = '${loggedUser.nricNo}';
