@@ -49,6 +49,7 @@ public class SMSJob implements Callable {
             //String result = sendGet(sendUrl);
             nf.setStatus(SEND_STATUS.SENT);
             //nf.setSendId(parseText(result));
+            nf.setCheckCount(nf.getCheckCount() + 1);
         } catch (Exception e) {
             LOG.error("",e);
             nf.setStatus(SEND_STATUS.ERROR);

@@ -19,8 +19,9 @@
 
     <context:property-placeholder location="classpath:properties/cruise.properties" ignore-unresolvable="true"/>
 
-    <!--<task:executor id="taskExecutor"
-                   pool-size="${app.active.thread.fetchContent}"
-                   queue-capacity="5"/>-->
+    <task:executor id="taskExecutor"
+                   pool-size="5-10"
+                   queue-capacity="105"/>
+
 
 </beans>

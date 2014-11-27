@@ -3,6 +3,7 @@ package com.marinabay.cruise.service.job;
 import com.marinabay.cruise.constant.SEND_STATUS;
 import com.marinabay.cruise.dao.NotificationDao;
 import com.marinabay.cruise.model.UserNotification;
+import com.marinabay.cruise.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,21 +18,21 @@ public class PushJob implements Callable {
 
     private Logger LOG = LoggerFactory.getLogger(PushJob.class);
 
-    private NotificationDao notificationDao;
+    private NotificationService notificationService;
     private UserNotification nf;
     private String sendUrl;
     private String pushReceive;
 
 
-    public PushJob(NotificationDao notificationDao, UserNotification nf, String sendUrl) {
-        this.notificationDao = notificationDao;
+    public PushJob(NotificationService notificationDao, UserNotification nf, String sendUrl) {
+        this.notificationService = notificationDao;
         this.nf = nf;
         this.sendUrl = sendUrl;
 
     }
     @Override
     public Object call() throws Exception {
-        LOG.info("send push", sendUrl);
+        LOG.info("send push {} {}", nf.getUserId(), nf.getId());
         try {
             //String result = sendGet(sendUrl);
             nf.setStatus(SEND_STATUS.SENT);
@@ -42,7 +43,7 @@ public class PushJob implements Callable {
             nf.setStatus(SEND_STATUS.ERROR);
         }
         //update status to db
-        notificationDao.updateUserNotification(nf);
+        notificationService.updateUserNotification(nf);
         LOG.info("update to db {} {}", nf.getUserId(), nf.getId());
         return null;
     }

@@ -330,9 +330,9 @@ function queryUserParams(params) {
 }
 
 function rowStyle(row, index) {
-    if(row.role === 'ADMIN') {
+    if(row.sendType === "PUSH") {
         return {
-            classes: 'danger'
+            classes: 'success'
         };
     }
     if (index % 2 === 0) {
