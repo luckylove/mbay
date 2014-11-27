@@ -88,6 +88,8 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
                         bootbox.alert(data.errorMsg);
                     } else {
                         bootbox.alert(data.result);
+                        $('#myTextarea').val('');
+                        $('#inputUserTag').tagsinput('removeAll');
                         $('#userGroupTable').bootstrapTable('refresh');
                     }
                 }).
