@@ -41,7 +41,7 @@ public class MobileRestCruiseController {
     @RequestMapping(value = {"/error.json"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public JSonResult error(HttpServletRequest request) {
-        return JSonResult.ofError("You need to login!", 500);
+        return JSonResult.ofError("You need login!", 500);
     }
 
     @RequestMapping(value = {"/login.json"}, method = RequestMethod.POST, produces = "application/json")
@@ -148,4 +148,34 @@ public class MobileRestCruiseController {
         }
     }
 
+    @RequestMapping(value = {"/enablePushNotification.json"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public JSonResult enablePushNotification(HttpServletRequest request,Long userId,  Boolean enable) {
+        if (userId == null) {
+            return JSonResult.ofError("UserId is required", 400);
+        }
+        User user = userService.selectByID(userId);
+        if (user == null) {
+            return JSonResult.ofError("User not found", 400);
+        }
+        return JSonResult.ofSuccess("Update is ok");
+    }
+
+    @RequestMapping(value = {"/surCharge.html"}, method = RequestMethod.GET)
+    public String surCharge(HttpServletRequest request) {
+        RequestUtls.clearLoggedUser(request);
+        return "/staticContent";
+    }
+
+    @RequestMapping(value = {"/direction.html"}, method = RequestMethod.GET)
+    public String direction(HttpServletRequest request) {
+        RequestUtls.clearLoggedUser(request);
+        return "/staticContent";
+    }
+
+    @RequestMapping(value = {"/information.html"}, method = RequestMethod.GET)
+    public String information(HttpServletRequest request) {
+        RequestUtls.clearLoggedUser(request);
+        return "/staticContent";
+    }
 }

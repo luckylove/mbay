@@ -22,7 +22,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/m/*.json" />
             <mvc:exclude-mapping path="/m/login.json"/>
-            <mvc:exclude-mapping path="/m/loginSubmit.json"/>
+            <mvc:exclude-mapping path="/m/addUser.json"/>
             <mvc:exclude-mapping path="/m/error.json"/>
             <bean class="com.marinabay.cruise.intercepter.MobileSecurityInterceptor" />
         </mvc:interceptor>
