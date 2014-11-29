@@ -1,5 +1,7 @@
 package com.marinabay.cruise.controller;
 
+import com.marinabay.cruise.constant.ROLE;
+import com.marinabay.cruise.constant.USERTYPE;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.*;
 import com.marinabay.cruise.utils.RequestUtls;
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -87,14 +90,61 @@ public class MobileRestCruiseController {
     @RequestMapping(value = {"/getSchedules.json"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public JSonResult getSchedules(HttpServletRequest request, String startdate, String enddate) {
-        if (StringUtils.isEmpty(startdate)) {
-            return JSonResult.ofError("startdate is required", 400);
+        if (StringUtils.isEmpty(startdate) || StringUtils.isEmpty(enddate)) {
+            return JSonResult.ofError("startdate, enddate is required", 400);
         }
         try {
             return JSonResult.ofSuccess(schedulesService.listMobile(startdate, enddate));
         } catch (Exception e) {
             LOG.error("", e);
             return JSonResult.ofError("Has error form server", 401);
+        }
+    }
+
+    @RequestMapping(value = {"/pageShedules.json"}, method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public JSonResult pageShedules(HttpServletRequest request, Integer page, Integer limit) {
+        if (page== null || page == 0) {
+            page = 1;
+        }
+        if (limit== null ||limit == 0) {
+            limit = 10;
+        }
+        try {
+            return JSonResult.ofSuccess(schedulesService.listCurrentMobile(page, limit));
+        } catch (Exception e) {
+            LOG.error("", e);
+            return JSonResult.ofError("Has error form server", 401);
+        }
+    }
+
+
+
+    @RequestMapping(value = {"/addUser.json"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public JSonResult registerUser(HttpServletRequest request, ModelMap model, User user) {
+
+        if (StringUtils.isEmpty(user.getUserName())) {
+            return JSonResult.ofError("Username can not empty", 400);
+        }
+        if (StringUtils.isEmpty(user.getPassword())) {
+            return JSonResult.ofError("Password can not empty", 400);
+        }
+        if (StringUtils.isNotEmpty(user.getUserName()) && userService.findByUserName(user.getUserName()) != null) {
+            return JSonResult.ofError("Duplicate username", 400);
+        }
+        if (StringUtils.isNotEmpty(user.getEmail()) && userService.findUserByEmail(user.getEmail()) != null) {
+            return JSonResult.ofError("Duplicate email", 400);
+        }
+
+        try {
+            user.setRole(ROLE.USER);
+            user.setUserType(USERTYPE.MOBILE);
+            userService.insert(user);
+            return JSonResult.ofSuccess(user);
+        } catch (Exception e) {
+            LOG.error("",e);
+            return JSonResult.ofError(e.getMessage());
         }
     }
 

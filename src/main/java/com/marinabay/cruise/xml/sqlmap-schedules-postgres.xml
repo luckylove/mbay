@@ -34,12 +34,12 @@
             </when>
             <otherwise>
                 <if test="departureTime != null and departureTime != ''" >
-                    <![CDATA[ and to_date(#{departureTime}, 'YYYY/MM/DD') = departure_time::date ]]>
+                    <![CDATA[ and to_date(#{departureTime}, 'YYYY/MM/DD') = arrival_time::date ]]>
                 </if>
             </otherwise>
         </choose>
       <if test="isToday == true" >
-          <![CDATA[ and departure_time::date = now()::date ]]>
+          <![CDATA[ and arrival_time::date = now()::date ]]>
       </if>
     </select>
   <select id="select" resultMap="resultMap" parameterType="map" >
@@ -53,12 +53,12 @@
           </when>
           <otherwise>
               <if test="departureTime != null and departureTime != ''" >
-                  <![CDATA[ and to_date(#{departureTime}, 'YYYY/MM/DD') = departure_time::date ]]>
+                  <![CDATA[ and to_date(#{departureTime}, 'YYYY/MM/DD') = arrival_time::date ]]>
               </if>
           </otherwise>
       </choose>
       <if test="isToday == true" >
-          <![CDATA[ and departure_time::date = now()::date ]]>
+          <![CDATA[ and arrival_time::date = now()::date ]]>
       </if>
       <if test="name != null and name != ''" >
           order by ${name} ${order}
@@ -75,26 +75,37 @@
         from schedules us left outer join cruise cr on us.cruise_id =cr.id
         where 1=1
           <if test="startdate != null and startdate != ''" >
-              <![CDATA[ and to_date(#{startdate}, 'YYYY/MM/DD') <= departure_time::date ]]>
+              <![CDATA[ and to_date(#{startdate}, 'YYYY/MM/DD') <= arrival_time::date ]]>
           </if>
           <if test="enddate != null and enddate != ''" >
-              <![CDATA[ and to_date(#{enddate}, 'YYYY/MM/DD') >= departure_time::date ]]>
+              <![CDATA[ and to_date(#{enddate}, 'YYYY/MM/DD') >= arrival_time::date ]]>
           </if>
+      order by arrival_time
   </select>
+
+    <select id="selectCurrentMobile" resultMap="resultMap" parameterType="map" >
+        select
+        <include refid="Base_Column_List_Aias" />  , cr.name as cruise_name
+        from schedules us left outer join cruise cr on us.cruise_id =cr.id
+        where 1=1
+        <![CDATA[ and now()::date <= arrival_time::date ]]>
+        order by arrival_time
+        limit ${limit} offset ${offset}
+    </select>
 
    <select id="countDashboard" resultType="long" parameterType="map" >
         select count(id) as total
         from schedules  us
         where 1=1
-       <![CDATA[ and #{startTime} <=  departure_time and departure_time <= #{endTime}]]>
+       <![CDATA[ and #{startTime} <=  arrival_time and arrival_time <= #{endTime}]]>
     </select>
     <select id="selectDashboard" resultMap="resultMap" parameterType="map" >
         select
         <include refid="Base_Column_List_Aias" />  , cr.name as cruise_name
         from schedules us left outer join cruise cr on us.cruise_id =cr.id
         where 1=1
-        <![CDATA[ and #{startTime} <=  departure_time and departure_time <= #{endTime}]]>
-        order by departure_time
+        <![CDATA[ and #{startTime} <=  arrival_time and arrival_time <= #{endTime}]]>
+        order by arrival_time
         <if test="limit > 0" >
             limit ${limit} offset ${offset}
         </if>
@@ -134,7 +145,7 @@
   </insert>
   
   
-  
+
   <update id="update" parameterType="scheduleModel" >
     update schedules
     set

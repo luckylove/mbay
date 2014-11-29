@@ -32,10 +32,26 @@ public class Schedules extends GenericModel{
     private String arrivalTimeStr;
     private String departureTimeStr;
     private boolean isToday;
+    private boolean isOvernight;
+
+    public boolean isOvernight() {
+        if (departureTime != null) {
+            LocalDateTime lc = new LocalDateTime(departureTime);
+            int hourOfDay = lc.getHourOfDay();
+            if (hourOfDay >= 0 && hourOfDay <= 6) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setOvernight(boolean overnight) {
+        isOvernight = overnight;
+    }
 
     public boolean isToday() {
-        if (departureTime != null) {
-            return DateUtils.isSameDay(Calendar.getInstance().getTime(), departureTime);
+        if (arrivalTime != null) {
+            return DateUtils.isSameDay(Calendar.getInstance().getTime(), arrivalTime);
         }
         return false;
     }

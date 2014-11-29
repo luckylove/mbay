@@ -164,10 +164,11 @@
                 resultType="java.lang.Long" order="BEFORE">
          SELECT nextVal('user_id_seq')
      </selectKey>
-    insert into users (id, user_name, name, nric_no, ui_num, mobile, password, role, taxi_license, user_type, taxi_id, reg_date)
+    insert into users (id, user_name, email, name, nric_no, ui_num, mobile, password, role, taxi_license, user_type, taxi_id, reg_date)
     values (
     	#{id,jdbcType=BIGINT},
     	#{userName,jdbcType=VARCHAR},
+    	#{email,jdbcType=VARCHAR},
     	#{name,jdbcType=VARCHAR},
     	#{nricNo,jdbcType=VARCHAR},
     	#{uiNum,jdbcType=VARCHAR},

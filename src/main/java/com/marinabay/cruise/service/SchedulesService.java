@@ -111,4 +111,11 @@ public class SchedulesService extends GenericService<Schedules>{
         return schedulesDao.selectMobile(hashMap);
     }
 
+    public List<Schedules> listCurrentMobile(int page, int limit) {
+        HashMap<Object,Object> hashMap = Maps.newHashMap();
+        hashMap.put("offset", (page-1)*limit);
+        hashMap.put("limit", limit);
+        return schedulesDao.selectCurrentMobile(hashMap);
+    }
+
 }
