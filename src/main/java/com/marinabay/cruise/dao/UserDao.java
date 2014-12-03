@@ -17,6 +17,10 @@ public interface UserDao extends GenericDao<User> {
 
     public void insertUserGroup(UserGroupUser userGroup) ;
 
+    public void updateToken(Map userGroup) ;
+
+    public void updatePushNotification(Map userGroup) ;
+
     public Long hasByUserAndGroup(UserGroupUser userGroup) ;
 
     public List<User> selectByLicense(String license) ;

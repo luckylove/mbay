@@ -5,6 +5,7 @@ import com.marinabay.cruise.constant.USERTYPE;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.*;
 import com.marinabay.cruise.utils.RequestUtls;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,12 +47,13 @@ public class MobileRestCruiseController {
 
     @RequestMapping(value = {"/login.json"}, method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-	public JSonResult login(HttpServletRequest request, String username, String password) {
+	public JSonResult login(HttpServletRequest request, String username, String password, String pushtoken) {
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
             User userByEmail = userService.findByUserName(username);
             if (userByEmail != null) {
                 if (userByEmail.getPassword().equals(password)) {
                     RequestUtls.logged(request, userByEmail);
+                    userService.updateToken(userByEmail.getId(), pushtoken);
                     return JSonResult.ofSuccess(request.getSession().getId());
                 } else {
                     return JSonResult.ofError("Password doesn't match", 402);
@@ -66,7 +68,8 @@ public class MobileRestCruiseController {
     @RequestMapping(value = {"/userInfo.json"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public JSonResult userInfo(HttpServletRequest request) {
-        return JSonResult.ofSuccess(RequestUtls.getLoggedUser(request));
+        User loggedUser = RequestUtls.getLoggedUser(request);
+        return JSonResult.ofSuccess(userService.selectByID(loggedUser.getId()));
     }
 
     @RequestMapping(value = {"/taxis.json"}, method = RequestMethod.GET, produces = "application/json")
@@ -148,34 +151,107 @@ public class MobileRestCruiseController {
         }
     }
 
+    @RequestMapping(value = {"/updateUser.json"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public JSonResult updateUser(HttpServletRequest request, ModelMap model, User user) {
+
+        if (user.getId() == null) {
+            return JSonResult.ofError("User not found", 400);
+        }
+        if (StringUtils.isEmpty(user.getUserName())) {
+            return JSonResult.ofError("Username can not empty", 400);
+        }
+        if (StringUtils.isEmpty(user.getPassword())) {
+            return JSonResult.ofError("Password can not empty", 400);
+        }
+        if (StringUtils.isNotEmpty(user.getUserName()) && userService.findByUserName(user.getUserName()) != null) {
+            return JSonResult.ofError("Duplicate username", 400);
+        }
+        if (StringUtils.isNotEmpty(user.getEmail()) && userService.findUserByEmail(user.getEmail()) != null) {
+            return JSonResult.ofError("Duplicate email", 400);
+        }
+
+        try {
+            user.setRole(ROLE.USER);
+            user.setUserType(USERTYPE.MOBILE);
+            userService.update(user);
+            return JSonResult.ofSuccess("Update is ok");
+        } catch (Exception e) {
+            LOG.error("",e);
+            return JSonResult.ofError(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = {"/forgotPass.json"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public JSonResult forgotPass(HttpServletRequest request, String email) {
+
+        if (StringUtils.isEmpty(email)) {
+            return JSonResult.ofError("Email can not empty", 400);
+        }
+        User userByEmail = userService.findUserByEmail(email);
+        if (userByEmail == null) {
+            return JSonResult.ofError("Do not found user with this email: " + email);
+        }
+
+        try {
+            String random = RandomStringUtils.random(5);
+            LOG.info("Change passord {}", random);
+            //send mail
+
+            userByEmail.setPassword(random);
+            return JSonResult.ofSuccess("Update is ok");
+        } catch (Exception e) {
+            LOG.error("",e);
+            return JSonResult.ofError(e.getMessage());
+        }
+    }
+
     @RequestMapping(value = {"/enablePushNotification.json"}, method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public JSonResult enablePushNotification(HttpServletRequest request,Long userId,  Boolean enable) {
-        if (userId == null) {
-            return JSonResult.ofError("UserId is required", 400);
-        }
-        User user = userService.selectByID(userId);
+    public JSonResult enablePushNotification(HttpServletRequest request,  Boolean enable) {
+        User loggedUser = RequestUtls.getLoggedUser(request);
+        User user = userService.selectByID(loggedUser.getId());
         if (user == null) {
             return JSonResult.ofError("User not found", 400);
         }
+        //update
+        userService.updatePushNotification(user.getId(), enable);
         return JSonResult.ofSuccess("Update is ok");
     }
 
     @RequestMapping(value = {"/surCharge.html"}, method = RequestMethod.GET)
-    public String surCharge(HttpServletRequest request) {
-        RequestUtls.clearLoggedUser(request);
+    public String surCharge(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("type", "surcharge");
+        model.addAttribute("data", cruisePortService.selectByID(1));
         return "/staticContent";
     }
 
     @RequestMapping(value = {"/direction.html"}, method = RequestMethod.GET)
-    public String direction(HttpServletRequest request) {
-        RequestUtls.clearLoggedUser(request);
+    public String direction(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("type", "direction");
+        model.addAttribute("data", cruisePortService.selectByID(1));
         return "/staticContent";
     }
 
     @RequestMapping(value = {"/information.html"}, method = RequestMethod.GET)
-    public String information(HttpServletRequest request) {
-        RequestUtls.clearLoggedUser(request);
+    public String information(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("type", "information");
+        model.addAttribute("data", cruisePortService.selectByID(1));
+        return "/staticContent";
+    }
+
+    @RequestMapping(value = {"/aboutus.html"}, method = RequestMethod.GET)
+    public String aboutus(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("type", "aboutus");
+        model.addAttribute("data", cruisePortService.selectByID(1));
+        return "/staticContent";
+    }
+
+    @RequestMapping(value = {"/luckydraw.html"}, method = RequestMethod.GET)
+    public String luckydraw(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("type", "luckydraw");
+        model.addAttribute("data", cruisePortService.selectByID(1));
         return "/staticContent";
     }
 }

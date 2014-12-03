@@ -189,6 +189,7 @@
     set
       user_name = #{userName,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
       nric_no = #{nricNo,jdbcType=VARCHAR},
       ui_num = #{uiNum,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
@@ -250,4 +251,18 @@
             #{it}
         </foreach>
     </select>
+
+    <update id="updateToken" parameterType="map" >
+    update users
+    set
+      device_token = #{deviceToken,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <update id="updatePushNotification" parameterType="map" >
+    update users
+    set
+      send_push = #{push,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

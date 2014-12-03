@@ -78,4 +78,12 @@ public class UserService extends GenericService<User>{
     public List<User> loadAllUserByIds(List<Long> userIds) {
         return userDao.loadAllUserByIds(ImmutableMap.of("userIds", userIds));
     }
+
+    public void updateToken(Long id, String token) {
+        userDao.updateToken(ImmutableMap.of("id", id, "device_token", token));
+    }
+
+    public void updatePushNotification(Long id, Boolean enble) {
+        userDao.updatePushNotification(ImmutableMap.of("id", id, "push", enble ? "1":"0" ));
+    }
 }

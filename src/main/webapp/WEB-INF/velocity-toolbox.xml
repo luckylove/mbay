@@ -6,6 +6,11 @@
         <value>2.0</value>
     </data>
     <tool>
+        <key>link</key>
+        <scope>request</scope>
+        <class>org.apache.velocity.tools.view.tools.LinkTool</class>
+    </tool>
+    <tool>
         <class>org.apache.velocity.tools.generic.NumberTool</class>
         <key>number</key>
         <scope>application</scope>
