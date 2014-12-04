@@ -83,6 +83,10 @@ public class UserService extends GenericService<User>{
         userDao.updateToken(ImmutableMap.of("id", id, "device_token", token));
     }
 
+    public void updatePassword(Long id, String password) {
+        userDao.updatePassword(ImmutableMap.of("id", id, "password", password));
+    }
+
     public void updatePushNotification(Long id, Boolean enble) {
         userDao.updatePushNotification(ImmutableMap.of("id", id, "push", enble ? "1":"0" ));
     }

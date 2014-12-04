@@ -34,6 +34,16 @@ public class Schedules extends GenericModel{
     private boolean isToday;
     private boolean isOvernight;
 
+    private String importKey;
+
+    public String getImportKey() {
+        return importKey;
+    }
+
+    public void setImportKey(String importKey) {
+        this.importKey = importKey;
+    }
+
     public boolean isOvernight() {
         if (departureTime != null) {
             LocalDateTime lc = new LocalDateTime(departureTime);

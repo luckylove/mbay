@@ -6,12 +6,14 @@ import com.marinabay.cruise.dao.CruiseDao;
 import com.marinabay.cruise.dao.SchedulesDao;
 import com.marinabay.cruise.model.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,15 +70,23 @@ public class SchedulesService extends GenericService<Schedules>{
 
 
     @Transactional
-    public void importSchedueles(List<Schedules> schedulesList) {
+    public void importSchedueles(List<Schedules> schedulesList, String fileName) {
+        String yyyyMMddHHmmss = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
+        if (StringUtils.isNotEmpty(fileName)) {
+            int indexOf = fileName.lastIndexOf(".");
+            if (indexOf > 1) {
+                yyyyMMddHHmmss += "++" + fileName.substring(0, indexOf).replaceAll("[\\s\\+]","");
+            }
+        }
         for (Schedules schedules : schedulesList) {
             Cruise byName = cruiseDao.findByName(schedules.getCruiseName().trim());
-            if(byName == null){
+            if (byName == null) {
                 //create cruise
                 byName = new Cruise();
                 byName.setName(schedules.getCruiseName().trim());
                 cruiseDao.insert(byName);
             }
+            schedules.setImportKey(yyyyMMddHHmmss);
             schedules.setCruiseId(byName.getId());
             schedulesDao.insert(schedules);
         }
@@ -116,6 +126,23 @@ public class SchedulesService extends GenericService<Schedules>{
         hashMap.put("offset", (page-1)*limit);
         hashMap.put("limit", limit);
         return schedulesDao.selectCurrentMobile(hashMap);
+    }
+
+
+    public  JSonPagingResult<SchedulesHistory> selectHistory(){
+        List<SchedulesHistory> strings = schedulesDao.selectHistory();
+        List<SchedulesHistory> results = new ArrayList<SchedulesHistory>(strings.size());
+        if (!strings.isEmpty()) {
+            for (SchedulesHistory key : strings) {
+                key.parse();
+                results.add(key);
+            }
+        }
+        return JSonPagingResult.ofSuccess(strings.size(), results);
+    }
+
+    public void removeSchedule(String key) {
+        schedulesDao.removeSchedule(key);
     }
 
 }

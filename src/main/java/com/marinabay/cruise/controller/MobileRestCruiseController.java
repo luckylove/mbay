@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +40,12 @@ public class MobileRestCruiseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MailSender mailSender;
+
+    @Autowired
+    private SimpleMailMessage alertMailMessage;
 
     @RequestMapping(value = {"/error.json"}, method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
@@ -191,16 +199,21 @@ public class MobileRestCruiseController {
         }
         User userByEmail = userService.findUserByEmail(email);
         if (userByEmail == null) {
-            return JSonResult.ofError("Do not found user with this email: " + email);
+            return JSonResult.ofError("Can not found user with this email: " + email);
         }
 
         try {
-            String random = RandomStringUtils.random(5);
+            String random = RandomStringUtils.randomAlphabetic(5);
             LOG.info("Change passord {}", random);
             //send mail
+            SimpleMailMessage mailMessage = new SimpleMailMessage(alertMailMessage);
+            mailMessage.setSubject("[Cruise recovery password]");
+            mailMessage.setText(String.format("Here is your new password: %s", random));
+            mailMessage.setTo(email);
+            mailSender.send(mailMessage);
+            userService.updatePassword(userByEmail.getId(), random);
 
-            userByEmail.setPassword(random);
-            return JSonResult.ofSuccess("Update is ok");
+            return JSonResult.ofSuccess("Mail is sent");
         } catch (Exception e) {
             LOG.error("",e);
             return JSonResult.ofError(e.getMessage());

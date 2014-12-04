@@ -71,6 +71,7 @@
                                 #if("$!loggedUser.role" == "ADMIN")
                                 <li> <a href="resources/sample/schedule_sample.xlsx"><i class="glyphicon glyphicon-th-list"></i> Upload Sample</a>  </li>
                                 <li> <a href="#" ng-click="open(form)"><i class="glyphicon glyphicon-indent-left"></i> Import Schedules</a> </li>
+                                <li> <a href="schedulesHistory.html"><i class="glyphicon glyphicon-indent-left"></i> Schedules History</a> </li>
                                 #end
                                 <li> <a href="schedules.html"><i class="glyphicon glyphicon-th-list"></i> List Schedules</a>  </li>
                             </ul>

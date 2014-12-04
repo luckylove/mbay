@@ -33,9 +33,15 @@ public class SchedulesController {
     private SchedulesService schedulesService;
 
 	@RequestMapping(value = {"/schedules.html"}, method = RequestMethod.GET)
-	public String userGroup(HttpServletRequest request, ModelMap model) {
+	public String schedules(HttpServletRequest request, ModelMap model) {
         model.addAttribute(VIEW_TYPE, "schedules");
         model.addAttribute("cruises", cruiseService.list(new PagingModel()).getRows());
+        return "/index";
+    }
+
+    @RequestMapping(value = {"/schedulesHistory.html"}, method = RequestMethod.GET)
+	public String schedulesHistory(HttpServletRequest request, ModelMap model) {
+        model.addAttribute(VIEW_TYPE, "schedulesHistory");
         return "/index";
     }
 
@@ -89,7 +95,7 @@ public class SchedulesController {
     public String importSchedules(FileUploadBean uploadItem) {
         try {
             List<Schedules> endResults = ExcelReader.getEndResults(uploadItem.getFile().getInputStream(), uploadItem.getFile().getOriginalFilename());
-            schedulesService.importSchedueles(endResults);
+            schedulesService.importSchedueles(endResults,  uploadItem.getFile().getOriginalFilename());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,6 +113,19 @@ public class SchedulesController {
     @ResponseBody
     public JSonResult addPassOnQueue(HttpServletRequest request, Long id, String type) {
         return JSonResult.ofSuccess(schedulesService.updatePassOnQueue(id, type));
+    }
+
+    @RequestMapping(value = {"/listSchedulesHistory.json"}, method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public JSonPagingResult<SchedulesHistory> listSchedulesHistory(HttpServletRequest request) {
+        return schedulesService.selectHistory();
+    }
+
+    @RequestMapping(value = {"/deleteHistorySchedules.json"}, method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public JSonResult deleteHistorySchedules(HttpServletRequest request, String key) {
+        schedulesService.removeSchedule(key);
+        return JSonResult.ofSuccess("");
     }
 
 

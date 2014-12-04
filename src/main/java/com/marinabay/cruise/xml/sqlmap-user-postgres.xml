@@ -252,10 +252,17 @@
         </foreach>
     </select>
 
-    <update id="updateToken" parameterType="map" >
+   <update id="updateToken" parameterType="map" >
     update users
     set
       device_token = #{deviceToken,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+   <update id="updatePassword" parameterType="map" >
+    update users
+    set
+      password = #{password,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

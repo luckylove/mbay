@@ -13,11 +13,17 @@
     <result column="taxi_on_queue" property="taxiOnQueue" jdbcType="INTEGER" />
     <result column="pass_on_queue" property="passOnQueue" jdbcType="INTEGER" />
     <result column="call_type" property="callType" jdbcType="VARCHAR" />
+    <result column="import_key" property="importKey" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
-  <sql id="Base_Column_List" >
+    <resultMap id="historyMap" type="com.marinabay.cruise.model.SchedulesHistory" >
+        <result column="import_key" property="importKey" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
     id, cruise_id, arrival_time, departure_time, passengers, taxi_on_queue, pass_on_queue, call_type, reg_date, mod_date
   </sql>
 
@@ -131,7 +137,7 @@
          SELECT nextVal('schedules_id_seq')
      </selectKey>
 
-    insert into schedules (id, cruise_id, arrival_time, departure_time, passengers, call_type, reg_date)
+    insert into schedules (id, cruise_id, arrival_time, departure_time, passengers, call_type, reg_date, import_key)
     values (
     	#{id,jdbcType=BIGINT},
     	#{cruiseId,jdbcType=BIGINT},
@@ -139,7 +145,8 @@
     	#{departureTime,jdbcType=TIMESTAMP},
     	#{passengers,jdbcType=INTEGER},
     	#{callType,jdbcType=VARCHAR},
-    	now()
+    	now(),
+        #{importKey,jdbcType=VARCHAR}
       )
 
   </insert>
@@ -197,5 +204,16 @@
         from schedules
         where id = #{value}
     </select>
+
+    <select id="selectHistory" resultMap="historyMap" >
+        select import_key
+        from schedules
+        where import_key is not null
+        group by import_key
+    </select>
+
+    <update id="removeSchedule" parameterType="string" >
+        delete from schedules where import_key = #{value}
+    </update>
 
 </mapper>
