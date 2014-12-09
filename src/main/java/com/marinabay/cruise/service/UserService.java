@@ -79,8 +79,8 @@ public class UserService extends GenericService<User>{
         return userDao.loadAllUserByIds(ImmutableMap.of("userIds", userIds));
     }
 
-    public void updateToken(Long id, String token) {
-        userDao.updateToken(ImmutableMap.of("id", id, "device_token", token));
+    public void updateToken(Long id, String token, String devicetype) {
+        userDao.updateToken(ImmutableMap.of("id", id, "deviceToken", token, "devicetype",devicetype));
     }
 
     public void updatePassword(Long id, String password) {
@@ -89,5 +89,13 @@ public class UserService extends GenericService<User>{
 
     public void updatePushNotification(Long id, Boolean enble) {
         userDao.updatePushNotification(ImmutableMap.of("id", id, "push", enble ? "1":"0" ));
+    }
+
+    public User checkDupUsername(Long userId, String userName) {
+        return userDao.checkDupUsername(ImmutableMap.of("userId", userId, "username", userName));
+    }
+
+    public User checkDupEmail(Long userId, String email){
+        return userDao.checkDupEmail(ImmutableMap.of("userId", userId, "email", email));
     }
 }

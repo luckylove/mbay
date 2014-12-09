@@ -255,7 +255,8 @@
    <update id="updateToken" parameterType="map" >
     update users
     set
-      device_token = #{deviceToken,jdbcType=VARCHAR}
+      device_token = #{deviceToken,jdbcType=VARCHAR},
+      device_type = #{devicetype,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -272,4 +273,18 @@
       send_push = #{push,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+   <select id="checkDupUsername" resultMap="userResultMap" parameterType="map">
+        select  *
+        from users us
+        where 1=1
+        and us.id != #{userId} and us.user_name = #{username}
+    </select>
+
+    <select id="checkDupEmail" resultMap="userResultMap" parameterType="map">
+        select  *
+        from users us
+        where 1=1
+        and us.id != #{userId} and us.email = #{email}
+    </select>
 </mapper>

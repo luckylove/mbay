@@ -1,5 +1,6 @@
 package com.marinabay.cruise.service;
 
+import com.google.android.gcm.server.Sender;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.marinabay.cruise.constant.SEND_STATUS;
@@ -8,7 +9,6 @@ import com.marinabay.cruise.dao.UserDao;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.job.CheckSMSJob;
 import com.marinabay.cruise.service.job.PushJob;
-import com.marinabay.cruise.service.job.RePushJob;
 import com.marinabay.cruise.service.job.SMSJob;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -66,10 +66,13 @@ public class NotificationService extends GenericService<Notification>{
     @Value("${cruise.sms.checkurl}")
     protected String checkUrl ;
 
+    @Value("${gcm.apikey}")
+    public String gcmApikey;
+
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
-    //private ExecutorService sendService = Executors.newFixedThreadPool(15);
-    //private ScheduledExecutorService checkService = Executors.newScheduledThreadPool(1);
+
+    private Sender sender;
 
     @Override
     public NotificationDao getDao() {
@@ -83,7 +86,7 @@ public class NotificationService extends GenericService<Notification>{
             List<UserNotification> allSendMsg = notificationDao.getResendSentNotification();
             for (UserNotification nf : allSendMsg) {
                 //only for push type
-                taskExecutor.submit(new PushJob(NotificationService.this, nf, getPUSH_URL(null, null, null)));
+                //taskExecutor.submit(new PushJob(NotificationService.this, nf, getPUSH_URL(null, null, null)));
             }
         } catch (Exception e) {
             LOG.error("", e);
@@ -129,8 +132,9 @@ public class NotificationService extends GenericService<Notification>{
                         nf.setStatus(SEND_STATUS.NOT_SEND);
                         notificationDao.insertUserNotification(nf);
                         if("1".equals(user.getSendPush())){
-                            PushJob smsJob = new PushJob(this, nf, getPUSH_URL(user.getUserName(), sendUser.getUserName(), message.getMessage()));
-                            taskExecutor.submit(smsJob);
+
+                           // PushJob smsJob = new PushJob(this, nf, getPUSH_URL(user.getUserName(), sendUser.getUserName(), message.getMessage()));
+                         //   taskExecutor.submit(smsJob);
                         }
                         //store to db and send to push job
                         //sendCnt ++;

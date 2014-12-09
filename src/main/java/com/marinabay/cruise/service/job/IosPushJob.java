@@ -4,7 +4,6 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.marinabay.cruise.constant.SEND_STATUS;
-import com.marinabay.cruise.dao.NotificationDao;
 import com.marinabay.cruise.model.UserNotification;
 import com.marinabay.cruise.service.NotificationService;
 import org.slf4j.Logger;
@@ -18,9 +17,9 @@ import java.util.concurrent.Callable;
  * Date: 9/23/14
  * Time: 7:15 PM
  */
-public class PushJob implements Callable {
+public class IosPushJob implements Callable {
 
-    private Logger LOG = LoggerFactory.getLogger(PushJob.class);
+    private Logger LOG = LoggerFactory.getLogger(IosPushJob.class);
 
     private NotificationService notificationService;
     private UserNotification nf;
@@ -29,7 +28,7 @@ public class PushJob implements Callable {
 
 
 
-    public PushJob(NotificationService notificationDao, UserNotification nf) {
+    public IosPushJob(NotificationService notificationDao, UserNotification nf) {
         this.notificationService = notificationDao;
         this.nf = nf;
 

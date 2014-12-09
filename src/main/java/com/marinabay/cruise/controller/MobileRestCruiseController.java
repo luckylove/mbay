@@ -55,13 +55,13 @@ public class MobileRestCruiseController {
 
     @RequestMapping(value = {"/login.json"}, method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-	public JSonResult login(HttpServletRequest request, String username, String password, String pushtoken) {
+	public JSonResult login(HttpServletRequest request, String username, String password, String pushtoken, String devicetype) {
         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
             User userByEmail = userService.findByUserName(username);
             if (userByEmail != null) {
                 if (userByEmail.getPassword().equals(password)) {
                     RequestUtls.logged(request, userByEmail);
-                    userService.updateToken(userByEmail.getId(), pushtoken);
+                    userService.updateToken(userByEmail.getId(), pushtoken, devicetype);
                     return JSonResult.ofSuccess(request.getSession().getId());
                 } else {
                     return JSonResult.ofError("Password doesn't match", 402);
@@ -162,28 +162,50 @@ public class MobileRestCruiseController {
     @RequestMapping(value = {"/updateUser.json"}, method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public JSonResult updateUser(HttpServletRequest request, ModelMap model, User user) {
-
-        if (user.getId() == null) {
-            return JSonResult.ofError("User not found", 400);
-        }
-        if (StringUtils.isEmpty(user.getUserName())) {
-            return JSonResult.ofError("Username can not empty", 400);
-        }
-        if (StringUtils.isEmpty(user.getPassword())) {
-            return JSonResult.ofError("Password can not empty", 400);
-        }
-        if (StringUtils.isNotEmpty(user.getUserName()) && userService.findByUserName(user.getUserName()) != null) {
-            return JSonResult.ofError("Duplicate username", 400);
-        }
-        if (StringUtils.isNotEmpty(user.getEmail()) && userService.findUserByEmail(user.getEmail()) != null) {
-            return JSonResult.ofError("Duplicate email", 400);
-        }
-
         try {
-            user.setRole(ROLE.USER);
-            user.setUserType(USERTYPE.MOBILE);
-            userService.update(user);
-            return JSonResult.ofSuccess("Update is ok");
+            User loggedUser = RequestUtls.getLoggedUser(request);
+            if (loggedUser == null) {
+                return JSonResult.ofError("Please login", 400);
+            }
+            User dbUser = userService.selectByID(loggedUser.getId());
+
+            if (StringUtils.isNotEmpty(user.getUserName())) {
+                if (userService.checkDupUsername(loggedUser.getId(), user.getUserName()) != null) {
+                    return JSonResult.ofError("Username is duplicated", 400);
+                } else {
+                    dbUser.setUserName(user.getUserName());
+                }
+            }
+            if (StringUtils.isNotEmpty(user.getEmail())) {
+                if (userService.checkDupEmail(loggedUser.getId(), user.getEmail()) != null) {
+                    return JSonResult.ofError("Email is duplicated", 400);
+                } else {
+                    dbUser.setEmail(user.getEmail());
+                }
+            }
+            if (StringUtils.isNotEmpty(user.getPassword())) {
+                dbUser.setPassword(user.getPassword());
+            }
+            if (StringUtils.isNotEmpty(user.getName())) {
+                dbUser.setName(user.getName());
+            }
+            if (StringUtils.isNotEmpty(user.getMobile())) {
+                dbUser.setMobile(user.getMobile());
+            }
+
+            if (StringUtils.isNotEmpty(user.getUiNum())) {
+                dbUser.setUiNum(user.getUiNum());
+            }
+
+            if (StringUtils.isNotEmpty(user.getTaxiLicense())) {
+                dbUser.setTaxiLicense(user.getTaxiLicense());
+            }
+
+            if (StringUtils.isNotEmpty(user.getTaxiCompany())) {
+                dbUser.setTaxiCompany(user.getTaxiCompany());
+            }
+            userService.update(dbUser);
+            return JSonResult.ofSuccess(userService.selectByID(loggedUser.getId()));
         } catch (Exception e) {
             LOG.error("",e);
             return JSonResult.ofError(e.getMessage());
