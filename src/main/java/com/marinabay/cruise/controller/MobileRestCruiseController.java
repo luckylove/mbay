@@ -56,21 +56,26 @@ public class MobileRestCruiseController {
     @RequestMapping(value = {"/login.json"}, method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
 	public JSonResult login(HttpServletRequest request, String username, String password, String pushtoken, String devicetype) {
-        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-            User userByEmail = userService.findByUserName(username);
-            if (userByEmail != null) {
-                if (userByEmail.getPassword().equals(password)) {
-                    RequestUtls.logged(request, userByEmail);
-                    userService.updateToken(userByEmail.getId(), pushtoken, devicetype);
-                    return JSonResult.ofSuccess(request.getSession().getId());
+        try {
+            if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                User userByEmail = userService.findByUserName(username);
+                if (userByEmail != null) {
+                    if (userByEmail.getPassword().equals(password)) {
+                        RequestUtls.logged(request, userByEmail);
+                        userService.updateToken(userByEmail.getId(), pushtoken, devicetype);
+                        return JSonResult.ofSuccess(request.getSession().getId());
+                    } else {
+                        return JSonResult.ofError("Password doesn't match", 402);
+                    }
                 } else {
-                    return JSonResult.ofError("Password doesn't match", 402);
+                    return JSonResult.ofError("Username not found", 401);
                 }
-            } else {
-                return JSonResult.ofError("Username not found", 401);
             }
+            return JSonResult.ofError("Please input required fields", 400);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JSonResult.ofSuccess(e.getMessage());
         }
-        return JSonResult.ofError("Please input required fields", 400);
     }
 
     @RequestMapping(value = {"/userInfo.json"}, method = RequestMethod.GET, produces = "application/json")
@@ -201,8 +206,8 @@ public class MobileRestCruiseController {
                 dbUser.setTaxiLicense(user.getTaxiLicense());
             }
 
-            if (StringUtils.isNotEmpty(user.getTaxiCompany())) {
-                dbUser.setTaxiCompany(user.getTaxiCompany());
+            if (user.getTaxiId() != null) {
+                dbUser.setTaxiId(user.getTaxiId());
             }
             userService.update(dbUser);
             return JSonResult.ofSuccess(userService.selectByID(loggedUser.getId()));

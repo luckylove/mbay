@@ -18,13 +18,15 @@
     <result column="user_type" property="userType" jdbcType="VARCHAR" />
     <result column="taxi_id" property="taxiId" jdbcType="BIGINT" />
     <result column="taxi_company" property="taxiCompany" jdbcType="VARCHAR" />
+    <result column="device_type" property="deviceType" jdbcType="VARCHAR" />
+    <result column="device_token" property="deviceToken" jdbcType="VARCHAR" />
     <result column="send_push" property="sendPush" jdbcType="VARCHAR" />
     <result column="reg_date" property="regDate" jdbcType="TIMESTAMP" />
     <result column="mod_date" property="modDate" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, user_name, nric_no, ui_num, name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, reg_date, mod_date, send_push
+    id, user_name, nric_no, ui_num, name, taxi_id, email, mobile, password, role, taxi_license, address, user_type, reg_date, mod_date, send_push ,device_type , device_token
   </sql>
 
     <sql id="Base_Column_List_Aias" >

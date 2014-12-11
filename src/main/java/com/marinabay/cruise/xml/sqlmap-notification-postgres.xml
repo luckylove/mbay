@@ -52,7 +52,7 @@
 
     from notification ug
       where 1=1
-      order by reg_date
+      order by reg_date desc
       <if test="limit > 0" >
           limit ${limit} offset ${offset}
       </if>

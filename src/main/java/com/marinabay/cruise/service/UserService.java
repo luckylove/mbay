@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,11 @@ public class UserService extends GenericService<User>{
     }
 
     public void updateToken(Long id, String token, String devicetype) {
-        userDao.updateToken(ImmutableMap.of("id", id, "deviceToken", token, "devicetype",devicetype));
+        HashMap<String, Object> objectHashMap = new HashMap<String, Object>(3);
+        objectHashMap.put("id", id);
+        objectHashMap.put("deviceToken", token);
+        objectHashMap.put("devicetype", devicetype);
+        userDao.updateToken(objectHashMap);
     }
 
     public void updatePassword(Long id, String password) {

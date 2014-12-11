@@ -1,14 +1,13 @@
 package com.marinabay.cruise.service;
 
-import com.google.android.gcm.server.Sender;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.marinabay.cruise.constant.SEND_STATUS;
 import com.marinabay.cruise.dao.NotificationDao;
 import com.marinabay.cruise.dao.UserDao;
 import com.marinabay.cruise.model.*;
-import com.marinabay.cruise.service.job.CheckSMSJob;
-import com.marinabay.cruise.service.job.PushJob;
+import com.marinabay.cruise.model.push.PushMessage;
+import com.marinabay.cruise.service.job.IosPushJob;
 import com.marinabay.cruise.service.job.SMSJob;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -17,20 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * User: son.nguyen
@@ -69,14 +61,22 @@ public class NotificationService extends GenericService<Notification>{
     @Value("${gcm.apikey}")
     public String gcmApikey;
 
+    @Value("${ios.pass}")
+    public String iosPass;
+
+    @Value("${ios.keystore}")
+    public String keystore;
+
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
-
-    private Sender sender;
 
     @Override
     public NotificationDao getDao() {
         return notificationDao;
+    }
+
+    @PostConstruct
+    private void init(){
     }
 
     @Scheduled(fixedDelay = 180000)
@@ -131,10 +131,14 @@ public class NotificationService extends GenericService<Notification>{
                         nf.setUserId(user.getId());
                         nf.setStatus(SEND_STATUS.NOT_SEND);
                         notificationDao.insertUserNotification(nf);
-                        if("1".equals(user.getSendPush())){
-
-                           // PushJob smsJob = new PushJob(this, nf, getPUSH_URL(user.getUserName(), sendUser.getUserName(), message.getMessage()));
-                         //   taskExecutor.submit(smsJob);
+                        if("1".equals(user.getSendPush()) && StringUtils.isNotEmpty(user.getDeviceToken())) {
+                            if ("1".equals(user.getDeviceType())) {// ios
+                                PushMessage msg = PushMessage.getInstance(message.getMessage(), user.getDeviceToken(), this.keystore, this.iosPass);
+                                IosPushJob smsJob = new IosPushJob(this, nf, msg);
+                                taskExecutor.submit(smsJob);
+                            } else if ("2".equals(user.getDeviceType())) { //android
+                                //send to android device
+                            }
                         }
                         //store to db and send to push job
                         //sendCnt ++;

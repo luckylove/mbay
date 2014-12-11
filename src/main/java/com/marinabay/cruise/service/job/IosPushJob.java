@@ -1,15 +1,16 @@
 package com.marinabay.cruise.service.job;
 
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
 import com.marinabay.cruise.constant.SEND_STATUS;
 import com.marinabay.cruise.model.UserNotification;
+import com.marinabay.cruise.model.push.PushMessage;
 import com.marinabay.cruise.service.NotificationService;
+import javapns.Push;
+import javapns.notification.PushedNotification;
+import javapns.notification.PushedNotifications;
+import javapns.notification.ResponsePacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 /**
@@ -23,25 +24,35 @@ public class IosPushJob implements Callable {
 
     private NotificationService notificationService;
     private UserNotification nf;
-    private String sendUrl;
-    private String pushReceive;
+    private PushMessage message;
 
 
 
-    public IosPushJob(NotificationService notificationDao, UserNotification nf) {
+    public IosPushJob(NotificationService notificationDao, UserNotification nf, PushMessage msg) {
         this.notificationService = notificationDao;
+        this.message = msg;
         this.nf = nf;
-
     }
     @Override
     public Object call() throws Exception {
-        LOG.info("send push {} {}", nf.getUserId(), nf.getId());
+        LOG.info("send push {} {} ks: {} ps:{} tk:{}", new Object[]{nf.getUserId(), nf.getId(), message.getKeyStore(), message.getKeyPass(), message.getToken()});
         try {
-            //String result = sendGet(sendUrl);
-            nf.setStatus(SEND_STATUS.SENT);
-            nf.setCheckCount(nf.getCheckCount() + 1);
-
-            //nf.setSendId(result);
+            PushedNotifications alert = Push.alert(message.getMessage(), message.getKeyStore(), message.getKeyPass(), true, message.getToken());
+            if (alert != null) {
+                PushedNotification pushedNotification = alert.get(0);
+                if (pushedNotification != null && pushedNotification.isSuccessful()) {
+                    nf.setStatus(SEND_STATUS.SENT);
+                    nf.setCheckCount(nf.getCheckCount() + 1);
+                    LOG.info("------------ Push is ok: {} -----------------", pushedNotification.getDevice().getToken());
+                } else {
+                    String invalidToken = pushedNotification.getDevice().getToken();
+                    LOG.error("************* Push is fail: invalid token {} **************", invalidToken);
+                    ResponsePacket theErrorResponse = pushedNotification.getResponse();
+                    if (theErrorResponse != null){
+                        LOG.error("************* Push is fail: invalid token {} - packet response {} **************", invalidToken, theErrorResponse.getMessage());
+                    }
+                }
+            }
         } catch (Exception e) {
             LOG.error("", e);
             nf.setStatus(SEND_STATUS.ERROR);
@@ -51,13 +62,5 @@ public class IosPushJob implements Callable {
         LOG.info("update to db {} {}", nf.getUserId(), nf.getId());
         return null;
     }
-
-    private void buildMessage(String token, String message) throws IOException {
-        Message.Builder gcmMsgBuilder = new Message.Builder();
-        gcmMsgBuilder.addData("message", message);
-        Result gcmResult = new Sender(token).send(gcmMsgBuilder.build(), token, 5);
-
-    }
-
 
 }

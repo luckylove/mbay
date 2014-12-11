@@ -221,6 +221,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.fernandospr</groupId>
+            <artifactId>javapns-jdk16</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
+
 
     </dependencies>
 

@@ -26,6 +26,26 @@ public class User extends GenericModel{
     private String sendPush;
     private boolean isQc;
 
+    //
+    private String deviceType;
+    private String deviceToken;
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
     public String getSendPush() {
         return sendPush;
     }
