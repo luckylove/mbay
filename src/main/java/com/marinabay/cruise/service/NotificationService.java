@@ -7,6 +7,7 @@ import com.marinabay.cruise.dao.NotificationDao;
 import com.marinabay.cruise.dao.UserDao;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.model.push.PushMessage;
+import com.marinabay.cruise.service.job.AndroidPushJob;
 import com.marinabay.cruise.service.job.IosPushJob;
 import com.marinabay.cruise.service.job.SMSJob;
 import org.apache.commons.lang.StringUtils;
@@ -138,6 +139,9 @@ public class NotificationService extends GenericService<Notification>{
                                 taskExecutor.submit(smsJob);
                             } else if ("2".equals(user.getDeviceType())) { //android
                                 //send to android device
+                                PushMessage msg = PushMessage.getInstance(message.getMessage(), user.getDeviceToken(), null, this.gcmApikey);
+                                AndroidPushJob smsJob = new AndroidPushJob(this, nf, msg);
+                                taskExecutor.submit(smsJob);
                             }
                         }
                         //store to db and send to push job

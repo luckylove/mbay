@@ -1,0 +1,53 @@
+<script src="resources/js/luckyDraw.js"></script>
+
+<div class="row" ng-controller="UserGroupCtrl">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Lucky Draw History</h3>
+            </div>
+            <div class="panel-body">
+                <div id="custem-toolbar">
+                    <div class="form-inline" role="form">
+                        <form name="form" ng-submit="submit(form)" novalidate>
+                            <div class="form-group">
+                                <div class="input-group ">
+                                    <span class="input-group-btn">
+                                       <button tabindex="-1"type="button" class="btn btn-default " ng-click="clear(); focusInput=true">Clear</button>
+                                    </span>
+                                    <input class="form-control" style="width: 300px" type="text" ng-model="userForm.content" placeholder="Enter content" focus-me="focusInput" required>
+                                </div>
+                                <div class='input-group date' id='datetimepicker10'>
+                                    <input type="text"  ng-model="userForm.triggerTime" class="form-control" required data-date-format="YYYY/MM/DD H:mm">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add New</button>
+                        </form>
+                    </div>
+                </div>
+                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"  data-toolbar="#custem-toolbar"
+                       data-page-list="[5, 10, 20, 50, 100, 200]" data-query-params="queryParams" data-row-style="rowStyle">
+                    <thead>
+                    <tr>
+                        <th data-field="content" data-align="center" data-sortable="false">Content</th>
+                        <th data-field="triggerTimeStr" data-align="center" data-sortable="false">Trigger Time</th>
+                        <th data-field="userName" data-align="center" data-sortable="false">Lucky User</th>
+                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function(){$('#userGroupTable').bootstrapTable({
+            url: 'listLuckyDraw.json'
+        })}, 100);
+    });
+
+</script>

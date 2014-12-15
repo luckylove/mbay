@@ -20,8 +20,11 @@
     <context:property-placeholder location="classpath:properties/cruise.properties" ignore-unresolvable="true"/>
 
     <task:executor id="taskExecutor"
-                   pool-size="5-10"
+                   pool-size="5-20"
                    queue-capacity="105"/>
+
+    <task:scheduler id="taskScheduler" pool-size="2"/>
+
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="${mail.host}"/>

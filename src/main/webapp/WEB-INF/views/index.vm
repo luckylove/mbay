@@ -60,6 +60,7 @@
                             #end
                             <ul class="list-unstyled collapse in">
                                 <li> <a href="listCruise.html"><i class="glyphicon glyphicon-th-list"></i> List Cruise</a>  </li>
+                                <li> <a href="luckyDraw.html"><i class="glyphicon glyphicon-th-list"></i> Lucky Draw</a>  </li>
                             </ul>
                         </accordion-group>
                         #end

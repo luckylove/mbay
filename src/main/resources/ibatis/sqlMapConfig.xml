@@ -24,6 +24,7 @@
         <typeAlias alias="userGroupUser" type="com.marinabay.cruise.model.UserGroupUser"/>
         <typeAlias alias="userNotification" type="com.marinabay.cruise.model.UserNotification"/>
         <typeAlias alias="historySchedules" type="com.marinabay.cruise.model.SchedulesHistory"/>
+        <typeAlias alias="luckyDraw" type="com.marinabay.cruise.model.LuckyDraw"/>
 
     </typeAliases>
 </configuration>
