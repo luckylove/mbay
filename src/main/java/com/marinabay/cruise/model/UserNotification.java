@@ -19,6 +19,25 @@ public class UserNotification extends GenericModel{
     private Date lastSent;
     private Integer checkCount = 0;
 
+    private String deviceToken;
+    private String deviceType;
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
     public Integer getCheckCount() {
         return checkCount;
     }

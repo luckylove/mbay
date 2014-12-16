@@ -24,6 +24,8 @@
         <result column="last_sent" property="lastSent" jdbcType="TIMESTAMP" />
         <result column="message" property="message" jdbcType="VARCHAR" />
         <result column="check_count" property="checkCount" jdbcType="INTEGER" />
+        <result column="device_token" property="deviceToken" jdbcType="VARCHAR" />
+        <result column="device_type" property="deviceType" jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="userMapResultView" type="com.marinabay.cruise.model.UserNotificationView" >
@@ -164,7 +166,7 @@
     </select>
 
     <select id="getResendSentNotification" resultMap="userMapResult">
-       select un.*, n.message from user_notification un
+       select un.*, n.message , u.device_token, u.device_type from user_notification un
         inner join notification n on un.notification_id = n.id
         inner join users u on un.user_id = u.id where
         un.type ='PUSH' AND u.send_push ='1' AND n.push_status = '1'

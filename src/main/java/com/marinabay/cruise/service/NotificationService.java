@@ -68,6 +68,9 @@ public class NotificationService extends GenericService<Notification>{
     @Value("${ios.keystore}")
     public String keystore;
 
+    @Value("${push.enable}")
+    public String pushEnable;
+
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
 
@@ -83,11 +86,25 @@ public class NotificationService extends GenericService<Notification>{
     @Scheduled(fixedDelay = 180000)
     public void initService() {
         try {
-            LOG.info("Go to check sms status");
-            List<UserNotification> allSendMsg = notificationDao.getResendSentNotification();
-            for (UserNotification nf : allSendMsg) {
-                //only for push type
-                //taskExecutor.submit(new PushJob(NotificationService.this, nf, getPUSH_URL(null, null, null)));
+            LOG.info("Go to check sms status and resend push");
+            if ("on".equals(pushEnable)) {
+                List<UserNotification> allSendMsg = notificationDao.getResendSentNotification();
+                for (UserNotification nf : allSendMsg) {
+                    if(StringUtils.isNotEmpty(nf.getDeviceToken())) {
+                        if ("1".equals(nf.getDeviceType())) {// ios
+                            PushMessage msg = PushMessage.getInstance(nf.getMessage(), nf.getDeviceToken(), this.keystore, this.iosPass);
+                            IosPushJob smsJob = new IosPushJob(this, nf, msg);
+                            taskExecutor.submit(smsJob);
+                        } else if ("2".equals(nf.getDeviceType())) { //android
+                            //send to android device
+                            PushMessage msg = PushMessage.getInstance(nf.getMessage(), nf.getDeviceToken(), null, this.gcmApikey);
+                            AndroidPushJob smsJob = new AndroidPushJob(this, nf, msg);
+                            taskExecutor.submit(smsJob);
+                        }
+                    }
+                }
+            }  else {
+                LOG.debug("push is disable");
             }
         } catch (Exception e) {
             LOG.error("", e);

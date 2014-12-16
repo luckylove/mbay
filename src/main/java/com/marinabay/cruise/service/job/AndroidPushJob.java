@@ -48,11 +48,15 @@ public class AndroidPushJob implements Callable {
                 String messageId = gcmResult.getMessageId();
                 if (StringUtils.isNotEmpty(messageId)) {
                     LOG.info("----------------- Sent successfully to " + messageId + " -----------------------");
+                    nf.setStatus(SEND_STATUS.SENT);
+                    nf.setCheckCount(nf.getCheckCount() + 1);
                 } else {
                     String gcmMsgErrorCode = gcmResult.getErrorCodeName();
+                    nf.setStatus(SEND_STATUS.ERROR);
                     LOG.error("******************* Send is fail with code: " + gcmMsgErrorCode + " ********************");
                 }
             } else {
+                nf.setStatus(SEND_STATUS.ERROR);
                 LOG.error("The GCM result is null");
             }
         } catch (Exception e) {
