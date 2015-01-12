@@ -46,7 +46,7 @@ public class SMSJob implements Callable {
         notificationDao.insertUserNotification(nf);
         LOG.info("send sms", sendUrl);
         try {
-            //String result = sendGet(sendUrl);
+            String result = sendGet(sendUrl);
             nf.setStatus(SEND_STATUS.SENT);
             //nf.setSendId(parseText(result));
             nf.setCheckCount(nf.getCheckCount() + 1);

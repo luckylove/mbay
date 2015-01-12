@@ -4,7 +4,11 @@ import com.marinabay.cruise.utils.RequestUtls;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.Days;
+import org.joda.time.Hours;
 import org.joda.time.LocalDateTime;
+import org.joda.time.Seconds;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,8 +37,36 @@ public class Schedules extends GenericModel{
     private String departureTimeStr;
     private boolean isToday;
     private boolean isOvernight;
+    private String timeDiff;
 
     private String importKey;
+
+    public String getTimeDiff() {
+        if (departureTime != null) {
+            //calculate diff time
+            Seconds seconds = Seconds.secondsBetween(new LocalDateTime(), new LocalDateTime(departureTime));
+            if (seconds.getSeconds() > 0) {
+                //format it
+                PeriodFormatter minutesAndSeconds = new PeriodFormatterBuilder()
+                        .printZeroAlways()
+                        .appendHours()
+                        .appendSeparator(":")
+                        .appendMinutes()
+                        .appendSeparator(":")
+                        .appendSeconds()
+                        .toFormatter();
+                StringBuffer bf = new StringBuffer();
+                minutesAndSeconds.printTo(bf, seconds.toStandardDuration().toPeriod());
+                timeDiff = bf.toString();
+                return timeDiff;
+            }
+        }
+        return "";
+    }
+
+    public void setTimeDiff(String timeDiff) {
+        this.timeDiff = timeDiff;
+    }
 
     public String getImportKey() {
         return importKey;

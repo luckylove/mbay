@@ -19,6 +19,7 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             $('#summernoteInfo').code(data.result.information);
             $('#summernoteSurcharge').code(data.result.surcharge);
             $('#summernoteDirection').code(data.result.direction);
+            $('#summernoteAboutUs').code(data.result.aboutUs);
             delete  $scope.userForm['regDate'];
             delete  $scope.userForm['modDate'];
         }
@@ -37,7 +38,8 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
             $.extend($scope.userForm, {
                 information: info,
                 surcharge: sur,
-                direction: dir
+                direction: dir ,
+                aboutUs: $('#summernoteAboutUs').code()
             })
             $http({
                 method: "post",
@@ -60,20 +62,18 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
     };
 
     $scope.$watch(
+        function () { return document.getElementById('summernoteAboutUs').innerHTML },
+        function(newval, oldval){
+            $('#summernoteAboutUs').summernote({
+                height: 200
+            });
+        }, true);
+
+    $scope.$watch(
         function () { return document.getElementById('summernoteInfo').innerHTML },
         function(newval, oldval){
             $('#summernoteInfo').summernote({
-                height: 200  ,
-                toolbar: [
-                    //[groupname, [button list]]
-
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],
-                ]
+                height: 200
             });
         }, true);
 
@@ -81,17 +81,7 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
         function () { return document.getElementById('summernoteSurcharge').innerHTML },
         function(newval, oldval){
             $('#summernoteSurcharge').summernote({
-                height: 200   ,
-                toolbar: [
-                    //[groupname, [button list]]
-
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],
-                ]
+                height: 200
             });
         }, true);
 
@@ -99,17 +89,7 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
         function () { return document.getElementById('summernoteDirection').innerHTML },
         function(newval, oldval){
             $('#summernoteDirection').summernote({
-                height: 200    ,
-                toolbar: [
-                    //[groupname, [button list]]
-
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']],
-                ]
+                height: 200
             });
         }, true);
 
