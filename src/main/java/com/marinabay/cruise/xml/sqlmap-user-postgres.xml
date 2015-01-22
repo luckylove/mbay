@@ -289,4 +289,9 @@
         where 1=1
         and us.id != #{userId} and us.email = #{email}
     </select>
+
+
+    <select id="listLuckyUser" resultMap="userResultMap" parameterType="long">
+        select * from users where id in (select unnest(string_to_array(user_ids, ',', '')::bigint[]) from luckydraw where id = #{value});
+    </select>
 </mapper>

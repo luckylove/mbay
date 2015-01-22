@@ -16,12 +16,14 @@
                                        <button tabindex="-1"type="button" class="btn btn-default " ng-click="clear(); focusInput=true">Clear</button>
                                     </span>
                                     <input class="form-control" style="width: 300px" type="text" ng-model="userForm.content" placeholder="Enter content" focus-me="focusInput" required>
+
                                 </div>
                                 <div class='input-group date' id='datetimepicker10'>
                                     <input type="text"  ng-model="userForm.triggerTime" class="form-control" required data-date-format="YYYY/MM/DD H:mm">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                                 </div>
+                                <input class="form-control" style="width: 90px" min="1" max="100" type="number" ng-model="userForm.numberUser" placeholder="users" focus-me="focusInput" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Add New</button>
                         </form>
@@ -33,7 +35,7 @@
                     <tr>
                         <th data-field="content" data-align="center" data-sortable="false">Content</th>
                         <th data-field="triggerTimeStr" data-align="center" data-sortable="false">Trigger Time</th>
-                        <th data-field="userName" data-align="center" data-sortable="false">Lucky User</th>
+                        <th data-field="numberUser" data-align="center" data-sortable="false">Lucky Users</th>
                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                     </tr>
                     </thead>

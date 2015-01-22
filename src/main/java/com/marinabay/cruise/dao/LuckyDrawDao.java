@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface LuckyDrawDao extends GenericDao<LuckyDraw> {
 
-    public void randomUser(Long id);
+    public Long randomUser(List<Long> userIds);
+
+    public void updateLuckyUser(LuckyDraw luckyDraw);
 
     public List<LuckyDraw> selectNotRun();
 

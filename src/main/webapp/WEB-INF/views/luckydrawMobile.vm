@@ -1,0 +1,73 @@
+<!doctype html>
+<html ng-app="cruiseApp">
+<head>
+
+    <link href="$request.contextPath/resources/css/bootstrap.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-tagsinput.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/index.css" rel="stylesheet">
+
+    <script src="$request.contextPath/resources/js/jquery.min.js"></script>
+    <script src="$request.contextPath/resources/js/angular-1.2.10.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap.min.js"></script>
+    <script src="$request.contextPath/resources/js/ui-bootstrap-tpls-0.11.0.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-table.min.js"></script>
+    <script src="$request.contextPath/resources/js/bootbox.min.js"></script>
+    <script src="$request.contextPath/resources/js/moment.min.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-tagsinput.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-switch.js"></script>
+    <script src="$request.contextPath/resources/js/index.js"></script>
+
+</head>
+<body>
+<div id="wrap">
+    <div class="containerm" >
+        <div class="row">
+
+            <div class="col-sm-12">
+                <script src="$request.contextPath/resources/js/luckyDrawMobile.js"></script>
+
+                <div class="row" ng-controller="UserGroupCtrl">
+                    <div class="col-xs-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Lucky Draw History</h3>
+                            </div>
+                            <div class="panel-body">
+
+                                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"
+                                       data-page-list="[5, 10, 20, 50, 100, 200]" data-query-params="queryParams" data-row-style="rowStyle">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="content" data-align="center" data-sortable="false">Content</th>
+                                        <th data-field="triggerTimeStr" data-align="center" data-sortable="false">Time</th>
+                                        <th data-field="numberUser" data-align="center" data-sortable="false">Lucky Users</th>
+                                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    $(function () {
+                        setTimeout(function(){$('#userGroupTable').bootstrapTable({
+                            url: '$request.contextPath/listLuckyDraw.json'
+                        })}, 100);
+                    });
+
+                </script>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

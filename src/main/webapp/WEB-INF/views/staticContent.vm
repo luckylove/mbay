@@ -126,7 +126,7 @@
             #elseif($type == "aboutus")
                 $!data.aboutUs
             #elseif($type == "luckydraw")
-                $!data.luckydraw
+                ffffffffffff
             #end
             <ng-view></ng-view>
         </div>

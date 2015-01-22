@@ -37,4 +37,6 @@ public interface UserDao extends GenericDao<User> {
 
     public User checkDupEmail(Map map);
 
+    public List<User> listLuckyUser(Long luckyId) ;
+
 }

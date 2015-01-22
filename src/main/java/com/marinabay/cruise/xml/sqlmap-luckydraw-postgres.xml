@@ -7,15 +7,16 @@
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="trigger_time" property="triggerTime" jdbcType="TIMESTAMP" />
-    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_ids" property="userIds" jdbcType="VARCHAR" />
+    <result column="number_user" property="numberUser" jdbcType="INTEGER" />
   </resultMap>
 
 
   <sql id="Base_Column_List" >
-    id, content, trigger_time, user_id
+    id, content, trigger_time, user_ids, number_user
   </sql>
   <sql id="Base_Column_List_Alias" >
-    ug.id, ug.content, ug.trigger_time, ug.user_id
+    ug.id, ug.content, ug.trigger_time, ug.user_ids, ug.number_user
   </sql>
 
  <select id="count" resultType="long" parameterType="pagingModel" >
@@ -26,8 +27,8 @@
 
   <select id="select" resultMap="mapResult" parameterType="pagingModel" >
     select
-    <include refid="Base_Column_List_Alias" /> , us.user_name
-    from luckydraw ug left outer join users us on ug.user_id = us.id
+    <include refid="Base_Column_List_Alias" />
+    from luckydraw ug
       where 1=1
       order by trigger_time desc
   <if test="limit > 0" >
@@ -48,33 +49,45 @@
     where id = #{value}
   </delete>
 
-  <insert id="insert" parameterType="taxiModel" >
+  <insert id="insert" parameterType="luckyDraw" >
 
       <selectKey keyProperty="id"
                  resultType="java.lang.Long" order="BEFORE">
           SELECT nextVal('luckydraw_id_seq')
       </selectKey>
 
-    insert into luckydraw (id, content, trigger_time, user_id)
+    insert into luckydraw (id, content, trigger_time, user_ids, number_user)
     values (
     	#{id,jdbcType=BIGINT},
     	#{content,jdbcType=VARCHAR},
     	#{triggerTime,jdbcType=TIMESTAMP},
-    	#{userId,jdbcType=TIMESTAMP}
+    	#{userIds,jdbcType=VARCHAR},
+    	#{numberUser,jdbcType=INTEGER}
       )
       
   </insert>
 
-  <update id="randomUser" parameterType="long">
-    update luckydraw
-    set user_id = (select id from users offset floor(random() * (select count(*) from users)) limit 1 )
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+  <select id="randomUser" resultType="long" parameterType="list">
+    select id from users
+     <if test="list != null and list.size() > 0">
+         where id not in
+         <foreach  collection="list" open="(" close=")" separator="," item="it">#{it}</foreach>
+     </if>
+    offset floor(random() * (select count(*) from users)) limit 1
+  </select>
 
   <select id="selectNotRun" resultMap="mapResult" parameterType="pagingModel">
     select
     <include refid="Base_Column_List" />
     from luckydraw ug
-    where 1=1 AND user_id is null AND trigger_time::date >= now()::date
+    where 1=1 AND user_ids is null AND trigger_time::date >= now()::date
   </select>
+
+    <update id="updateLuckyUser" parameterType="luckyDraw" >
+    update luckydraw
+    set
+      user_ids = #{userIds}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
 </mapper>

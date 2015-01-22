@@ -34,39 +34,12 @@ cruiseApp.controller('UserGroupCtrl', function ($scope, $modal, $http) {
         $scope.userForm = {};
     }
 
-    $scope.$watch(
-        function () { return document.getElementById('datetimepicker10').innerHTML },
-        function(newval, oldval){
-            $('#datetimepicker10').datetimepicker({
-                showToday: true
-            });
-            $("#datetimepicker10").on("dp.change",function (e) {
-                $scope.userForm.triggerTime = e.date.format('YYYY/MM/DD HH:mm');
-            });
-        }, true);
-
 });
 
 window.operateEvents = {
-    'click .remove': function (e, value, row, index) {
-        bootbox.confirm("Are  you sure you want to remove it", function(result) {
-            if(result) {
-                $.ajax({
-                    type: "GET",
-                    url: 'deleteLuckyDraw.json',
-                    data: {
-                        ids: row.id
-                    },
-                    dataType: 'json'
-                })
-                    .done(function(data) {
-                        $('#userGroupTable').bootstrapTable('refresh');
-                    });
-            }
-        });
-    } ,
+
     'click .detail': function (e, value, row, index) {
-        document.location.href = "luckyDraw.html?id=" + row.id
+        document.location.href = "luckydraw.html?id=" + row.id
     }
 };
 
@@ -74,9 +47,6 @@ window.operateEvents = {
 function operateFormatter(value, row, index) {
     return [
 
-        '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
-        '<i class="glyphicon glyphicon-remove"></i>',
-        '</a>   '      +
             '<a class="detail ml10" href="javascript:void(0)" title="Remove">',
         '<i class="glyphicon glyphicon-arrow-right"></i>',
         '</a>'

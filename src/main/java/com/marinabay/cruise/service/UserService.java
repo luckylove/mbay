@@ -103,4 +103,9 @@ public class UserService extends GenericService<User>{
     public User checkDupEmail(Long userId, String email){
         return userDao.checkDupEmail(ImmutableMap.of("userId", userId, "email", email));
     }
+
+    public JSonPagingResult<User> listLuckyUser(Long luckyId) {
+        List<User> users = userDao.listLuckyUser(luckyId);
+        return JSonPagingResult.ofSuccess(users.size(), users);
+    }
 }

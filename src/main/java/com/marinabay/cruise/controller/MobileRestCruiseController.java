@@ -289,9 +289,11 @@ public class MobileRestCruiseController {
     }
 
     @RequestMapping(value = {"/luckydraw.html"}, method = RequestMethod.GET)
-    public String luckydraw(HttpServletRequest request, ModelMap model) {
-        model.addAttribute("type", "luckydraw");
-        model.addAttribute("data", cruisePortService.selectByID(1));
-        return "/staticContent";
+    public String luckydraw(HttpServletRequest request, ModelMap model, Long id) {
+        if (id != null) {
+            model.addAttribute("luckyId", id);
+            return "luckydrawMobileUser";
+        }
+        return "/luckydrawMobile";
     }
 }

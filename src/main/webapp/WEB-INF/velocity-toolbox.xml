@@ -52,9 +52,14 @@
         <key>stringUtils</key>
         <class>org.apache.commons.lang.StringUtils</class>
     </tool>
-	 <tool>
+	<tool>
 	   <key>import</key> 
 	   <scope>request</scope> 
 	   <class>org.apache.velocity.tools.view.tools.ImportTool</class> 
-	 </tool>
+	</tool>
+    <tool>
+        <key>context</key>
+        <scope>request</scope>
+        <class>org.apache.velocity.tools.view.ViewContextTool</class>
+    </tool>
 </toolbox>

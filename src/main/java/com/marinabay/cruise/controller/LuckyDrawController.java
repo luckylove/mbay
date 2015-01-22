@@ -3,6 +3,7 @@ package com.marinabay.cruise.controller;
 import com.google.common.base.Splitter;
 import com.marinabay.cruise.model.*;
 import com.marinabay.cruise.service.LuckyDrawService;
+import com.marinabay.cruise.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,24 @@ public class LuckyDrawController {
     @Autowired
     private LuckyDrawService luckyDrawService;
 
+    @Autowired
+    private UserService userService;
+
 	@RequestMapping(value = {"/luckyDraw.html"}, method = RequestMethod.GET)
-	public String taxi(HttpServletRequest request, ModelMap model) {
-        model.addAttribute(VIEW_TYPE, "luckydraw");
+	public String luckyDraw(HttpServletRequest request, ModelMap model, Long id) {
+        if (id != null) {
+            model.addAttribute(VIEW_TYPE, "luckyDrawUser");
+            model.addAttribute("luckyId", id);
+        } else {
+            model.addAttribute(VIEW_TYPE, "luckydraw");
+        }
         return "/index";
+    }
+
+    @RequestMapping(value = {"/luckyDrawUser.json"}, method = RequestMethod.GET)
+    @ResponseBody
+    public JSonPagingResult<User>  luckyDrawUser(HttpServletRequest request, ModelMap model, Long luckyId) {
+        return userService.listLuckyUser(luckyId);
     }
 
     @RequestMapping(value = {"/listLuckyDraw.json"}, method = RequestMethod.GET)

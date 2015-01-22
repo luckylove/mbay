@@ -1,0 +1,40 @@
+<script src="resources/js/sentUserList.js"></script>
+
+<div class="row" ng-controller="UserGroupCtrl">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="box-tools pull-left">
+                    <span class="badge" style="background-color: #ebcccc;margin-right: 10px;">
+                        <a class="remove ml10" href="luckyDraw.html" title="Remove">
+                        <i class="glyphicon glyphicon-arrow-left"></i>
+                        </a>
+                    </span>
+                </div>
+                <h3 class="panel-title">Lucky Users</h3>
+            </div>
+            <div class="panel-body">
+                <table id="userGroupTable" data-height="550" data-side-pagination="server" data-pagination="true"
+                       data-page-list="[5, 10, 20, 50, 100, 200]" data-query-params="queryParams" data-row-style="rowStyle">
+                    <thead>
+                    <tr>
+                        <th data-field="id" data-align="center" data-sortable="false">Id</th>
+                        <th data-field="userName" data-align="center" data-sortable="false">Name</th>
+                        <th data-field="email" data-align="center" data-sortable="false">Email</th>
+                        <th data-field="mobile" data-align="center" data-sortable="false">Mobile</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function(){$('#userGroupTable').bootstrapTable({
+            url: 'luckyDrawUser.json?luckyId=${luckyId}'
+        })}, 100);
+    });
+
+</script>
