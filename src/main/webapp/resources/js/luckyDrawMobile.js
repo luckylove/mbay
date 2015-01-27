@@ -47,7 +47,7 @@ window.operateEvents = {
 function operateFormatter(value, row, index) {
     return [
 
-            '<a class="detail ml10" href="javascript:void(0)" title="Remove">',
+      '<a class="detail ml10" href="javascript:void(0)" title="Remove">',
         '<i class="glyphicon glyphicon-arrow-right"></i>',
         '</a>'
     ].join('');
@@ -68,16 +68,13 @@ function queryParams(params) {
 
 
 function rowStyle(row, index) {
-    if(row.userIds != '') {
+    if(row.userIds) {
         return {
             classes: 'success'
         };
     }
-    if (index % 2 === 0) {
-        return {
-            classes: 'active'
-        };
-    }
-    return {};
+    return {
+        classes: 'active'
+    };
 }
 

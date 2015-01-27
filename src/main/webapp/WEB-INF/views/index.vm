@@ -2,25 +2,25 @@
 <html ng-app="cruiseApp">
 <head>
 
-    <link href="resources/css/bootstrap.css" rel="stylesheet">
-    <link href="resources/css/bootstrap-theme.css" rel="stylesheet">
-    <link href="resources/css/bootstrap-table.min.css" rel="stylesheet">
-    <link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-    <link href="resources/css/bootstrap-tagsinput.css" rel="stylesheet">
-    <link href="resources/css/bootstrap-switch.min.css" rel="stylesheet">
-    <link href="resources/css/index.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-table.min.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-tagsinput.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="$request.contextPath/resources/css/index.css" rel="stylesheet">
 
-    <script src="resources/js/jquery.min.js"></script>
-    <script src="resources/js/angular-1.2.10.js"></script>
-    <script src="resources/js/bootstrap.min.js"></script>
-    <script src="resources/js/ui-bootstrap-tpls-0.11.0.js"></script>
-    <script src="resources/js/bootstrap-table.min.js"></script>
-    <script src="resources/js/bootbox.min.js"></script>
-    <script src="resources/js/moment.min.js"></script>
-    <script src="resources/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="resources/js/bootstrap-tagsinput.js"></script>
-    <script src="resources/js/bootstrap-switch.js"></script>
-    <script src="resources/js/index.js"></script>
+    <script src="$request.contextPath/resources/js/jquery.min.js"></script>
+    <script src="$request.contextPath/resources/js/angular-1.2.10.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap.min.js"></script>
+    <script src="$request.contextPath/resources/js/ui-bootstrap-tpls-0.11.0.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-table.min.js"></script>
+    <script src="$request.contextPath/resources/js/bootbox.min.js"></script>
+    <script src="$request.contextPath/resources/js/moment.min.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-tagsinput.js"></script>
+    <script src="$request.contextPath/resources/js/bootstrap-switch.js"></script>
+    <script src="$request.contextPath/resources/js/index.js"></script>
     <script type="text/javascript">
         var isNric = '${loggedUser.nricNo}';
         if(isNric === '0' && document.location.href.indexOf('profile.html') < 0 && document.location.href.indexOf('index.html') < 0 ){
@@ -70,7 +70,7 @@
                             #end
                             <ul class="list-unstyled collapse in">
                                 #if("$!loggedUser.role" == "ADMIN")
-                                <li> <a href="resources/sample/schedule_sample.xlsx"><i class="glyphicon glyphicon-th-list"></i> Download template</a>  </li>
+                                <li> <a href="$request.contextPath/resources/sample/schedule_sample.xlsx"><i class="glyphicon glyphicon-th-list"></i> Download template</a>  </li>
                                 <li> <a href="#" ng-click="open(form)"><i class="glyphicon glyphicon-indent-left"></i> Import Schedules</a> </li>
                                 <li> <a href="schedulesHistory.html"><i class="glyphicon glyphicon-indent-left"></i> Schedules History</a> </li>
                                 #end

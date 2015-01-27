@@ -1,7 +1,7 @@
 <!doctype html>
 <html ng-app="cruiseApp">
 <head>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="$request.contextPath/resources/css/bootstrap.css" rel="stylesheet">
     <link href="$request.contextPath/resources/css/bootstrap-theme.css" rel="stylesheet">
     <link href="$request.contextPath/resources/css/bootstrap-table.min.css" rel="stylesheet">
@@ -45,8 +45,8 @@
                                     <tr>
                                         <th data-field="content" data-align="center" data-sortable="false">Content</th>
                                         <th data-field="triggerTimeStr" data-align="center" data-sortable="false">Time</th>
-                                        <th data-field="numberUser" data-align="center" data-sortable="false">Lucky Users</th>
                                         <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
+                                        <th data-field="numberUser" data-align="center" data-sortable="false">Users</th>
                                     </tr>
                                     </thead>
                                 </table>

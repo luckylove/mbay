@@ -1,6 +1,7 @@
 <!doctype html>
 <html ng-app="cruiseApp">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="$request.contextPath/resources/css/bootstrap.css" rel="stylesheet">
     <link href="$request.contextPath/resources/css/bootstrap-theme.css" rel="stylesheet">
     <link href="$request.contextPath/resources/css/bootstrap-table.min.css" rel="stylesheet">
