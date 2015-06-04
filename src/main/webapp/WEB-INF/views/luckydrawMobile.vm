@@ -45,8 +45,8 @@
                                     <tr>
                                         <th data-field="content" data-align="center" data-sortable="false">Content</th>
                                         <th data-field="triggerTimeStr" data-align="center" data-sortable="false">Time</th>
-                                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                                         <th data-field="numberUser" data-align="center" data-sortable="false">Users</th>
+                                        <th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">Action</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -59,7 +59,11 @@
                     $(function () {
                         setTimeout(function(){$('#userGroupTable').bootstrapTable({
                             url: '$request.contextPath/listLuckyDraw.json'
-                        })}, 100);
+                        }) ;
+                            $('#userGroupTable').on('click-row.bs.table', function (e, row, $element) {
+                                document.location.href = "luckydraw.html?id=" + row.id;
+                            })
+                        }, 100);
                     });
 
                 </script>
