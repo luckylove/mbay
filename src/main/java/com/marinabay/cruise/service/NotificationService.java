@@ -194,10 +194,10 @@ public class NotificationService extends GenericService<Notification>{
         List<NameValuePair> params = Lists.newArrayList();
         params.add(new BasicNameValuePair("username", username));
         params.add(new BasicNameValuePair("password", password));
-        params.add(new BasicNameValuePair("to", to));
+        params.add(new BasicNameValuePair("to", "+" + to));
         params.add(new BasicNameValuePair("from", from));
         params.add(new BasicNameValuePair("message", message));
-        params.add(new BasicNameValuePair("message-type", "sms.automatic"));
+        //params.add(new BasicNameValuePair("message-type", "sms.automatic"));
         return params;
     }
 

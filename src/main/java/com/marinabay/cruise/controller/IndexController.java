@@ -135,6 +135,12 @@ public class IndexController {
         return "/index";
     }
 
+    @RequestMapping(value = {"/map.html"}, method = RequestMethod.GET)
+    public String map(HttpServletRequest request, ModelMap model) {
+        model.addAttribute("viewType", "activeUser");
+        return "/map";
+    }
+
 
 
 
